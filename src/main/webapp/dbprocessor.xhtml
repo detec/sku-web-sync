@@ -43,9 +43,60 @@
 				<h:outputText value="#{s.after}">
 				</h:outputText>			
 			</h:column>
-	    </h:dataTable>	
+	    </h:dataTable>
+	 <h:outputLabel value="Переименованных групп SKU нет." rendered="#{empty DBSKUGroupsController.updateDBGroupList}" style="font-style: italic"></h:outputLabel>
+	 <br></br>
+	<h:panelGrid columns="1" rows="2">    
+	   	<h:outputLabel value="Добавленные группы SKU. Они были добавлены в XLS-файле.">
+		</h:outputLabel>
+		<h:outputLabel value="Для добавления группы SKU в базу данных отметьте необходимые строки флажками.">
+		</h:outputLabel>
+	</h:panelGrid>
+	    <h:dataTable border="1" var = "s" value="#{DBSKUGroupsController.addDBGroupList}">
+	    	<h:column id="Selected">
+	    		<f:facet name="header" >
+				<h:outputText value="Выбор"></h:outputText>
+				</f:facet>
+				<h:selectBooleanCheckbox value="#{s.checked}">
+				</h:selectBooleanCheckbox>
+	    	</h:column>
+	    	<h:column id="Key">
+				<f:facet name="header" >
+				<h:outputText value="Ключ"></h:outputText>
+				</f:facet>
+			<h:outputText value="#{s.key}">
+			</h:outputText>	
+			</h:column>
+			<h:column id="Before">
+				<f:facet name="header" >
+					<h:outputText value="До"></h:outputText>
+				</f:facet>
+				<h:outputText value="#{s.before}">
+				</h:outputText>	
+			</h:column>
+			<h:column id="After">
+				<f:facet name="header" >
+					<h:outputText value="После"></h:outputText>
+				</f:facet>
+				<h:outputText value="#{s.after}">
+				</h:outputText>			
+			</h:column>
+				<h:column id="Parent">
+				<f:facet name="header" >
+					<h:outputText value="Родитель"></h:outputText>
+				</f:facet>
+				<h:selectOneMenu value="#{s.parent}">
+				 <f:selectItem itemLabel="" itemValue="#{0}" noSelectionOption="true" itemDisabled="false"/>
+				 <f:selectItems value="#{DBSKUGroupsController.selectGroupsMap}"  var="group" itemValue="#{group.value}" itemLabel="#{group.key}" />
+				</h:selectOneMenu>			
+			</h:column>
+	    </h:dataTable>
+	    <h:outputLabel value="Добавленных групп SKU нет." rendered="#{empty DBSKUGroupsController.addDBGroupList}" style="font-style: italic"></h:outputLabel>
+	    <h:panelGrid columns="1">
+		<h:commandButton value="Выход" rendered="#{XLSProcessorController.sessionManager.loggedIn}"
+		action="#{loginBean.logout}"></h:commandButton>
+		</h:panelGrid>	    	
 	</h:form>
-	<br></br>
 	<h:panelGrid columns="1"  rendered="#{not empty DBSKUGroupsController.exceptionString}">
 	<h:outputLabel value="Журнал ошибок"></h:outputLabel>
 	<h:inputTextarea value="#{DBSKUGroupsController.exceptionString}" 

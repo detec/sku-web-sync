@@ -8,6 +8,7 @@ import javax.naming.NamingException;
 
 import com.malbi.sync.sku.dao.DAO;
 import com.malbi.sync.sku.model.Changes;
+import com.malbi.sync.sku.model.DBSKUGroup;
 import com.malbi.sync.sku.model.DbRowData;
 
 public class SKUService {
@@ -56,6 +57,40 @@ public class SKUService {
 			result = false;
 		}
 		return result;
+	}
+
+	public boolean renameGroup(Changes changes) {
+		boolean result = false;
+		try {
+			DAO.renameGroup(changes);
+			result = true;
+		} catch (ClassNotFoundException | SQLException | NamingException e) {
+			this.ErrorLog = "Не удалось переименовать группу SKU в БД: \n" + e.getMessage();
+			result = false;
+		}
+		return result;
+	}
+
+	public boolean addNewGroup(String parent, Changes changes) {
+		boolean result = false;
+		try {
+			result = DAO.addNewGroup(parent, changes);
+		} catch (ClassNotFoundException | SQLException | NamingException e) {
+			this.ErrorLog = "Не удалось добавить группу SKU в БД: \n" + e.getMessage();
+			result = false;
+		}
+
+		return result;
+	}
+
+	public Map<Integer, DBSKUGroup> getDBSKUgroups() {
+		Map<Integer, DBSKUGroup> groupsMap = new HashMap<Integer, DBSKUGroup>();
+		try {
+			groupsMap = DAO.getDBSKUgroups();
+		} catch (ClassNotFoundException | SQLException | NamingException e) {
+			this.ErrorLog = "Не удалось получить список групп SKU из БД: \n" + e.getMessage();
+		}
+		return groupsMap;
 	}
 
 	private String ErrorLog;

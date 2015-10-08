@@ -12,6 +12,7 @@ import javax.naming.NamingException;
 
 import com.malbi.sync.sku.db.ConnectionManager;
 import com.malbi.sync.sku.model.Changes;
+import com.malbi.sync.sku.model.DBSKUGroup;
 import com.malbi.sync.sku.model.DbRowData;
 
 public class DAO {
@@ -49,6 +50,17 @@ public class DAO {
 		return skuGropMap;
 	}
 
+	public static Map<Integer, DBSKUGroup> getDBSKUgroups()
+			throws ClassNotFoundException, SQLException, NamingException {
+		Map<Integer, String> skuGropMap = getSkuGroupMap();
+		Map<Integer, DBSKUGroup> DBSKUGroupMap = new HashMap<Integer, DBSKUGroup>();
+
+		skuGropMap.entrySet().stream()
+				.forEach(t -> DBSKUGroupMap.put(t.getKey(), new DBSKUGroup(t.getKey().intValue(), t.getValue())));
+
+		return DBSKUGroupMap;
+	}
+
 	public static Map<Integer, DbRowData> getSkuHierarchyMap()
 			throws SQLException, ClassNotFoundException, NamingException {
 		Map<Integer, DbRowData> dbRows = new HashMap<>();
@@ -78,5 +90,73 @@ public class DAO {
 		stmt.setInt(4, 0);
 		stmt.executeUpdate();
 
+	}
+
+	public static void renameGroup(Changes changes) throws ClassNotFoundException, SQLException, NamingException {
+		Connection con = ConnectionManager.getDBConnection();
+		PreparedStatement stmt = con
+				.prepareStatement("UPDATE xx_rs_sku_groups" + "   SET group_name = ?" + "   WHERE group_id = ?");
+		stmt.setString(1, changes.getAfter());
+		stmt.setInt(2, changes.getId());
+		stmt.executeUpdate();
+	}
+
+	public static boolean addNewGroup(String parent, Changes changes)
+			throws ClassNotFoundException, SQLException, NamingException {
+		ResultSet rs;
+		PreparedStatement pStmt;
+
+		Connection con = ConnectionManager.getDBConnection();
+		if (isInteger(parent)) {
+
+			pStmt = con.prepareStatement("SELECT group_id" + "  FROM xx_rs_sku_groups" + "  WHERE group_id = ?");
+			pStmt.setInt(1, Integer.parseInt(parent));
+		} else {
+			pStmt = con.prepareStatement("SELECT group_id" + "  FROM xx_rs_sku_groups" + "  WHERE group_name = ?");
+			pStmt.setString(1, parent);
+		}
+
+		rs = pStmt.executeQuery();
+		int parentId;
+		// check if result set has data. If true add group to group list and
+		// hierarchy.
+		if (rs.next()) {
+			parentId = rs.getInt(1);
+			// add to group list
+			pStmt = con.prepareStatement("INSERT INTO xx_rs_sku_groups" + "           (group_id"
+					+ "           ,group_name)" + "     VALUES" + "           (?, ?)");
+			pStmt.setInt(1, changes.getId());
+			pStmt.setString(2, changes.getAfter());
+			pStmt.executeUpdate();
+			// System.out.println("Group added to list: ID " + changes.getId() +
+			// ", Name " + changes.getAfter() + ".");
+
+			// add to hierarchy
+			pStmt = con.prepareStatement("INSERT INTO xx_rs_sku_hierarchy" + "           (parent_id"
+					+ "           ,node_id" + "           ,is_group" + "           ,is_plan_group)" + "     VALUES"
+					+ "           (?, ?, ?, ?)");
+			pStmt.setInt(1, parentId);
+			pStmt.setInt(2, changes.getId());
+			pStmt.setInt(3, 1);
+			pStmt.setInt(4, 0);
+			pStmt.executeUpdate();
+			// System.out.println("Group was added to hierarchy: parentID " +
+			// parentId + ", nodeID " + changes.getId()
+			// + ", isGroup 1, isPlanGroup 0.");
+		} else {
+			return false;
+		}
+
+		return true;
+	}
+
+	public static boolean isInteger(String s) {
+		try {
+			Integer.parseInt(s);
+		} catch (NumberFormatException e) {
+			return false;
+		}
+		// only got here if we didn't return false
+		return true;
 	}
 }

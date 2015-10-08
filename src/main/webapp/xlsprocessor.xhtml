@@ -45,10 +45,15 @@
 				</h:outputText>			
 			</h:column>
 	    </h:dataTable>
+	    <h:outputLabel value="Переименованных SKU нет." rendered="#{empty XLSProcessorController.skuRename}" style="font-style: italic"></h:outputLabel>
 	    <br></br>
-	    <h:outputLabel value="Отсутствующие SKU. Их больше нет в базе данных.">
+	    <h:panelGrid columns="1" rows="2">
+	    <h:outputLabel value="Отсутствующие SKU. Их нет в базе данных.">
 	    </h:outputLabel>
-	    <br></br>
+	    <h:outputLabel value="Для удаления соответствующих строк в файле отметьте их флажками.">
+	    </h:outputLabel>
+	    </h:panelGrid>
+	    
 	    <h:dataTable border="1" var = "s" value="#{XLSProcessorController.doesNotExist}">
 	    	<h:column id="Selected">
 	    		<f:facet name="header" >
@@ -78,12 +83,16 @@
 				<h:outputText value="#{s.after}">
 				</h:outputText>			
 			</h:column>
-	    
 	    </h:dataTable>
-	    <h:commandButton value="Применить и сохранить изменения в файле" 
+	    <h:outputLabel value="Удалённых SKU нет." rendered="#{empty XLSProcessorController.doesNotExist}" style="font-style: italic"></h:outputLabel>
+	    <h:panelGrid columns="1">
+	    <h:commandButton value="Применить, сохранить изменения в файле и перейти далее" 
 		action="#{XLSProcessorController.commitXLSChanges}"></h:commandButton>
+		<h:commandButton value="Перейти далее без сохранения" 
+		action="#{XLSProcessorController.goToDBProcessor}"></h:commandButton>
 		<h:commandButton value="Выход" rendered="#{XLSProcessorController.sessionManager.loggedIn}"
 		action="#{loginBean.logout}"></h:commandButton>
+		</h:panelGrid>
 		</h:form>
 		<br></br>
 		<h:panelGrid columns="1"  rendered="#{not empty XLSProcessorController.exceptionString}">

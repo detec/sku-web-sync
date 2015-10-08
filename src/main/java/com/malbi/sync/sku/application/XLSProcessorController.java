@@ -54,6 +54,10 @@ public class XLSProcessorController implements Serializable {
 		return returnAddress;
 	}
 
+	public String goToDBProcessor() {
+		return "/dbprocessor.xhtml?faces-redirect=true";
+	}
+
 	public void removeXLSRows() {
 		// for (Changes ch : doesNotExists) {
 		// this.rows.remove(getArrayIdOfXlsRowDataBySkuCode(ch.getId()));
