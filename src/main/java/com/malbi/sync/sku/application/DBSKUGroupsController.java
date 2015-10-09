@@ -2,7 +2,6 @@ package com.malbi.sync.sku.application;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -20,23 +19,48 @@ import com.malbi.sync.sku.service.SKUService;
 @ViewScoped
 public class DBSKUGroupsController implements Serializable {
 
-	public void applyChanges() {
+	public String goToSKUProcessor() {
+		return "/skuprocessor.xhtml?faces-redirect=true";
+	}
+
+	public void test() {
+		System.out.println("Alive");
+	}
+
+	public String applyChanges() {
+		String returnAddress = "";
+
 		SKUService service = new SKUService();
 		StringBuffer log = new StringBuffer();
 		// rename checked groups
 		this.updateDBGroupList.stream().filter(t -> t.isChecked()).forEach(t -> {
-			service.renameGroup(t);
-			String receivedLog = service.getErrorLog();
-			// append carrige return if error message is not empty.
-			log.append(receivedLog + ((receivedLog.length() == 0) ? "" : "\n"));
+			boolean result;
+			result = service.renameGroup(t);
+			if (!result) {
+				String receivedLog = service.getErrorLog();
+				// append carrige return if error message is not empty.
+				log.append(receivedLog + ((receivedLog.length() == 0) ? "" : "\n"));
+			}
 		});
 
 		this.addDBGroupList.stream().filter(t -> t.isChecked()).forEach(t -> {
-			// boolean addResult = service.addNewGroup(parent, t);
+			boolean result;
+			int parentId = t.getParent().getKey();
+			result = service.addNewGroup(parentId, t);
+			if (!result) {
+				String receivedLog = service.getErrorLog();
+				// append carriage return if error message is not empty.
+				log.append(receivedLog + ((receivedLog.length() == 0) ? "" : "\n"));
+			}
 		});
 
 		// after all operations.
-		this.ExceptionString = log.toString();
+		if (log.toString() != null) {
+			this.ExceptionString = log.toString();
+		} else {
+			returnAddress = "/skuprocessor.xhtml?faces-redirect=true";
+		}
+		return returnAddress;
 	}
 
 	@PostConstruct
@@ -61,7 +85,7 @@ public class DBSKUGroupsController implements Serializable {
 			}
 		});
 
-		this.selectGroupsMap.putAll(service.getDBSKUgroups());
+		this.selectGroupsList.addAll(service.getDBSKUgroups());
 		// catch error messages
 		// log.append("\n" + service.getErrorLog());
 		if (log.toString() != null) {
@@ -69,14 +93,14 @@ public class DBSKUGroupsController implements Serializable {
 		}
 	}
 
-	private Map<Integer, DBSKUGroup> selectGroupsMap = new HashMap<Integer, DBSKUGroup>();
+	private List<DBSKUGroup> selectGroupsList = new ArrayList<DBSKUGroup>();
 
-	public Map<Integer, DBSKUGroup> getSelectGroupsMap() {
-		return selectGroupsMap;
+	public List<DBSKUGroup> getSelectGroupsList() {
+		return selectGroupsList;
 	}
 
-	public void setSelectGroupsMap(Map<Integer, DBSKUGroup> selectGroupsMap) {
-		this.selectGroupsMap = selectGroupsMap;
+	public void setSelectGroupsList(List<DBSKUGroup> selectGroupsList) {
+		this.selectGroupsList = selectGroupsList;
 	}
 
 	private List<DialogueChanges> addDBGroupList = new ArrayList<>();

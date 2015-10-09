@@ -1,7 +1,9 @@
 package com.malbi.sync.sku.service;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.naming.NamingException;
@@ -71,10 +73,11 @@ public class SKUService {
 		return result;
 	}
 
-	public boolean addNewGroup(String parent, Changes changes) {
+	public boolean addNewGroup(int parentId, Changes changes) {
 		boolean result = false;
 		try {
-			result = DAO.addNewGroup(parent, changes);
+			DAO.addNewGroup(parentId, changes);
+			result = true;
 		} catch (ClassNotFoundException | SQLException | NamingException e) {
 			this.ErrorLog = "Не удалось добавить группу SKU в БД: \n" + e.getMessage();
 			result = false;
@@ -83,14 +86,14 @@ public class SKUService {
 		return result;
 	}
 
-	public Map<Integer, DBSKUGroup> getDBSKUgroups() {
-		Map<Integer, DBSKUGroup> groupsMap = new HashMap<Integer, DBSKUGroup>();
+	public List<DBSKUGroup> getDBSKUgroups() {
+		List<DBSKUGroup> groupsList = new ArrayList<DBSKUGroup>();
 		try {
-			groupsMap = DAO.getDBSKUgroups();
+			groupsList = DAO.getDBSKUgroupsList();
 		} catch (ClassNotFoundException | SQLException | NamingException e) {
 			this.ErrorLog = "Не удалось получить список групп SKU из БД: \n" + e.getMessage();
 		}
-		return groupsMap;
+		return groupsList;
 	}
 
 	private String ErrorLog;

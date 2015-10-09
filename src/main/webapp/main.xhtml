@@ -7,7 +7,9 @@
 	xmlns:h="http://xmlns.jcp.org/jsf/html"
 	xmlns:f="http://xmlns.jcp.org/jsf/core">
 
+<h:body>
 <h2>Синхронизация SKU</h2>
+<h3>Загрузка XLS-файла для анализа</h3>
 	<h:form id="form" enctype="multipart/form-data" rendered="#{loginBean.loggedIn}">
 	
 		<h:inputFile id="file" value="#{skuMain.file}"/>
@@ -16,10 +18,8 @@
       		action="#{skuMain.checkXLSFile()}">
     		<f:ajax execute="file" render="@all"/>
   		</h:commandButton>
-  		</h:form>
-<!--   		<br></br> -->
   		<h:messages id="messages" errorClass="err" warnClass="warn" infoClass="info" style="color: #FF8080" showDetail="true" showSummary="true"/>
-<!--   		<br></br> -->
+
   		<h:panelGrid columns="2">
   		<h:selectBooleanCheckbox value="#{skuMain.fileUploaded}" id="Uploadcheckbox">
 		</h:selectBooleanCheckbox>
@@ -29,7 +29,7 @@
 		 <h:outputLabel value="XLS-файл успешно проверен" for="XLScheckbox" />
 		 </h:panelGrid>
 		
-		<h:form id="buttons" enctype="multipart/form-data" rendered="#{loginBean.loggedIn}">
+<!-- 		<h:form id="buttons" enctype="multipart/form-data" rendered="#{loginBean.loggedIn}"> -->
 		<h:link value="Обработать файл SKU_BASE_1C.xls ..." outcome="xlsprocessor" 
 		rendered="#{skuMain.fileUploaded and skuMain.uploadedXLSValidationResult}"></h:link>
 		<h:commandButton value="Выход" rendered="#{loginBean.loggedIn}"
@@ -41,5 +41,6 @@
 		<h:inputTextarea value="#{skuMain.exceptionString}"
       		readonly="true" cols="130" rows="40"/>
       	</h:panelGrid>	
+</h:body>	
 	
 </html>
