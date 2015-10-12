@@ -96,6 +96,29 @@ public class SKUService {
 		return groupsList;
 	}
 
+	public boolean moveSkuToAnotherGroup(Changes c) {
+		boolean result = false;
+		try {
+			DAO.moveSkuToAnotherGroup(c);
+			result = true;
+		} catch (ClassNotFoundException | SQLException | NamingException e) {
+			this.ErrorLog = "Не удалось переместить SKU в другую группу: \n" + e.getMessage();
+		}
+		return result;
+	}
+
+	public boolean deleteSku(Changes c) {
+		boolean result = false;
+		try {
+			DAO.deleteSku(c);
+			result = true;
+		} catch (ClassNotFoundException | SQLException | NamingException e) {
+			this.ErrorLog = "Не удалось удалить SKU: \n" + e.getMessage();
+		}
+
+		return result;
+	}
+
 	private String ErrorLog;
 
 	public String getErrorLog() {

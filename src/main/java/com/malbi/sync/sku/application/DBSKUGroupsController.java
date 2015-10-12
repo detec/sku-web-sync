@@ -8,7 +8,7 @@ import java.util.Map;
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
-import javax.faces.view.ViewScoped;
+import javax.faces.bean.RequestScoped;
 
 import com.malbi.sync.sku.model.Changes;
 import com.malbi.sync.sku.model.DBSKUGroup;
@@ -16,15 +16,11 @@ import com.malbi.sync.sku.model.DialogueChanges;
 import com.malbi.sync.sku.service.SKUService;
 
 @ManagedBean(name = "DBSKUGroupsController")
-@ViewScoped
+@RequestScoped
 public class DBSKUGroupsController implements Serializable {
 
 	public String goToSKUProcessor() {
 		return "/skuprocessor.xhtml?faces-redirect=true";
-	}
-
-	public void test() {
-		System.out.println("Alive");
 	}
 
 	public String applyChanges() {
@@ -55,7 +51,7 @@ public class DBSKUGroupsController implements Serializable {
 		});
 
 		// after all operations.
-		if (log.toString() != null) {
+		if (!log.toString().isEmpty()) {
 			this.ExceptionString = log.toString();
 		} else {
 			returnAddress = "/skuprocessor.xhtml?faces-redirect=true";
@@ -68,13 +64,17 @@ public class DBSKUGroupsController implements Serializable {
 		refreshData();
 	}
 
+	public void appendLogAtRefresh(SKUService service, StringBuffer log) {
+		if (!log.toString().isEmpty()) {
+			log.append(service.getErrorLog());
+		}
+	}
+
 	public void refreshData() {
 		SKUService service = new SKUService();
 		Map<Integer, String> skuGroupMap = service.getSkuGroupMap();
 		StringBuffer log = new StringBuffer();
-		if (service.getErrorLog() != null) {
-			log.append(service.getErrorLog());
-		}
+		appendLogAtRefresh(service, log);
 
 		List<Changes> groupUpdate = this.sessionManager.getxSource().getGroupUpdates(skuGroupMap);
 		groupUpdate.stream().forEach(t -> {
@@ -87,10 +87,7 @@ public class DBSKUGroupsController implements Serializable {
 
 		this.selectGroupsList.addAll(service.getDBSKUgroups());
 		// catch error messages
-		// log.append("\n" + service.getErrorLog());
-		if (log.toString() != null) {
-			this.ExceptionString = log.toString();
-		}
+		appendLogAtRefresh(service, log);
 	}
 
 	private List<DBSKUGroup> selectGroupsList = new ArrayList<DBSKUGroup>();

@@ -3,8 +3,8 @@ package com.malbi.sync.sku.model;
 public class Changes {
 
 	int key;
-	String before;
-	String after;
+	String before = "";
+	String after = "";
 
 	// GUI field.
 	boolean checked;

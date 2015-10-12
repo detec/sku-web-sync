@@ -87,11 +87,11 @@
 				</f:facet>
 				<h:selectOneMenu value="#{s.parent}" converter="DBSKUGroupConverter" id="ParentSelect">
 				 <f:selectItem itemLabel="" itemValue="#{null}" noSelectionOption="true" itemDisabled="false" id="NotSelectParent"/>
-				 <f:selectItems value="#{DBSKUGroupsController.selectGroupsList}"  var="group" itemValue="#{group.key}" itemLabel="#{group.name}" id="SelectList"/>
+				 <f:selectItems value="#{DBSKUGroupsController.selectGroupsList}"  var="group" itemValue="#{group}" itemLabel="#{group.name}" id="SelectList"/>
 				</h:selectOneMenu>			
 			</h:column>
-	    </h:dataTable>
-	    <h:outputLabel value="Добавленных групп SKU нет." rendered="#{empty DBSKUGroupsController.addDBGroupList}" style="font-style: italic"></h:outputLabel>
+	</h:dataTable>
+	<h:outputLabel value="Добавленных групп SKU нет." rendered="#{empty DBSKUGroupsController.addDBGroupList}" style="font-style: italic"></h:outputLabel>
 	    <h:panelGrid columns="1">
 	    <h:commandButton value="Применить, сохранить изменения в базе данных и перейти далее" 
 		action="#{DBSKUGroupsController.applyChanges}" id="ProcessNext"></h:commandButton>

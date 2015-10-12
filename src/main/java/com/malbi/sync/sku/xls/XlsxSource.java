@@ -23,7 +23,9 @@ import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.poifs.filesystem.POIFSFileSystem;
 
 import com.malbi.sync.sku.model.Changes;
+import com.malbi.sync.sku.model.DBSKUGroup;
 import com.malbi.sync.sku.model.DbRowData;
+import com.malbi.sync.sku.model.SKUGroupChanges;
 import com.malbi.sync.sku.model.XlsRowData;
 
 public class XlsxSource {
@@ -64,6 +66,38 @@ public class XlsxSource {
 		}
 
 		return new ArrayList<Changes>(changes.values());
+	}
+
+	public List<SKUGroupChanges> getDBGroupUpdates(Map<Integer, String> dbSkuGropMap) {
+
+		Map<Integer, SKUGroupChanges> groupChanges = new HashMap<Integer, SKUGroupChanges>();
+		// SKUService service = new SKUService();
+		// List<DBSKUGroup> dbGroupsList = service.getDBSKUgroups();
+
+		this.rows.stream().forEach(t -> {
+			Integer key = t.getSkuGroupCode();
+			if (!dbSkuGropMap.containsKey(key)) {
+				// new sku group
+				int groupCode = Integer.getInteger(t.getSkuGroup());
+				SKUGroupChanges change = new SKUGroupChanges(key, new DBSKUGroup(),
+						new DBSKUGroup(groupCode, dbSkuGropMap.get(groupCode)));
+
+				groupChanges.put(key, change);
+			} else {
+				// renames sku group
+				String dbSkuGroupName = dbSkuGropMap.get(key);
+				String xlsSkuGroupName = t.getSkuGroup();
+				if (!dbSkuGroupName.equals(xlsSkuGroupName)) {
+					SKUGroupChanges change = new SKUGroupChanges(key, new DBSKUGroup(key, dbSkuGroupName),
+							new DBSKUGroup(key, xlsSkuGroupName));
+					groupChanges.put(key, change);
+				}
+			}
+
+		});
+
+		return new ArrayList<SKUGroupChanges>(groupChanges.values());
+
 	}
 
 	public List<Changes> getSkuUpdates(Map<Integer, DbRowData> dbSkuMap) {

@@ -111,24 +111,7 @@ public class DAO {
 			throws ClassNotFoundException, SQLException, NamingException {
 		PreparedStatement pStmt;
 		Connection con = ConnectionManager.getDBConnection();
-		// if (isInteger(parent)) {
-		//
-		// pStmt = con.prepareStatement("SELECT group_id" + " FROM
-		// xx_rs_sku_groups" + " WHERE group_id = ?");
-		// pStmt.setInt(1, Integer.parseInt(parent));
-		// } else {
-		// pStmt = con.prepareStatement("SELECT group_id" + " FROM
-		// xx_rs_sku_groups" + " WHERE group_name = ?");
-		// pStmt.setString(1, parent);
-		// }
-		//
-		// rs = pStmt.executeQuery();
-		// int parentId;
-		// // check if result set has data. If true add group to group list and
-		// // hierarchy.
-		// if (rs.next()) {
-		// parentId = rs.getInt(1);
-		// add to group list
+
 		pStmt = con.prepareStatement("INSERT INTO xx_rs_sku_groups" + "           (group_id" + "           ,group_name)"
 				+ "     VALUES" + "           (?, ?)");
 		pStmt.setInt(1, changes.getId());
@@ -150,13 +133,25 @@ public class DAO {
 
 	}
 
-	// public static boolean isInteger(String s) {
-	// try {
-	// Integer.parseInt(s);
-	// } catch (NumberFormatException e) {
-	// return false;
-	// }
-	// // only got here if we didn't return false
-	// return true;
-	// }
+	public static void moveSkuToAnotherGroup(Changes c) throws SQLException, ClassNotFoundException, NamingException {
+		PreparedStatement pStmt;
+		Connection con = ConnectionManager.getDBConnection();
+
+		pStmt = con.prepareStatement("UPDATE xx_rs_sku_hierarchy" + "   SET parent_id = ?" + " WHERE node_id = ?");
+		pStmt.setInt(1, Integer.parseInt(c.getAfter()));
+		pStmt.setInt(2, c.getId());
+		pStmt.executeUpdate();
+
+	}
+
+	public static void deleteSku(Changes c) throws ClassNotFoundException, SQLException, NamingException {
+		PreparedStatement pStmt;
+		Connection con = ConnectionManager.getDBConnection();
+
+		pStmt = con.prepareStatement("DELETE FROM xx_rs_sku_hierarchy" + "      WHERE node_id = ?");
+		pStmt.setInt(1, c.getId());
+		pStmt.executeUpdate();
+
+	}
+
 }

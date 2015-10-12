@@ -3,9 +3,13 @@ package com.malbi.sync.sku.model;
 // This is a class to represent DB SKU group in dialogue.
 public class DBSKUGroup {
 
+	public DBSKUGroup() {
+
+	}
+
 	// we need this id-constructor to convert from string to id in Option-menu.
 	public DBSKUGroup(int key) {
-
+		this.key = key;
 	}
 
 	public DBSKUGroup(int key, String name) {

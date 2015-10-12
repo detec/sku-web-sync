@@ -1,7 +1,6 @@
 package com.malbi.sync.sku.converter;
 
 import javax.faces.application.FacesMessage;
-import javax.faces.bean.RequestScoped;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.convert.Converter;
@@ -11,7 +10,6 @@ import javax.faces.convert.FacesConverter;
 import com.malbi.sync.sku.model.DBSKUGroup;
 
 @FacesConverter(forClass = DBSKUGroup.class, value = "DBSKUGroupConverter")
-@RequestScoped
 public class DBSKUGroupConverter implements Converter {
 
 	@Override
