@@ -37,7 +37,7 @@ public class DBSKUGroupConverter implements Converter {
 		if (modelValue instanceof DBSKUGroup) {
 			DBSKUGroup object = (DBSKUGroup) modelValue;
 			// return String.valueOf(object.getKey());
-			return Integer.toString(object.getKey());
+			return Integer.toString(object.getId());
 		} else {
 
 			// let's try to do nothing and return empty string

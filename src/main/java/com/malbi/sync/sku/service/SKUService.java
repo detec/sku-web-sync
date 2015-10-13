@@ -10,8 +10,10 @@ import javax.naming.NamingException;
 
 import com.malbi.sync.sku.dao.DAO;
 import com.malbi.sync.sku.model.Changes;
+import com.malbi.sync.sku.model.DBSKU;
 import com.malbi.sync.sku.model.DBSKUGroup;
 import com.malbi.sync.sku.model.DbRowData;
+import com.malbi.sync.sku.model.SKUGroupChanges;
 
 public class SKUService {
 
@@ -49,10 +51,17 @@ public class SKUService {
 		return dbRows;
 	}
 
-	public boolean addSkuToDB(Changes c) {
+	// changed
+	public boolean addSkuToDB(SKUGroupChanges c) {
 		boolean result = false;
+
+		// In DAO we should send plain objects, not business-layer ones.
+		DBSKU sku = new DBSKU();
+		sku.setId(c.getId()); // id of the SKU
+		sku.setParentId(c.getAfter().getId()); // id of the parent group.
+
 		try {
-			DAO.addSkuToDB(c);
+			DAO.addSkuToDB(sku);
 			result = true;
 		} catch (SQLException | ClassNotFoundException | NamingException e) {
 			this.ErrorLog = "Не удалось получить иерархию SKU из БД: \n" + e.getMessage();
@@ -86,6 +95,7 @@ public class SKUService {
 		return result;
 	}
 
+	// Andrei Duplik added.
 	public List<DBSKUGroup> getDBSKUgroups() {
 		List<DBSKUGroup> groupsList = new ArrayList<DBSKUGroup>();
 		try {
@@ -96,10 +106,17 @@ public class SKUService {
 		return groupsList;
 	}
 
-	public boolean moveSkuToAnotherGroup(Changes c) {
+	// changed
+	public boolean moveSkuToAnotherGroup(SKUGroupChanges c) {
 		boolean result = false;
+
+		// In DAO we should send plain objects, not business-layer ones.
+		DBSKU sku = new DBSKU();
+		sku.setParentId(c.getAfter().getId());
+		sku.setId(c.getId());
+
 		try {
-			DAO.moveSkuToAnotherGroup(c);
+			DAO.moveSkuToAnotherGroup(sku);
 			result = true;
 		} catch (ClassNotFoundException | SQLException | NamingException e) {
 			this.ErrorLog = "Не удалось переместить SKU в другую группу: \n" + e.getMessage();
@@ -107,10 +124,12 @@ public class SKUService {
 		return result;
 	}
 
-	public boolean deleteSku(Changes c) {
+	// changed
+	public boolean deleteSku(SKUGroupChanges c) {
 		boolean result = false;
+		DBSKU sku = new DBSKU(c.getId());
 		try {
-			DAO.deleteSku(c);
+			DAO.deleteSku(sku);
 			result = true;
 		} catch (ClassNotFoundException | SQLException | NamingException e) {
 			this.ErrorLog = "Не удалось удалить SKU: \n" + e.getMessage();

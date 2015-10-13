@@ -63,6 +63,17 @@ public class SKUGroupChanges {
 	DBSKUGroup before;
 	DBSKUGroup after;
 
+	// GUI field.
+	boolean checked;
+
+	public boolean isChecked() {
+		return checked;
+	}
+
+	public void setChecked(boolean checked) {
+		this.checked = checked;
+	}
+
 	public int getKey() {
 		return key;
 	}
@@ -85,6 +96,14 @@ public class SKUGroupChanges {
 
 	public void setAfter(DBSKUGroup after) {
 		this.after = after;
+	}
+
+	public int getId() {
+		return this.key;
+	}
+
+	public void setId(int pId) {
+		this.key = pId;
 	}
 
 }

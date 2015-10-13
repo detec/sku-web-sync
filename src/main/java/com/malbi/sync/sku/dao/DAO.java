@@ -14,6 +14,7 @@ import javax.naming.NamingException;
 
 import com.malbi.sync.sku.db.ConnectionManager;
 import com.malbi.sync.sku.model.Changes;
+import com.malbi.sync.sku.model.DBSKU;
 import com.malbi.sync.sku.model.DBSKUGroup;
 import com.malbi.sync.sku.model.DbRowData;
 
@@ -54,6 +55,7 @@ public class DAO {
 	}
 
 	public static List<DBSKUGroup> getDBSKUgroupsList() throws ClassNotFoundException, SQLException, NamingException {
+
 		Map<Integer, String> skuGropMap = getSkuGroupMap();
 		List<DBSKUGroup> DBGroupList = new ArrayList<DBSKUGroup>();
 		skuGropMap.entrySet().stream()
@@ -63,6 +65,7 @@ public class DAO {
 
 	public static Map<Integer, DbRowData> getSkuHierarchyMap()
 			throws SQLException, ClassNotFoundException, NamingException {
+
 		Map<Integer, DbRowData> dbRows = new HashMap<>();
 		ResultSet rs;
 
@@ -80,14 +83,15 @@ public class DAO {
 		return dbRows;
 	}
 
-	public static void addSkuToDB(Changes c) throws SQLException, ClassNotFoundException, NamingException {
+	// changed
+	public static void addSkuToDB(DBSKU sku) throws SQLException, ClassNotFoundException, NamingException {
 		Connection con = ConnectionManager.getDBConnection();
 		PreparedStatement stmt = con.prepareStatement("INSERT INTO xx_rs_sku_hierarchy" + "           (parent_id"
 				+ "           ,node_id" + "           ,is_group" + "           ,is_plan_group)" + "     VALUES"
 				+ "           (?, ?, ?, ?)");
 
-		stmt.setInt(1, Integer.parseInt(c.getAfter()));
-		stmt.setInt(2, c.getId());
+		stmt.setInt(1, sku.getParentId());
+		stmt.setInt(2, sku.getId());
 		stmt.setInt(3, 0);
 		stmt.setInt(4, 0);
 		stmt.executeUpdate();
@@ -133,23 +137,27 @@ public class DAO {
 
 	}
 
-	public static void moveSkuToAnotherGroup(Changes c) throws SQLException, ClassNotFoundException, NamingException {
+	// changed
+	public static void moveSkuToAnotherGroup(DBSKU sku) throws SQLException, ClassNotFoundException, NamingException {
 		PreparedStatement pStmt;
 		Connection con = ConnectionManager.getDBConnection();
 
 		pStmt = con.prepareStatement("UPDATE xx_rs_sku_hierarchy" + "   SET parent_id = ?" + " WHERE node_id = ?");
-		pStmt.setInt(1, Integer.parseInt(c.getAfter()));
-		pStmt.setInt(2, c.getId());
+		// pStmt.setInt(1, Integer.parseInt(c.getAfter()));
+		// pStmt.setInt(2, c.getId());
+		pStmt.setInt(1, sku.getParentId());
+		pStmt.setInt(2, sku.getId());
 		pStmt.executeUpdate();
 
 	}
 
-	public static void deleteSku(Changes c) throws ClassNotFoundException, SQLException, NamingException {
+	// changed, deletes SKU from hierarchy
+	public static void deleteSku(DBSKU sku) throws ClassNotFoundException, SQLException, NamingException {
 		PreparedStatement pStmt;
 		Connection con = ConnectionManager.getDBConnection();
 
 		pStmt = con.prepareStatement("DELETE FROM xx_rs_sku_hierarchy" + "      WHERE node_id = ?");
-		pStmt.setInt(1, c.getId());
+		pStmt.setInt(1, sku.getId());
 		pStmt.executeUpdate();
 
 	}

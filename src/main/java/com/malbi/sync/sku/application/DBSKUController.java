@@ -10,17 +10,14 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.RequestScoped;
 
-import com.malbi.sync.sku.model.Changes;
+import com.malbi.sync.sku.model.DBSKUGroup;
 import com.malbi.sync.sku.model.DbRowData;
+import com.malbi.sync.sku.model.SKUGroupChanges;
 import com.malbi.sync.sku.service.SKUService;
 
 @ManagedBean(name = "DBSKUController")
 @RequestScoped
 public class DBSKUController implements Serializable {
-
-	List<Changes> updateList = new ArrayList<>();
-	List<Changes> addList = new ArrayList<>();
-	List<Changes> removeList = new ArrayList<>();
 
 	public void appendLog(SKUService service, StringBuffer log) {
 		String receivedLog = service.getErrorLog();
@@ -85,25 +82,63 @@ public class DBSKUController implements Serializable {
 		Map<Integer, DbRowData> SKUHierarchy = service.getSkuHierarchyMap();
 		appendLogAtRefresh(service, log);
 
-		List<Changes> skuChanges = this.sessionManager.getxSource().getSkuUpdates(SKUHierarchy);
+		List<SKUGroupChanges> skuChanges = this.sessionManager.getxSource().getSKUUpdatesDBGroups(SKUHierarchy);
 
-		for (Changes c : skuChanges)
-
-		{
-			if (c.getBefore() == null) {
-				addList.add(c);
-			} else if (c.getAfter() == null) {
-				removeList.add(c);
+		// for (Changes c : skuChanges)
+		//
+		// {
+		// if (c.getBefore() == null) {
+		// addList.add(c);
+		// } else if (c.getAfter() == null) {
+		// removeList.add(c);
+		// } else {
+		// updateList.add(c);
+		// }
+		// }
+		skuChanges.stream().forEach(t -> {
+			DBSKUGroup comparison = new DBSKUGroup();
+			if (t.getBefore().equals(comparison)) {
+				this.addList.add(t);
+			} else if (t.getAfter().equals(comparison)) {
+				this.removeList.add(t);
 			} else {
-				updateList.add(c);
+				this.updateList.add(t);
 			}
-		}
+		});
 
 	}
 
 	@PostConstruct
 	public void init() {
 		refreshData();
+	}
+
+	List<SKUGroupChanges> updateList = new ArrayList<SKUGroupChanges>();
+	List<SKUGroupChanges> addList = new ArrayList<SKUGroupChanges>();
+	List<SKUGroupChanges> removeList = new ArrayList<SKUGroupChanges>();
+
+	public List<SKUGroupChanges> getUpdateList() {
+		return updateList;
+	}
+
+	public void setUpdateList(List<SKUGroupChanges> updateList) {
+		this.updateList = updateList;
+	}
+
+	public List<SKUGroupChanges> getAddList() {
+		return addList;
+	}
+
+	public void setAddList(List<SKUGroupChanges> addList) {
+		this.addList = addList;
+	}
+
+	public List<SKUGroupChanges> getRemoveList() {
+		return removeList;
+	}
+
+	public void setRemoveList(List<SKUGroupChanges> removeList) {
+		this.removeList = removeList;
 	}
 
 	private String ExceptionString;
@@ -125,30 +160,6 @@ public class DBSKUController implements Serializable {
 
 	public void setSessionManager(LoginBean sessionManager) {
 		this.sessionManager = sessionManager;
-	}
-
-	public List<Changes> getUpdateList() {
-		return updateList;
-	}
-
-	public void setUpdateList(List<Changes> updateList) {
-		this.updateList = updateList;
-	}
-
-	public List<Changes> getAddList() {
-		return addList;
-	}
-
-	public void setAddList(List<Changes> addList) {
-		this.addList = addList;
-	}
-
-	public List<Changes> getRemoveList() {
-		return removeList;
-	}
-
-	public void setRemoveList(List<Changes> removeList) {
-		this.removeList = removeList;
 	}
 
 	private static final long serialVersionUID = 2396746074529297511L;

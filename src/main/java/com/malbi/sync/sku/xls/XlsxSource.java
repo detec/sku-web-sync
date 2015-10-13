@@ -27,6 +27,7 @@ import com.malbi.sync.sku.model.DBSKUGroup;
 import com.malbi.sync.sku.model.DbRowData;
 import com.malbi.sync.sku.model.SKUGroupChanges;
 import com.malbi.sync.sku.model.XlsRowData;
+import com.malbi.sync.sku.service.SKUService;
 
 public class XlsxSource {
 
@@ -68,38 +69,42 @@ public class XlsxSource {
 		return new ArrayList<Changes>(changes.values());
 	}
 
-	public List<SKUGroupChanges> getDBGroupUpdates(Map<Integer, String> dbSkuGropMap) {
+	// public List<SKUGroupChanges> getDBGroupUpdates(Map<Integer, String>
+	// dbSkuGropMap) {
+	//
+	// Map<Integer, SKUGroupChanges> groupChanges = new HashMap<Integer,
+	// SKUGroupChanges>();
+	// // SKUService service = new SKUService();
+	// // List<DBSKUGroup> dbGroupsList = service.getDBSKUgroups();
+	//
+	// this.rows.stream().forEach(t -> {
+	// Integer key = t.getSkuGroupCode();
+	// if (!dbSkuGropMap.containsKey(key)) {
+	// // new sku group
+	// int groupCode = Integer.getInteger(t.getSkuGroup());
+	// SKUGroupChanges change = new SKUGroupChanges(key, new DBSKUGroup(),
+	// new DBSKUGroup(groupCode, dbSkuGropMap.get(groupCode)));
+	//
+	// groupChanges.put(key, change);
+	// } else {
+	// // renames sku group
+	// String dbSkuGroupName = dbSkuGropMap.get(key);
+	// String xlsSkuGroupName = t.getSkuGroup();
+	// if (!dbSkuGroupName.equals(xlsSkuGroupName)) {
+	// SKUGroupChanges change = new SKUGroupChanges(key, new DBSKUGroup(key,
+	// dbSkuGroupName),
+	// new DBSKUGroup(key, xlsSkuGroupName));
+	// groupChanges.put(key, change);
+	// }
+	// }
+	//
+	// });
+	//
+	// return new ArrayList<SKUGroupChanges>(groupChanges.values());
+	//
+	// }
 
-		Map<Integer, SKUGroupChanges> groupChanges = new HashMap<Integer, SKUGroupChanges>();
-		// SKUService service = new SKUService();
-		// List<DBSKUGroup> dbGroupsList = service.getDBSKUgroups();
-
-		this.rows.stream().forEach(t -> {
-			Integer key = t.getSkuGroupCode();
-			if (!dbSkuGropMap.containsKey(key)) {
-				// new sku group
-				int groupCode = Integer.getInteger(t.getSkuGroup());
-				SKUGroupChanges change = new SKUGroupChanges(key, new DBSKUGroup(),
-						new DBSKUGroup(groupCode, dbSkuGropMap.get(groupCode)));
-
-				groupChanges.put(key, change);
-			} else {
-				// renames sku group
-				String dbSkuGroupName = dbSkuGropMap.get(key);
-				String xlsSkuGroupName = t.getSkuGroup();
-				if (!dbSkuGroupName.equals(xlsSkuGroupName)) {
-					SKUGroupChanges change = new SKUGroupChanges(key, new DBSKUGroup(key, dbSkuGroupName),
-							new DBSKUGroup(key, xlsSkuGroupName));
-					groupChanges.put(key, change);
-				}
-			}
-
-		});
-
-		return new ArrayList<SKUGroupChanges>(groupChanges.values());
-
-	}
-
+	// This is the original Bondarenko's method
 	public List<Changes> getSkuUpdates(Map<Integer, DbRowData> dbSkuMap) {
 		List<Changes> changes = new ArrayList<Changes>();
 		Integer key;
@@ -128,6 +133,51 @@ public class XlsxSource {
 		}
 
 		return changes;
+	}
+
+	// this method should return not groups' codes but DBGroup objects with
+	// name. Andrei Duplik wrote after getSkuUpdates
+	public List<SKUGroupChanges> getSKUUpdatesDBGroups(Map<Integer, DbRowData> dbSkuMap) {
+		List<SKUGroupChanges> changes = new ArrayList<SKUGroupChanges>();
+
+		SKUService service = new SKUService();
+		Map<Integer, String> mapDBGroups = service.getSkuGroupMap();
+
+		this.rows.stream().forEach(t -> {
+			Integer key = t.getSkuCode();
+			if (!dbSkuMap.containsKey(key)) {
+				// new sku
+				Integer groupCode = t.getSkuGroupCode();
+				SKUGroupChanges change = new SKUGroupChanges(key, new DBSKUGroup(),
+						new DBSKUGroup(groupCode.intValue(), mapDBGroups.get(groupCode)));
+
+				changes.add(change);
+			} else {
+				// moved to new group
+				int dbParentId = dbSkuMap.get(key).getParentId();
+				int xlsParentId = t.getSkuGroupCode();
+				if (dbParentId != xlsParentId) {
+					SKUGroupChanges change = new SKUGroupChanges(key,
+							new DBSKUGroup(dbParentId, mapDBGroups.get(dbParentId)),
+							new DBSKUGroup(xlsParentId, mapDBGroups.get(xlsParentId)));
+					changes.add(change);
+				}
+				// all entries that are left in dbSkuMap -> are deleted from
+				// xlsSource
+				dbSkuMap.remove(key);
+
+			}
+		});
+
+		// deleted values from xls source
+		dbSkuMap.values().stream().forEach(t -> {
+			SKUGroupChanges change = new SKUGroupChanges(t.getNodeId(),
+					new DBSKUGroup(t.getParentId(), mapDBGroups.get(t.getParentId())), new DBSKUGroup());
+			changes.add(change);
+		});
+
+		return changes;
+
 	}
 
 	public void updateXlsSource() throws FileNotFoundException, IOException {

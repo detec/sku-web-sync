@@ -41,7 +41,7 @@ public class DBSKUGroupsController implements Serializable {
 
 		this.addDBGroupList.stream().filter(t -> t.isChecked()).forEach(t -> {
 			boolean result;
-			int parentId = t.getParent().getKey();
+			int parentId = t.getParent().getId();
 			result = service.addNewGroup(parentId, t);
 			if (!result) {
 				String receivedLog = service.getErrorLog();
