@@ -13,7 +13,7 @@
 	<h4>SKU, перемещённые в другую группу</h4>
 	<h:outputLabel value="Они были изменены в XLS-файле. Для перемещения SKU в другую группу в базе данных отметьте необходимые строки флажками.">
 	</h:outputLabel>
-	<h:form id="SKUForm" enctype="multipart/form-data" rendered="#{DBSKUController.sessionManager.loggedIn}">
+	<h:form id="SKUForm" enctype="multipart/form-data" rendered="#{loginBean.loggedIn}">
 	    <h:dataTable border="1" var = "s" value="#{DBSKUController.updateList}" id="UpdateListDataTable">
 	    	<h:column id="Selected">
 	    		<f:facet name="header" >
@@ -80,7 +80,7 @@
 	    </h:dataTable>
 	    <h:outputLabel value="Добавленных SKU нет." rendered="#{empty DBSKUController.addList}" style="font-style: italic"></h:outputLabel>		     
 	    <h4>Удалённые SKU</h4>
-	    <h:outputLabel value="Они были удалены из XLS-файла. Для удаления SKU из базу данных отметьте необходимые строки флажками.">
+	    <h:outputLabel value="Они были удалены из XLS-файла. Для удаления SKU из базы данных отметьте необходимые строки флажками.">
 		</h:outputLabel>
 	    <h:dataTable border="1" var = "s" value="#{DBSKUController.removeList}" id="RemoveListDataTable">
 	    	<h:column id="Selected">
@@ -118,14 +118,14 @@
 		action="#{DBSKUController.applyChanges}" id="ProcessNext"></h:commandButton>
 		<h:commandButton value="Перейти далее без сохранения" 
 		action="#{DBSKUController.goToXLSDownload}" id="Next"></h:commandButton>
-		<h:commandButton value="Выход" rendered="#{DBSKUController.sessionManager.loggedIn}"
+		<h:commandButton value="Выход" rendered="#{loginBean.loggedIn}"
 		action="#{loginBean.logout}" id="Logout"></h:commandButton>
 		</h:panelGrid>		 
 	</h:form>
-	<h:panelGrid columns="1"  rendered="#{not empty DBSKUController.exceptionString}">
-	<h:outputLabel value="Журнал ошибок"></h:outputLabel>
-	<h:inputTextarea value="#{DBSKUGroupsController.exceptionString}" 
-    		readonly="true" cols="130" rows="40"/>
-	</h:panelGrid>
+<!-- 	<h:panelGrid columns="1"  rendered="#{not empty DBSKUController.exceptionString}"> -->
+<!-- 	<h:outputLabel value="Журнал ошибок"></h:outputLabel> -->
+<!-- 	<h:inputTextarea value="#{DBSKUGroupsController.exceptionString}"  -->
+<!--     		readonly="true" cols="130" rows="40"/> -->
+<!-- 	</h:panelGrid> -->
 	</h:body>
 </html>

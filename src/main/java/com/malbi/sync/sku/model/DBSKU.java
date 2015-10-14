@@ -8,18 +8,47 @@ public class DBSKU extends AbstractDBEntity {
 	}
 
 	public DBSKU(int pKey) {
-		super.key = pKey;
+		key = pKey;
 	}
 
 	public DBSKU(int pKey, String pName) {
-		super.key = pKey;
-		super.name = pName;
+		key = pKey;
+		name = pName;
 	}
 
 	public DBSKU(int pKey, String pName, int pParentId) {
-		super.key = pKey;
-		super.name = pName;
-		super.parentId = pParentId;
+		key = pKey;
+		name = pName;
+		parentId = pParentId;
 	}
 
+	@Override
+	public boolean equals(Object obj) {
+
+		if (this == obj) {
+			return true;
+		}
+		if (obj == null) {
+			return false;
+		}
+		if (getClass() != obj.getClass()) {
+			return false;
+		}
+
+		DBSKU other = (DBSKU) obj;
+		if (key != other.key) {
+			return false;
+		}
+
+		return true;
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + key;
+		return result;
+
+	}
 }

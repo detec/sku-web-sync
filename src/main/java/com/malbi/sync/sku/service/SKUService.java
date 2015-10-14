@@ -95,15 +95,21 @@ public class SKUService {
 		return result;
 	}
 
-	// Andrei Duplik added.
+	// Andrei Duplik added. Returns SKU group with id and name
 	public List<DBSKUGroup> getDBSKUgroups() {
-		List<DBSKUGroup> groupsList = new ArrayList<DBSKUGroup>();
+		List<DBSKUGroup> DBGroupList = new ArrayList<DBSKUGroup>();
 		try {
-			groupsList = DAO.getDBSKUgroupsList();
+			// groupsList = DAO.getDBSKUgroupsList();
+
+			Map<Integer, String> skuGropMap = DAO.getSkuGroupMap();
+			// List<DBSKUGroup> DBGroupList = new ArrayList<DBSKUGroup>();
+			skuGropMap.entrySet().stream()
+					.forEach(t -> DBGroupList.add(new DBSKUGroup(t.getKey().intValue(), t.getValue())));
+
 		} catch (ClassNotFoundException | SQLException | NamingException e) {
 			this.ErrorLog = "Не удалось получить список групп SKU из БД: \n" + e.getMessage();
 		}
-		return groupsList;
+		return DBGroupList;
 	}
 
 	// changed
@@ -136,6 +142,15 @@ public class SKUService {
 		}
 
 		return result;
+	}
+
+	public DBSKUGroup getDBSKUGroupById(int pId) {
+		try {
+			return DAO.getDBSKUGroupById(pId);
+		} catch (ClassNotFoundException | SQLException | NamingException e) {
+			this.ErrorLog = "Не удалось запросить в БД группу SKU: \n" + e.getMessage();
+		}
+		return new DBSKUGroup();
 	}
 
 	private String ErrorLog = "";

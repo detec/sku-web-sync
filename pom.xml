@@ -10,9 +10,9 @@
   <properties>
   	<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   	<mojarra-version>2.2.12</mojarra-version>
-  	<webflow-version>2.4.2.RELEASE</webflow-version>
-  	<spring-framework-version>4.1.6.RELEASE</spring-framework-version>
-  	<springsecurity-version>4.0.2.RELEASE</springsecurity-version>
+<!--   	<webflow-version>2.4.2.RELEASE</webflow-version> -->
+<!--   	<spring-framework-version>4.1.6.RELEASE</spring-framework-version> -->
+<!--   	<springsecurity-version>4.0.2.RELEASE</springsecurity-version> -->
   </properties>
   
 <repositories>
@@ -202,19 +202,20 @@
         		<warName>${rp.build.warname}</warName>
 	        </configuration>
     	</plugin>
-		<plugin>
-        	<groupId>org.apache.tomcat.maven</groupId>
-        	<artifactId>tomcat7-maven-plugin</artifactId>
-        	<version>2.2</version>
-        	<configuration>
-        		<url>http://localhost:8080/manager/text</url>
-        		<server>TomcatServer</server>
-        		<username>admin</username>
-        		<password>admin</password>
-        		<warFile>${project.build.directory}/${rp.build.warname}.war</warFile>
-        		<update>true</update>
-        	</configuration>
-      </plugin>
+    	<!-- We will use Glassfish for hosting this app -->
+<!-- 		<plugin> -->
+<!--         	<groupId>org.apache.tomcat.maven</groupId> -->
+<!--         	<artifactId>tomcat7-maven-plugin</artifactId> -->
+<!--         	<version>2.2</version> -->
+<!--         	<configuration> -->
+<!--         		<url>http://localhost:8080/manager/text</url> -->
+<!--         		<server>TomcatServer</server> -->
+<!--         		<username>admin</username> -->
+<!--         		<password>admin</password> -->
+<!--         		<warFile>${project.build.directory}/${rp.build.warname}.war</warFile> -->
+<!--         		<update>true</update> -->
+<!--         	</configuration> -->
+<!--       	</plugin> -->
       
  	</plugins>   
   </build>
@@ -222,14 +223,12 @@
  	<profile>
         <id>test</id> 
         <properties>
-            <db.jdbcUrl>jdbc:oracle:thin:@//oradb02.malbi.dp.ua:1521/WORK</db.jdbcUrl>
             <rp.build.warname>sku-web-sync-test</rp.build.warname>
         </properties>
     </profile>
     <profile>
         <id>prod</id>
         <properties>
-            <db.jdbcUrl>jdbc:oracle:thin:@//oradb01.malbi.dp.ua:1521/PROD</db.jdbcUrl>
             <rp.build.warname>sku-web-sync</rp.build.warname>
         </properties>
     </profile>

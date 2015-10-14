@@ -28,7 +28,7 @@ public class DBSKUGroupsController implements Serializable {
 	public String applyChanges() {
 		String returnAddress = "";
 
-		SKUService service = new SKUService();
+		// SKUService service = new SKUService();
 		StringBuffer log = new StringBuffer();
 		// rename checked groups
 		this.updateDBGroupList.stream().filter(t -> t.isChecked()).forEach(t -> {
@@ -36,7 +36,7 @@ public class DBSKUGroupsController implements Serializable {
 			result = service.renameGroup(t);
 			if (!result) {
 				String receivedLog = service.getErrorLog();
-				// append carrige return if error message is not empty.
+				// append carriage return if error message is not empty.
 				log.append(receivedLog + ((receivedLog.length() == 0) ? "" : "\n"));
 			}
 		});
@@ -77,7 +77,7 @@ public class DBSKUGroupsController implements Serializable {
 	}
 
 	public void refreshData() {
-		SKUService service = new SKUService();
+		// SKUService service = new SKUService();
 		Map<Integer, String> skuGroupMap = service.getSkuGroupMap();
 		StringBuffer log = new StringBuffer();
 		appendLogAtRefresh(service, log);
@@ -155,5 +155,8 @@ public class DBSKUGroupsController implements Serializable {
 	}
 
 	private static final long serialVersionUID = 3971794466485136396L;
+
+	@Inject
+	SKUService service;
 
 }

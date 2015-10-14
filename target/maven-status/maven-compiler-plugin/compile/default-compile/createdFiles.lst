@@ -8,10 +8,10 @@ com\malbi\sync\sku\model\DBSKUGroup.class
 com\malbi\sync\sku\application\DBSKUGroupsController.class
 com\malbi\sync\sku\model\DialogueChanges.class
 com\malbi\sync\sku\model\DBSKU.class
+com\malbi\sync\sku\application\XLSUploadController.class
 com\malbi\sync\sku\model\XlsRowData.class
 com\malbi\sync\sku\db\ConnectionManager.class
 com\malbi\sync\sku\xls\XlsxSource.class
-com\malbi\sync\sku\application\SKUMainController.class
 com\malbi\sync\sku\model\SKUGroupChanges.class
 com\malbi\sync\sku\service\SKUService.class
 com\malbi\sync\sku\application\XLSDownloadController.class

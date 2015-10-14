@@ -34,7 +34,7 @@ public class DBSKUController implements Serializable {
 	public String applyChanges() {
 		String returnAddress = "";
 
-		SKUService service = new SKUService();
+		// SKUService service = new SKUService();
 		StringBuffer log = new StringBuffer();
 
 		// move checked SKU
@@ -85,7 +85,7 @@ public class DBSKUController implements Serializable {
 
 	public void refreshData() {
 		StringBuffer log = new StringBuffer();
-		SKUService service = new SKUService();
+		// SKUService service = new SKUService();
 		Map<Integer, DbRowData> SKUHierarchy = service.getSkuHierarchyMap();
 		appendLogAtRefresh(service, log);
 
@@ -180,5 +180,8 @@ public class DBSKUController implements Serializable {
 	}
 
 	private static final long serialVersionUID = 2396746074529297511L;
+
+	@Inject
+	SKUService service;
 
 }

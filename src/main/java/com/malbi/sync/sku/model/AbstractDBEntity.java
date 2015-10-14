@@ -70,7 +70,7 @@ public abstract class AbstractDBEntity {
 
 	@Override
 	public String toString() {
-		return "[name=" + name + "]";
+		return name;
 	}
 
 }

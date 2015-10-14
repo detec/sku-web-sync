@@ -13,7 +13,7 @@
 	<h4>Переименованные SKU</h4>
 	<h:outputLabel value="Они были переименованы в базе данных. Для переименования SKU в файле отметьте необходимые строки флажками.">
 	</h:outputLabel>
-	<h:form id="buttons" enctype="multipart/form-data" rendered="#{XLSProcessorController.sessionManager.loggedIn}">
+	<h:form id="XLSProcessorForm" enctype="multipart/form-data" rendered="#{loginBean.loggedIn}">
 	    <h:dataTable border="1" var = "s" value="#{XLSProcessorController.skuRename}">
 	    	<h:column id="Selected">
 	    		<f:facet name="header" >
@@ -51,7 +51,7 @@
 	    <h:outputLabel value="Их нет в базе данных. Для удаления соответствующих строк в файле отметьте их флажками.">
 	    </h:outputLabel>
 	    
-	    <h:dataTable border="1" var = "s" value="#{XLSProcessorController.doesNotExist}">
+	    <h:dataTable border="1" var = "s" value="#{XLSProcessorController.doesNotExist}" rendered="#{loginBean.loggedIn}">
 	    	<h:column id="Selected">
 	    		<f:facet name="header" >
 				<h:outputText value="Выбор"></h:outputText>
@@ -87,16 +87,16 @@
 		action="#{XLSProcessorController.commitXLSChanges}"></h:commandButton>
 		<h:commandButton value="Перейти далее без сохранения" 
 		action="#{XLSProcessorController.goToDBProcessor}"></h:commandButton>
-		<h:commandButton value="Выход" rendered="#{XLSProcessorController.sessionManager.loggedIn}"
+		<h:commandButton value="Выход" rendered="#{loginBean.loggedIn}"
 		action="#{loginBean.logout}"></h:commandButton>
 		</h:panelGrid>
 		</h:form>
-		<br></br>
-		<h:panelGrid columns="1"  rendered="#{not empty XLSProcessorController.exceptionString}">
-	    <h:outputLabel value="Журнал ошибок"></h:outputLabel>
-	    <h:inputTextarea value="#{XLSProcessorController.exceptionString}" 
-      		readonly="true" cols="130" rows="40"/>
-		</h:panelGrid>
+<!-- 		<br></br> -->
+<!-- 		<h:panelGrid columns="1"  rendered="#{not empty XLSProcessorController.exceptionString}"> -->
+<!-- 	    <h:outputLabel value="Журнал ошибок"></h:outputLabel> -->
+<!-- 	    <h:inputTextarea value="#{XLSProcessorController.exceptionString}"  -->
+<!--       		readonly="true" cols="130" rows="40"/> -->
+<!-- 		</h:panelGrid> -->
 </h:body>
 
 </html>

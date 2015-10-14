@@ -80,7 +80,7 @@
 	    </h:dataTable>
 	    <h:outputLabel value="Добавленных SKU нет." rendered="#{empty DBSKUController.addList}" style="font-style: italic"></h:outputLabel>		     
 	    <h4>Удалённые SKU</h4>
-	    <h:outputLabel value="Они были удалены из XLS-файла. Для удаления SKU из базу данных отметьте необходимые строки флажками.">
+	    <h:outputLabel value="Они были удалены из XLS-файла. Для удаления SKU из базы данных отметьте необходимые строки флажками.">
 		</h:outputLabel>
 	    <h:dataTable border="1" var = "s" value="#{DBSKUController.removeList}" id="RemoveListDataTable">
 	    	<h:column id="Selected">

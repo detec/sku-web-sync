@@ -5,9 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import javax.naming.NamingException;
@@ -54,14 +52,16 @@ public class DAO {
 		return skuGropMap;
 	}
 
-	public static List<DBSKUGroup> getDBSKUgroupsList() throws ClassNotFoundException, SQLException, NamingException {
+	// public static List<DBSKUGroup> getDBSKUgroupsList() throws
+	// ClassNotFoundException, SQLException, NamingException {
 
-		Map<Integer, String> skuGropMap = getSkuGroupMap();
-		List<DBSKUGroup> DBGroupList = new ArrayList<DBSKUGroup>();
-		skuGropMap.entrySet().stream()
-				.forEach(t -> DBGroupList.add(new DBSKUGroup(t.getKey().intValue(), t.getValue())));
-		return DBGroupList;
-	}
+	// Map<Integer, String> skuGropMap = getSkuGroupMap();
+	// List<DBSKUGroup> DBGroupList = new ArrayList<DBSKUGroup>();
+	// skuGropMap.entrySet().stream()
+	// .forEach(t -> DBGroupList.add(new DBSKUGroup(t.getKey().intValue(),
+	// t.getValue())));
+	// return DBGroupList;
+	// }
 
 	public static Map<Integer, DbRowData> getSkuHierarchyMap()
 			throws SQLException, ClassNotFoundException, NamingException {
@@ -81,6 +81,30 @@ public class DAO {
 		con.close();
 
 		return dbRows;
+	}
+
+	public static DBSKUGroup getDBSKUGroupById(int pId) throws ClassNotFoundException, SQLException, NamingException {
+		DBSKUGroup skuGroup = new DBSKUGroup();
+
+		Connection con = ConnectionManager.getDBConnection();
+		ResultSet rs;
+		PreparedStatement stmt = con.prepareStatement(
+				"select group_id" + " ,group_name" + " from xx_rs_sku_groups" + " where group_id = ?");
+
+		stmt.setInt(1, pId);
+		// rs = stmt.executeQuery("select group_id"
+		// + " ,group_name"
+		// + " from xx_rs_sku_groups"
+		// + "where group_id = ?");
+
+		rs = stmt.executeQuery();
+		while (rs.next()) {
+			// skuGropMap.put(rs.getInt(1), rs.getString(2));
+			skuGroup = new DBSKUGroup(rs.getInt(1), rs.getString(2));
+		}
+
+		con.close();
+		return skuGroup;
 	}
 
 	// changed

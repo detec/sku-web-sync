@@ -49,7 +49,7 @@ public class LoginBean implements Serializable {
 			this.xSource = new XlsxSource();
 
 			loggedIn = true;
-			return "/xlsupload.xhtml";
+			return "/xlsupload.xhtml?faces-redirect=true";
 
 		}
 
@@ -65,7 +65,7 @@ public class LoginBean implements Serializable {
 		this.loggedIn = false;
 		this.password = "";
 		this.xSource = new XlsxSource();
-		return "login";
+		return "/login.xhtml?faces-redirect=true";
 	}
 
 	@NotEmpty(message = "Введите имя пользователя!")

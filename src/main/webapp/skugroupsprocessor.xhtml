@@ -85,7 +85,7 @@
 				<f:facet name="header" >
 					<h:outputText value="Родитель"></h:outputText>
 				</f:facet>
-				<h:selectOneMenu value="#{s.parent}" converter="DBSKUGroupConverter" id="ParentSelect">
+				<h:selectOneMenu value="#{s.parent}" converter="#{DBSKUGroupConverter}" id="ParentSelect">
 				 <f:selectItem itemLabel="" itemValue="#{null}" noSelectionOption="true" itemDisabled="false" id="NotSelectParent"/>
 				 <f:selectItems value="#{DBSKUGroupsController.selectGroupsList}"  var="group" itemValue="#{group}" itemLabel="#{group.name}" id="SelectList"/>
 				</h:selectOneMenu>			

@@ -93,7 +93,7 @@ public class XLSProcessorController implements Serializable {
 		StringBuffer log = new StringBuffer();
 
 		List<XlsRowData> rows = this.sessionManager.getxSource().getRows();
-		SKUService service = new SKUService();
+		// SKUService service = new SKUService();
 		this.skuMap = service.getSkuMap();
 		// check if there are errors.
 		// this.ExceptionString = service.getErrorLog();
@@ -133,8 +133,6 @@ public class XLSProcessorController implements Serializable {
 	List<Changes> skuRename = new ArrayList<Changes>();
 
 	public List<Changes> getSkuRename() {
-		// return skuRename;
-		// refreshData();
 		return this.skuRename;
 	}
 
@@ -194,4 +192,7 @@ public class XLSProcessorController implements Serializable {
 	}
 
 	private static final long serialVersionUID = -4146325243351405003L;
+
+	@Inject
+	SKUService service;
 }
