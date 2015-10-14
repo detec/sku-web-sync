@@ -15,7 +15,6 @@ import org.hibernate.validator.constraints.NotEmpty;
 import com.malbi.sync.sku.xls.XlsxSource;
 
 @Named("loginBean")
-// @Dependent
 @SessionScoped
 public class LoginBean implements Serializable {
 
@@ -50,12 +49,12 @@ public class LoginBean implements Serializable {
 			this.xSource = new XlsxSource();
 
 			loggedIn = true;
-			return "/main.xhtml";
+			return "/xlsupload.xhtml";
 
 		}
 
 		// Set login ERROR
-		FacesMessage msg = new FacesMessage(errormessage);
+		FacesMessage msg = new FacesMessage("Ошибка аутентификации", errormessage);
 		msg.setSeverity(FacesMessage.SEVERITY_ERROR);
 		FacesContext.getCurrentInstance().addMessage(null, msg);
 		return "";

@@ -138,7 +138,7 @@ public class SKUService {
 		return result;
 	}
 
-	private String ErrorLog;
+	private String ErrorLog = "";
 
 	public String getErrorLog() {
 		return ErrorLog;

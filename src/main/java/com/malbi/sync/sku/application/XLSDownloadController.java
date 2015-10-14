@@ -6,8 +6,8 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.Serializable;
 
+import javax.enterprise.context.RequestScoped;
 import javax.faces.application.FacesMessage;
-import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -46,7 +46,7 @@ public class XLSDownloadController implements Serializable {
 			responseOutputStream.close();
 
 		} catch (IOException e) {
-			FacesMessage msg = new FacesMessage("Ошибка скачивания изменённого xls-файла: \n" + e.getMessage());
+			FacesMessage msg = new FacesMessage("Ошибка скачивания изменённого xls-файла", e.getMessage());
 			msg.setSeverity(FacesMessage.SEVERITY_ERROR);
 			FacesContext.getCurrentInstance().addMessage(null, msg);
 		}

@@ -101,11 +101,11 @@
 		action="#{loginBean.logout}" id="Logout"></h:commandButton>
 		</h:panelGrid>	    	
 	</h:form>
-	<h:panelGrid columns="1"  rendered="#{not empty DBSKUGroupsController.exceptionString}">
-	<h:outputLabel value="Журнал ошибок"></h:outputLabel>
-	<h:inputTextarea value="#{DBSKUGroupsController.exceptionString}" 
-    		readonly="true" cols="130" rows="40"/>
-	</h:panelGrid>
+<!-- 	<h:panelGrid columns="1"  rendered="#{not empty DBSKUGroupsController.exceptionString}"> -->
+<!-- 	<h:outputLabel value="Журнал ошибок"></h:outputLabel> -->
+<!-- 	<h:inputTextarea value="#{DBSKUGroupsController.exceptionString}"  -->
+<!--     		readonly="true" cols="130" rows="40"/> -->
+<!-- 	</h:panelGrid> -->
 </h:body>
 	
 </html>

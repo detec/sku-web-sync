@@ -6,7 +6,9 @@ import java.util.List;
 import java.util.Map;
 
 import javax.annotation.PostConstruct;
-import javax.faces.bean.RequestScoped;
+import javax.enterprise.context.RequestScoped;
+import javax.faces.application.FacesMessage;
+import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
 
@@ -63,7 +65,12 @@ public class DBSKUController implements Serializable {
 		});
 		// after all operations.
 		if (!log.toString().isEmpty()) {
+
 			this.ExceptionString = log.toString();
+			FacesMessage msg = new FacesMessage("Ошибки при операциях с базы данных", this.ExceptionString);
+			msg.setSeverity(FacesMessage.SEVERITY_ERROR);
+			FacesContext.getCurrentInstance().addMessage(null, msg);
+
 		} else {
 			returnAddress = "/xlsdownload.xhtml?faces-redirect=true";
 		}
@@ -105,6 +112,16 @@ public class DBSKUController implements Serializable {
 				this.updateList.add(t);
 			}
 		});
+
+		// after all operations.
+		if (!log.toString().isEmpty()) {
+
+			this.ExceptionString = log.toString();
+			FacesMessage msg = new FacesMessage("Ошибки при операциях с базы данных", this.ExceptionString);
+			msg.setSeverity(FacesMessage.SEVERITY_ERROR);
+			FacesContext.getCurrentInstance().addMessage(null, msg);
+
+		}
 
 	}
 

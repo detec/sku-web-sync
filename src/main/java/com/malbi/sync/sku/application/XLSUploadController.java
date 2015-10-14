@@ -15,13 +15,21 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import javax.servlet.http.Part;
 
+import com.malbi.sync.sku.service.SKUService;
 import com.malbi.sync.sku.xls.XlsxSource;
 
-@Named(value = "skuMain")
+@Named("XLSUpload")
 @ViewScoped
-public class SKUMainController implements Serializable {
+public class XLSUploadController implements Serializable {
+
+	public void appendLog(SKUService service, StringBuffer log) {
+		String receivedLog = service.getErrorLog();
+		// append carrige return if error message is not empty.
+		log.append(receivedLog + ((receivedLog.length() == 0) ? "" : "\n"));
+	}
 
 	public void upload() {
+		StringBuffer log = new StringBuffer();
 
 		InputStream inputStream = null;
 		OutputStream outputStream = null;
@@ -30,7 +38,8 @@ public class SKUMainController implements Serializable {
 			this.outputFile = File.createTempFile("SKU_BASE_1C", ".xls");
 
 		} catch (IOException e) {
-			this.ExceptionString = e.getMessage();
+			// this.ExceptionString = e.getMessage();
+			log.append(e.getMessage());
 			this.fileUploaded = false;
 			return;
 		}
@@ -40,7 +49,8 @@ public class SKUMainController implements Serializable {
 			inputStream = file.getInputStream();
 		} catch (IOException e) {
 
-			this.ExceptionString = e.getMessage();
+			// this.ExceptionString = e.getMessage();
+			log.append(e.getMessage());
 			this.fileUploaded = false;
 			return;
 		}
@@ -49,7 +59,8 @@ public class SKUMainController implements Serializable {
 		try {
 			outputStream = new FileOutputStream(outputFile);
 		} catch (FileNotFoundException e) {
-			this.ExceptionString = e.getMessage();
+			// this.ExceptionString = e.getMessage();
+			log.append(e.getMessage());
 			this.fileUploaded = false;
 			return;
 		}
@@ -61,13 +72,15 @@ public class SKUMainController implements Serializable {
 				outputStream.write(buffer, 0, bytesRead);
 			}
 		} catch (IOException e) {
-			this.ExceptionString = e.getMessage();
+			// this.ExceptionString = e.getMessage();
+			log.append(e.getMessage());
 
 			if (outputStream != null) {
 				try {
 					outputStream.close();
 				} catch (IOException e1) {
-					this.ExceptionString = e1.getMessage();
+					// this.ExceptionString = e1.getMessage();
+					log.append(e1.getMessage());
 				}
 			}
 			this.fileUploaded = false;
@@ -79,7 +92,8 @@ public class SKUMainController implements Serializable {
 			try {
 				outputStream.close();
 			} catch (IOException e) {
-				this.ExceptionString = e.getMessage();
+				// this.ExceptionString = e.getMessage();
+				log.append(e.getMessage());
 				this.fileUploaded = false;
 				return;
 			}
@@ -88,32 +102,33 @@ public class SKUMainController implements Serializable {
 			try {
 				inputStream.close();
 			} catch (IOException e) {
-				this.ExceptionString = e.getMessage();
+				// this.ExceptionString = e.getMessage();
+				log.append(e.getMessage());
 				this.fileUploaded = false;
 				return;
 			}
 		}
 
 		this.fileUploaded = true;
+
+		if (!log.toString().isEmpty()) {
+			this.ExceptionString = log.toString();
+			FacesMessage msg = new FacesMessage("Ошибки при загрузке файла на сервер", this.ExceptionString);
+			msg.setSeverity(FacesMessage.SEVERITY_ERROR);
+			FacesContext.getCurrentInstance().addMessage(null, msg);
+		}
 		return;
 
 	}
 
 	// This this the main method
 	public void checkXLSFile() {
-		// Boolean uploadResult = upload();
-		// if (!uploadResult) {
-		// FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_FATAL,
-		// "Закачка файла SKU_BASE_1C.xls",
-		// "Ошибка закачки, подробности смотрите в журнале ниже.!");
-		// FacesContext.getCurrentInstance().addMessage("messages", message);
-		// return;
-		// }
+		StringBuffer log = new StringBuffer();
 
 		this.upload();
 		if (!this.fileUploaded) {
 			FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_FATAL, "Закачка файла SKU_BASE_1C.xls",
-					"Ошибка закачки, подробности смотрите в журнале ниже.!");
+					"Ошибка закачки!");
 			FacesContext.getCurrentInstance().addMessage("messages", message);
 			return;
 		}
@@ -125,7 +140,11 @@ public class SKUMainController implements Serializable {
 		try {
 			xSource.initData();
 		} catch (IOException e) {
-			this.ExceptionString = e.getMessage();
+			// this.ExceptionString = e.getMessage();
+			log.append(e.getMessage());
+			FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_FATAL, "Закачка файла SKU_BASE_1C.xls",
+					log.toString());
+			FacesContext.getCurrentInstance().addMessage("messages", message);
 			return;
 		}
 

@@ -9,7 +9,9 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import javax.annotation.PostConstruct;
-import javax.faces.view.ViewScoped;
+import javax.enterprise.context.RequestScoped;
+import javax.faces.application.FacesMessage;
+import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
 
@@ -18,18 +20,8 @@ import com.malbi.sync.sku.model.XlsRowData;
 import com.malbi.sync.sku.service.SKUService;
 
 @Named(value = "XLSProcessorController")
-@ViewScoped
+@RequestScoped
 public class XLSProcessorController implements Serializable {
-
-	// public XLSProcessorController() {
-	// refreshData();
-	//
-	// }
-
-	/**
-	 *
-	 */
-	private static final long serialVersionUID = -4146325243351405003L;
 
 	// stub method to create instance of class.
 	public void processAgainstDB() {
@@ -38,6 +30,7 @@ public class XLSProcessorController implements Serializable {
 	}
 
 	public String commitXLSChanges() {
+
 		// first we rename in file
 		renameInXLS();
 
@@ -47,21 +40,22 @@ public class XLSProcessorController implements Serializable {
 		String returnAddress = "";
 		try {
 			this.sessionManager.getxSource().updateXlsSource();
-			returnAddress = "/dbprocessor.xhtml?faces-redirect=true";
+			returnAddress = "/skugroupsprocessor.xhtml?faces-redirect=true";
 		} catch (IOException e) {
-			this.ExceptionString = e.getMessage();
+			FacesMessage msg = new FacesMessage("Ошибки при изменении XLS-файла", e.getMessage());
+			msg.setSeverity(FacesMessage.SEVERITY_ERROR);
+			FacesContext.getCurrentInstance().addMessage(null, msg);
+
+			// this.ExceptionString = e.getMessage();
 		}
 		return returnAddress;
 	}
 
 	public String goToDBProcessor() {
-		return "/dbprocessor.xhtml?faces-redirect=true";
+		return "/skugroupsprocessor.xhtml?faces-redirect=true";
 	}
 
 	public void removeXLSRows() {
-		// for (Changes ch : doesNotExists) {
-		// this.rows.remove(getArrayIdOfXlsRowDataBySkuCode(ch.getId()));
-		// }
 
 		skuRename.stream().filter(t -> t.isChecked()).forEach(t -> {
 			int key = t.getId();
@@ -79,9 +73,6 @@ public class XLSProcessorController implements Serializable {
 	}
 
 	public void renameInXLS() {
-		// for (Changes ch : skuRename) {
-		// this.rows.get(getArrayIdOfXlsRowDataBySkuCode(ch.getId())).setSkuName(ch.getAfter());
-		// }
 
 		skuRename.stream().filter(t -> t.isChecked()).forEach(t -> {
 			String SKUName = t.getAfter();
@@ -99,11 +90,14 @@ public class XLSProcessorController implements Serializable {
 	}
 
 	public void refreshData() {
+		StringBuffer log = new StringBuffer();
+
 		List<XlsRowData> rows = this.sessionManager.getxSource().getRows();
 		SKUService service = new SKUService();
 		this.skuMap = service.getSkuMap();
 		// check if there are errors.
-		this.ExceptionString = service.getErrorLog();
+		// this.ExceptionString = service.getErrorLog();
+		appendLog(service, log);
 
 		// Let's not fill second table if database connection failed.
 		if (this.skuMap.size() == 0) {
@@ -120,7 +114,20 @@ public class XLSProcessorController implements Serializable {
 				skuRename.add(new Changes(skuCode, xlsSKUName, dbSkuName));
 			}
 		}
-		// refreshIsCommitPrepared();
+
+		if (!log.toString().isEmpty()) {
+			this.ExceptionString = log.toString();
+			FacesMessage msg = new FacesMessage("Ошибка работы с базой", this.ExceptionString);
+			msg.setSeverity(FacesMessage.SEVERITY_ERROR);
+			FacesContext.getCurrentInstance().addMessage(null, msg);
+		}
+
+	}
+
+	public void appendLog(SKUService service, StringBuffer log) {
+		String receivedLog = service.getErrorLog();
+		// append carrige return if error message is not empty.
+		log.append(receivedLog + ((receivedLog.length() == 0) ? "" : "\n"));
 	}
 
 	List<Changes> skuRename = new ArrayList<Changes>();
@@ -186,4 +193,5 @@ public class XLSProcessorController implements Serializable {
 		this.isCommitPrepared = isCommitPrepared;
 	}
 
+	private static final long serialVersionUID = -4146325243351405003L;
 }

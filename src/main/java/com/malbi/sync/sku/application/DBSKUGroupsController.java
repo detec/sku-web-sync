@@ -6,7 +6,9 @@ import java.util.List;
 import java.util.Map;
 
 import javax.annotation.PostConstruct;
-import javax.faces.bean.RequestScoped;
+import javax.enterprise.context.RequestScoped;
+import javax.faces.application.FacesMessage;
+import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
 
@@ -53,6 +55,10 @@ public class DBSKUGroupsController implements Serializable {
 		// after all operations.
 		if (!log.toString().isEmpty()) {
 			this.ExceptionString = log.toString();
+			FacesMessage msg = new FacesMessage("Ошибка работы с базой", this.ExceptionString);
+			msg.setSeverity(FacesMessage.SEVERITY_ERROR);
+			FacesContext.getCurrentInstance().addMessage(null, msg);
+
 		} else {
 			returnAddress = "/skuprocessor.xhtml?faces-redirect=true";
 		}
@@ -88,6 +94,13 @@ public class DBSKUGroupsController implements Serializable {
 		this.selectGroupsList.addAll(service.getDBSKUgroups());
 		// catch error messages
 		appendLogAtRefresh(service, log);
+
+		if (!log.toString().isEmpty()) {
+			this.ExceptionString = log.toString();
+			FacesMessage msg = new FacesMessage("Ошибка работы с базой", this.ExceptionString);
+			msg.setSeverity(FacesMessage.SEVERITY_ERROR);
+			FacesContext.getCurrentInstance().addMessage(null, msg);
+		}
 	}
 
 	private List<DBSKUGroup> selectGroupsList = new ArrayList<DBSKUGroup>();
