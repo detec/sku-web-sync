@@ -5,16 +5,17 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import javax.enterprise.context.SessionScoped;
 import javax.faces.application.FacesMessage;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
+import javax.inject.Named;
 
 import org.hibernate.validator.constraints.NotEmpty;
 
 import com.malbi.sync.sku.xls.XlsxSource;
 
-@ManagedBean(name = "loginBean")
+@Named("loginBean")
+// @Dependent
 @SessionScoped
 public class LoginBean implements Serializable {
 
@@ -27,27 +28,38 @@ public class LoginBean implements Serializable {
 
 	public String doLogin() {
 
+		String errormessage = "";
 		String key = this.username + this.password;
 
-		if (!userList.contains(key)) {
+		if (this.username == null && this.password == null) {
+			errormessage = "Имя пользователя и пароль не переданы!";
+		}
 
-			// Set login ERROR
-			FacesMessage msg = new FacesMessage("Имя пользователя и/или пароль неверны!");
-			msg.setSeverity(FacesMessage.SEVERITY_ERROR);
-			FacesContext.getCurrentInstance().addMessage(null, msg);
+		else if (!userList.contains(key)) {
 
-			// we don't need messages about duplicates.
-			this.xSource = new XlsxSource();
+			errormessage = "Имя пользователя и/или пароль неверны!";
+			loggedIn = false;
 			// To to login page
 			// return "/login.xhtml";
-			return "/login.xhtml?faces-redirect=true";
+			// return "/login.xhtml?faces-redirect=true";
+
 		}
 
 		else {
+			// we don't need messages about duplicates.
+			this.xSource = new XlsxSource();
+
 			loggedIn = true;
 			return "/main.xhtml";
 
 		}
+
+		// Set login ERROR
+		FacesMessage msg = new FacesMessage(errormessage);
+		msg.setSeverity(FacesMessage.SEVERITY_ERROR);
+		FacesContext.getCurrentInstance().addMessage(null, msg);
+		return "";
+
 	}
 
 	public String logout() {

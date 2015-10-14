@@ -1,0 +1,36 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+
+<h:body>	
+<h3>Вход в приложение синхронизация SKU</h3>	
+	    <h:form id="form" enctype="multipart/form-data" >
+	   
+            <h:panelGrid columns="2">
+                <h:outputText value="*Имя пользователя"></h:outputText>
+                <h:inputText id="username" value="#{loginBean.username}">
+                 <h:message for="username" errorClass="err" warnClass="warn" infoClass="info" showDetail="false"></h:message>
+                </h:inputText>
+                
+                <h:outputText value="*Пароль"></h:outputText>
+                <h:inputSecret id="password" value="#{loginBean.password}">
+                 <h:message for="password" errorClass="err" warnClass="warn" infoClass="info" showDetail="false"></h:message>
+                </h:inputSecret>                
+                
+            </h:panelGrid>
+            <h:commandButton value="Вход" action="#{loginBean.doLogin}">
+  
+            </h:commandButton>
+			
+		</h:form>
+<h:messages id="messages" errorClass="err" warnClass="warn" infoClass="info" style="color: #FF8080" showDetail="true" showSummary="true" layout="table"/>
+
+</h:body>
+
+
+</html>

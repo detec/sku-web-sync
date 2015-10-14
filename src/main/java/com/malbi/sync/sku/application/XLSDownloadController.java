@@ -7,13 +7,13 @@ import java.io.OutputStream;
 import java.io.Serializable;
 
 import javax.faces.application.FacesMessage;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
+import javax.inject.Inject;
+import javax.inject.Named;
 import javax.servlet.http.HttpServletResponse;
 
-@ManagedBean(name = "XLSDownloadController")
+@Named(value = "XLSDownloadController")
 @RequestScoped
 public class XLSDownloadController implements Serializable {
 
@@ -55,7 +55,7 @@ public class XLSDownloadController implements Serializable {
 
 	private static final long serialVersionUID = 2829805868397655132L;
 
-	@ManagedProperty(value = "#{loginBean}")
+	@Inject
 	private LoginBean sessionManager;
 
 	public LoginBean getSessionManager() {

@@ -9,15 +9,15 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import javax.annotation.PostConstruct;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
 import javax.faces.view.ViewScoped;
+import javax.inject.Inject;
+import javax.inject.Named;
 
 import com.malbi.sync.sku.model.Changes;
 import com.malbi.sync.sku.model.XlsRowData;
 import com.malbi.sync.sku.service.SKUService;
 
-@ManagedBean(name = "XLSProcessorController")
+@Named(value = "XLSProcessorController")
 @ViewScoped
 public class XLSProcessorController implements Serializable {
 
@@ -145,7 +145,7 @@ public class XLSProcessorController implements Serializable {
 		this.doesNotExist = doesNotExist;
 	}
 
-	@ManagedProperty(value = "#{loginBean}")
+	@Inject
 	private LoginBean sessionManager;
 
 	public LoginBean getSessionManager() {

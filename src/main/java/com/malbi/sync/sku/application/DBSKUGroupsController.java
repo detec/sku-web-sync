@@ -6,16 +6,16 @@ import java.util.List;
 import java.util.Map;
 
 import javax.annotation.PostConstruct;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.RequestScoped;
+import javax.inject.Inject;
+import javax.inject.Named;
 
 import com.malbi.sync.sku.model.Changes;
 import com.malbi.sync.sku.model.DBSKUGroup;
 import com.malbi.sync.sku.model.DialogueChanges;
 import com.malbi.sync.sku.service.SKUService;
 
-@ManagedBean(name = "DBSKUGroupsController")
+@Named(value = "DBSKUGroupsController")
 @RequestScoped
 public class DBSKUGroupsController implements Serializable {
 
@@ -130,7 +130,7 @@ public class DBSKUGroupsController implements Serializable {
 		ExceptionString = exceptionString;
 	}
 
-	@ManagedProperty(value = "#{loginBean}")
+	@Inject
 	private LoginBean sessionManager;
 
 	public LoginBean getSessionManager() {

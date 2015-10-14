@@ -9,15 +9,15 @@ import java.io.OutputStream;
 import java.io.Serializable;
 
 import javax.faces.application.FacesMessage;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
 import javax.faces.context.FacesContext;
 import javax.faces.view.ViewScoped;
+import javax.inject.Inject;
+import javax.inject.Named;
 import javax.servlet.http.Part;
 
 import com.malbi.sync.sku.xls.XlsxSource;
 
-@ManagedBean(name = "skuMain")
+@Named(value = "skuMain")
 @ViewScoped
 public class SKUMainController implements Serializable {
 
@@ -198,7 +198,7 @@ public class SKUMainController implements Serializable {
 		this.fileUploaded = fileUploaded;
 	}
 
-	@ManagedProperty(value = "#{loginBean}")
+	@Inject
 	private LoginBean sessionManager;
 
 	public LoginBean getSessionManager() {
