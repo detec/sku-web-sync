@@ -31,16 +31,6 @@ import com.malbi.sync.sku.service.SKUService;
 
 public class XlsxSource {
 
-	public XlsxSource(Path p) {
-		this.filePath = p;
-		try {
-			initData();
-		} catch (IOException e) {
-
-		}
-	}
-
-	// 02.10.2015, Andrew Duplik.
 	// Will add default constructor to split object creation and validation.
 	public XlsxSource() {
 
@@ -68,41 +58,6 @@ public class XlsxSource {
 
 		return new ArrayList<Changes>(changes.values());
 	}
-
-	// public List<SKUGroupChanges> getDBGroupUpdates(Map<Integer, String>
-	// dbSkuGropMap) {
-	//
-	// Map<Integer, SKUGroupChanges> groupChanges = new HashMap<Integer,
-	// SKUGroupChanges>();
-	// // SKUService service = new SKUService();
-	// // List<DBSKUGroup> dbGroupsList = service.getDBSKUgroups();
-	//
-	// this.rows.stream().forEach(t -> {
-	// Integer key = t.getSkuGroupCode();
-	// if (!dbSkuGropMap.containsKey(key)) {
-	// // new sku group
-	// int groupCode = Integer.getInteger(t.getSkuGroup());
-	// SKUGroupChanges change = new SKUGroupChanges(key, new DBSKUGroup(),
-	// new DBSKUGroup(groupCode, dbSkuGropMap.get(groupCode)));
-	//
-	// groupChanges.put(key, change);
-	// } else {
-	// // renames sku group
-	// String dbSkuGroupName = dbSkuGropMap.get(key);
-	// String xlsSkuGroupName = t.getSkuGroup();
-	// if (!dbSkuGroupName.equals(xlsSkuGroupName)) {
-	// SKUGroupChanges change = new SKUGroupChanges(key, new DBSKUGroup(key,
-	// dbSkuGroupName),
-	// new DBSKUGroup(key, xlsSkuGroupName));
-	// groupChanges.put(key, change);
-	// }
-	// }
-	//
-	// });
-	//
-	// return new ArrayList<SKUGroupChanges>(groupChanges.values());
-	//
-	// }
 
 	// This is the original Bondarenko's method
 	public List<Changes> getSkuUpdates(Map<Integer, DbRowData> dbSkuMap) {
@@ -187,14 +142,11 @@ public class XlsxSource {
 		Path backUpPath = parent.resolve(Paths.get("back_up", backUpFile));
 
 		backUpPath.getParent().toFile().mkdirs();
-		// try {
 		Files.copy(this.XlsFile.toPath(), backUpPath);
 
 		POIFSFileSystem stream;
 		HSSFWorkbook book;
 		HSSFSheet sheet;
-		// stream = new POIFSFileSystem(new
-		// FileInputStream(this.filePath.toFile()));
 
 		// There is a more modern example
 		// Workbook destBook = WorkbookFactory.create(srcFile);
@@ -222,8 +174,6 @@ public class XlsxSource {
 			sheet.removeRow(sheet.getRow(i));
 		}
 
-		// File result = this.filePath.toFile();
-		// FileOutputStream out = new FileOutputStream(result);
 		// book.close(); // or it causes Position 4498432 past the end of the
 		// file
 		FileOutputStream out = new FileOutputStream(this.XlsFile);
@@ -268,7 +218,7 @@ public class XlsxSource {
 			error += "\n";
 		}
 
-		// DUBLE ID
+		// Duplicate IDs
 		// ///////////////////////////////////////////////////////////////
 		Set<Integer> allId = new HashSet<Integer>();
 		Set<Integer> dubId = new HashSet<Integer>();
@@ -315,13 +265,9 @@ public class XlsxSource {
 		}
 
 		if (error.equals(defaultMsg)) {
-			// System.out.println("XlsFile Internal validationd has finished
-			// successfully.");
 			return true;
 		} else {
-			// System.out.println(error + MainApp.END_MSG);
-			// System.exit(1);
-			// let's return custom error log to calling class.
+
 			this.validationErrorLog = error;
 			return false;
 		}
@@ -334,11 +280,6 @@ public class XlsxSource {
 		HSSFSheet sheet;
 		XlsRowData row;
 
-		// 02.10.2015, Andrei Duplik.
-		// Documentation says that it is prefferable to create this object from
-		// file.
-		// stream = new POIFSFileSystem(new
-		// FileInputStream(this.filePath.toFile()));
 		stream = new POIFSFileSystem(this.XlsFile);
 
 		book = new HSSFWorkbook(stream);
@@ -418,4 +359,8 @@ public class XlsxSource {
 	public void setValidationErrorLog(String validationErrorLog) {
 		this.validationErrorLog = validationErrorLog;
 	}
+
+	// Injection doesn't work
+	// @Inject
+	// SKUService service;
 }

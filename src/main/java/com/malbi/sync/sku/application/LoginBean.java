@@ -38,10 +38,6 @@ public class LoginBean implements Serializable {
 
 			errormessage = "Имя пользователя и/или пароль неверны!";
 			loggedIn = false;
-			// To to login page
-			// return "/login.xhtml";
-			// return "/login.xhtml?faces-redirect=true";
-
 		}
 
 		else {

@@ -52,17 +52,6 @@ public class DAO {
 		return skuGropMap;
 	}
 
-	// public static List<DBSKUGroup> getDBSKUgroupsList() throws
-	// ClassNotFoundException, SQLException, NamingException {
-
-	// Map<Integer, String> skuGropMap = getSkuGroupMap();
-	// List<DBSKUGroup> DBGroupList = new ArrayList<DBSKUGroup>();
-	// skuGropMap.entrySet().stream()
-	// .forEach(t -> DBGroupList.add(new DBSKUGroup(t.getKey().intValue(),
-	// t.getValue())));
-	// return DBGroupList;
-	// }
-
 	public static Map<Integer, DbRowData> getSkuHierarchyMap()
 			throws SQLException, ClassNotFoundException, NamingException {
 
@@ -92,10 +81,6 @@ public class DAO {
 				"select group_id" + " ,group_name" + " from xx_rs_sku_groups" + " where group_id = ?");
 
 		stmt.setInt(1, pId);
-		// rs = stmt.executeQuery("select group_id"
-		// + " ,group_name"
-		// + " from xx_rs_sku_groups"
-		// + "where group_id = ?");
 
 		rs = stmt.executeQuery();
 		while (rs.next()) {
@@ -130,6 +115,18 @@ public class DAO {
 				.prepareStatement("UPDATE xx_rs_sku_groups" + "   SET group_name = ?" + "   WHERE group_id = ?");
 		stmt.setString(1, changes.getAfter());
 		stmt.setInt(2, changes.getId());
+		stmt.executeUpdate();
+
+		con.close();
+	}
+
+	public static void updateGroup(DBSKUGroup group) throws ClassNotFoundException, SQLException, NamingException {
+		Connection con = ConnectionManager.getDBConnection();
+		PreparedStatement stmt = con
+				.prepareStatement("UPDATE xx_rs_sku_groups" + "   SET group_name = ?" + "   WHERE group_id = ?");
+
+		stmt.setString(1, group.getName());
+		stmt.setInt(2, group.getId());
 		stmt.executeUpdate();
 
 		con.close();

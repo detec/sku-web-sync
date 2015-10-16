@@ -72,8 +72,14 @@ public class SKUService {
 
 	public boolean renameGroup(Changes changes) {
 		boolean result = false;
+
+		DBSKUGroup group = new DBSKUGroup();
+		group.setId(changes.getId());
+		group.setName(changes.getAfter());
+
 		try {
-			DAO.renameGroup(changes);
+			// DAO.renameGroup(changes);
+			DAO.updateGroup(group);
 			result = true;
 		} catch (ClassNotFoundException | SQLException | NamingException e) {
 			this.ErrorLog = "Не удалось переименовать группу SKU в БД: \n" + e.getMessage();
