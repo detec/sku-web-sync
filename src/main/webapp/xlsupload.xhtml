@@ -16,8 +16,8 @@
 		<h:inputFile id="file" value="#{XLSUpload.file}"/>
 	 	<br></br>
 	 	<h:commandButton value="Загрузить файл SKU_BASE_1C.xls ..."
-      		action="#{XLSUpload.checkXLSFile()}">
-    		<f:ajax execute="file" render="@all"/>
+      		action="#{XLSUpload.checkXLSFile()}" id="uploadButton">
+<!--     		<f:ajax execute="file" render="@all"/> -->
   		</h:commandButton>
   		
 
@@ -36,10 +36,11 @@
 		<h:panelGrid columns="1">
 		<h:commandButton value="Обработать файл SKU_BASE_1C.xls ..."  
 		action="#{XLSUpload.goToXLSProcessor}"
-		rendered="#{XLSUpload.fileUploaded and XLSUpload.uploadedXLSValidationResult}">
+		rendered="#{XLSUpload.fileUploaded and XLSUpload.uploadedXLSValidationResult}"
+		id="processButton">
 		</h:commandButton>
 		<h:commandButton value="Выход" rendered="#{loginBean.loggedIn}"
-		action="#{loginBean.logout}"></h:commandButton>
+		action="#{loginBean.logout}" id="logoutButton"></h:commandButton>
 		</h:panelGrid>
 		</h:form>
 <!-- 		<h:panelGrid columns="1"  rendered="#{not empty skuMain.exceptionString}"> -->

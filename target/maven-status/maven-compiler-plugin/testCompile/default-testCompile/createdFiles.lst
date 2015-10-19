@@ -1,0 +1,4 @@
+com\malbi\sync\sku\application\LaunchTest.class
+com\malbi\sync\sku\application\LoginTest.class
+com\malbi\sync\sku\application\XLSUploadTest.class
+com\malbi\sync\sku\application\AbstractTest.class

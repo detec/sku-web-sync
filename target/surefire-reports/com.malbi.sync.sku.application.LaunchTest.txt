@@ -1,0 +1,4 @@
+-------------------------------------------------------------------------------
+Test set: com.malbi.sync.sku.application.LaunchTest
+-------------------------------------------------------------------------------
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 13.043 sec

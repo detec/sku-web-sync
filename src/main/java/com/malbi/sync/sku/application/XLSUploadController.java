@@ -139,7 +139,7 @@ public class XLSUploadController implements Serializable {
 		// reading file into some linked list with rows.
 		try {
 			xSource.initData();
-		} catch (IOException e) {
+		} catch (Exception e) {
 			// this.ExceptionString = e.getMessage();
 			log.append(e.getMessage());
 			FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_FATAL, "Закачка файла SKU_BASE_1C.xls",

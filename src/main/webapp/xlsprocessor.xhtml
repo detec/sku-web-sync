@@ -84,11 +84,11 @@
 	    <h:outputLabel value="Удалённых SKU нет." rendered="#{empty XLSProcessorController.doesNotExist}" style="font-style: italic"></h:outputLabel>
 	    <h:panelGrid columns="1">
 	    <h:commandButton value="Применить, сохранить изменения в файле и перейти далее" 
-		action="#{XLSProcessorController.commitXLSChanges}"></h:commandButton>
+		action="#{XLSProcessorController.commitXLSChanges}" id="applyChanges"></h:commandButton>
 		<h:commandButton value="Перейти далее без сохранения" 
-		action="#{XLSProcessorController.goToDBProcessor}"></h:commandButton>
+		action="#{XLSProcessorController.goToDBProcessor}" id="goNext"></h:commandButton>
 		<h:commandButton value="Выход" rendered="#{loginBean.loggedIn}"
-		action="#{loginBean.logout}"></h:commandButton>
+		action="#{loginBean.logout}" id="logoutButton"></h:commandButton>
 		</h:panelGrid>
 		</h:form>
 <!-- 		<br></br> -->

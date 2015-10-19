@@ -274,7 +274,7 @@ public class XlsxSource {
 
 	}
 
-	public void initData() throws FileNotFoundException, IOException {
+	public void initData() throws Exception {
 		POIFSFileSystem stream;
 		HSSFWorkbook book;
 		HSSFSheet sheet;
@@ -284,6 +284,12 @@ public class XlsxSource {
 
 		book = new HSSFWorkbook(stream);
 		sheet = book.getSheet("base");
+		// here can be no sheet with such name
+		if (sheet == null) {
+			book.close();
+			throw new Exception("Не найден лист base!");
+		}
+
 		int rowNo = 1;
 		do {
 			row = new XlsRowData(rowNo + 1, (int) getCell(rowNo, 0, sheet).getNumericCellValue(),
