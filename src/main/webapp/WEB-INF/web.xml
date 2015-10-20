@@ -63,14 +63,14 @@ id="WebApp_ID" version="3.1">
     	<param-value>true</param-value>
 	</context-param>
 
-<!-- Fixed this with adding private static field with @Resource(name = "Oracle") annotation -->
-<!-- This section is needed to workaround Glassfish bug when choosing datasource pool. -->	
-<!-- 	<resource-ref> -->
-<!-- 		<description>Oracle database datasource</description> -->
-<!-- 		<res-ref-name>Oracle</res-ref-name> -->
-<!-- 		<res-type>javax.sql.DataSource</res-type> -->
-<!-- 		<res-auth>Container</res-auth> -->
-<!-- 		<lookup-name>Oracle</lookup-name> -->
-<!-- 	</resource-ref> -->
+<!-- Fixed this with adding private static field with @Resource(name = "Oracle") annotation  DOESN'T WORK  -->
+<!-- This section is needed to workaround Glassfish bug when choosing datasource pool.  -->	
+	<resource-ref>
+		<description>Oracle database datasource</description>
+		<res-ref-name>Oracle</res-ref-name>
+		<res-type>javax.sql.DataSource</res-type>
+		<res-auth>Container</res-auth>
+		<lookup-name>Oracle</lookup-name>
+	</resource-ref>
 
 </web-app>

@@ -4,21 +4,22 @@ import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
 
-import javax.annotation.Resource;
+import javax.naming.Context;
+import javax.naming.InitialContext;
 import javax.naming.NamingException;
 
 public class ConnectionManager {
 
-	@Resource(name = "Oracle")
-	private static com.sun.appserv.jdbc.DataSource ds;
+	// @Resource(name = "Oracle")
+	// private static com.sun.appserv.jdbc.DataSource ds;
 
 	public static Connection getDBConnection() throws SQLException, ClassNotFoundException, NamingException {
 
-		// com.sun.appserv.jdbc.DataSource ds = null;
-		// InitialContext initialContext = new InitialContext();
-		//
-		// Context dbContext = (Context) initialContext.lookup("java:comp/env");
-		// ds = (com.sun.appserv.jdbc.DataSource) dbContext.lookup("Oracle");
+		com.sun.appserv.jdbc.DataSource ds = null;
+		InitialContext initialContext = new InitialContext();
+
+		Context dbContext = (Context) initialContext.lookup("java:comp/env");
+		ds = (com.sun.appserv.jdbc.DataSource) dbContext.lookup("Oracle");
 
 		Connection con = null;
 
