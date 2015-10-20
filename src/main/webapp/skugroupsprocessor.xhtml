@@ -96,16 +96,12 @@
 	    <h:commandButton value="Применить, сохранить изменения в базе данных и перейти далее" 
 		action="#{DBSKUGroupsController.applyChanges}" id="ProcessNext"></h:commandButton>
 		<h:commandButton value="Перейти далее без сохранения" 
-		action="#{DBSKUGroupsController.goToSKUProcessor}" id="Next"></h:commandButton>
+		action="#{DBSKUGroupsController.goToSKUProcessor}" id="goNext"></h:commandButton>
 		<h:commandButton value="Выход" rendered="#{DBSKUGroupsController.sessionManager.loggedIn}"
-		action="#{loginBean.logout}" id="Logout"></h:commandButton>
+		action="#{loginBean.logout}" id="logoutButton"></h:commandButton>
 		</h:panelGrid>	    	
 	</h:form>
-<!-- 	<h:panelGrid columns="1"  rendered="#{not empty DBSKUGroupsController.exceptionString}"> -->
-<!-- 	<h:outputLabel value="Журнал ошибок"></h:outputLabel> -->
-<!-- 	<h:inputTextarea value="#{DBSKUGroupsController.exceptionString}"  -->
-<!--     		readonly="true" cols="130" rows="40"/> -->
-<!-- 	</h:panelGrid> -->
+
 </h:body>
 	
 </html>

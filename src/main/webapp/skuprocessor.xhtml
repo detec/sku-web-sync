@@ -117,15 +117,10 @@
 	    <h:commandButton value="Применить, сохранить изменения в базе данных и перейти далее" 
 		action="#{DBSKUController.applyChanges}" id="ProcessNext"></h:commandButton>
 		<h:commandButton value="Перейти далее без сохранения" 
-		action="#{DBSKUController.goToXLSDownload}" id="Next"></h:commandButton>
+		action="#{DBSKUController.goToXLSDownload}" id="goNext"></h:commandButton>
 		<h:commandButton value="Выход" rendered="#{loginBean.loggedIn}"
-		action="#{loginBean.logout}" id="Logout"></h:commandButton>
+		action="#{loginBean.logout}" id="logoutButton"></h:commandButton>
 		</h:panelGrid>		 
 	</h:form>
-<!-- 	<h:panelGrid columns="1"  rendered="#{not empty DBSKUController.exceptionString}"> -->
-<!-- 	<h:outputLabel value="Журнал ошибок"></h:outputLabel> -->
-<!-- 	<h:inputTextarea value="#{DBSKUGroupsController.exceptionString}"  -->
-<!--     		readonly="true" cols="130" rows="40"/> -->
-<!-- 	</h:panelGrid> -->
 	</h:body>
 </html>

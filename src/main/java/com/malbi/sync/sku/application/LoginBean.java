@@ -18,7 +18,7 @@ import com.malbi.sync.sku.xls.XlsxSource;
 @SessionScoped
 public class LoginBean implements Serializable {
 
-	private static final long serialVersionUID = 4615292844760430977L;
+	private static final long serialVersionUID = 7125135135382108493L;
 
 	// add default constructor
 	public LoginBean() {

@@ -24,6 +24,28 @@ public class LaunchTest extends AbstractTest {
 		// check xls upload
 		uploadTest.doUpload();
 
+		XLSProcessorTest processor = new XLSProcessorTest();
+		processor.driver = driver;
+
+		// check xls sku
+		processor.doProcess();
+
+		DBGroupsTest DBGroups = new DBGroupsTest();
+		DBGroups.driver = driver;
+
+		// check DB groups
+		DBGroups.doProcess();
+
+		DBSKUProcessorTest SKU = new DBSKUProcessorTest();
+		SKU.driver = driver;
+
+		// check SKU processing
+		SKU.doProcess();
+
+		XLSDownloadTest download = new XLSDownloadTest();
+		download.driver = driver;
+
+		download.doDownload();
 	}
 
 	@Before

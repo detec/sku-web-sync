@@ -15,7 +15,7 @@
 	    <h:commandButton value="Загрузить изменённый XLS-файл" 
 		action="#{XLSDownloadController.doDonwload}" id="DownloadButton"></h:commandButton>
 		<h:commandButton value="Выход" rendered="#{XLSDownloadController.sessionManager.loggedIn}"
-		action="#{loginBean.logout}" id="Logout"></h:commandButton>
+		action="#{loginBean.logout}" id="logoutButton"></h:commandButton>
 		</h:panelGrid>
 		</h:form>
 	</h:body>

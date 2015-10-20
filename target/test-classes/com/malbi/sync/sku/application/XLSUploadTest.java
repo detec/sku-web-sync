@@ -52,4 +52,12 @@ public class XLSUploadTest extends AbstractTest {
 
 	}
 
+	public void doLogout() {
+
+		WebElement applyButton = driver.findElement(By.id("XLSUploadForm:logoutButton"));
+		assertThat(applyButton.isSelected());
+		applyButton.click();
+
+	}
+
 }

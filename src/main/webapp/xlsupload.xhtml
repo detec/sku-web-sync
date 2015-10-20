@@ -17,7 +17,6 @@
 	 	<br></br>
 	 	<h:commandButton value="Загрузить файл SKU_BASE_1C.xls ..."
       		action="#{XLSUpload.checkXLSFile()}" id="uploadButton">
-<!--     		<f:ajax execute="file" render="@all"/> -->
   		</h:commandButton>
   		
 
@@ -30,9 +29,6 @@
 		 <h:outputLabel value="XLS-файл успешно проверен" for="XLScheckbox" />
 		 </h:panelGrid>
 
-
-<!-- 		<h:link value="Обработать файл SKU_BASE_1C.xls ..." outcome="xlsprocessor"  -->
-<!-- 		rendered="#{XLSUpload.fileUploaded and XLSUpload.uploadedXLSValidationResult}"></h:link> -->
 		<h:panelGrid columns="1">
 		<h:commandButton value="Обработать файл SKU_BASE_1C.xls ..."  
 		action="#{XLSUpload.goToXLSProcessor}"
@@ -43,11 +39,6 @@
 		action="#{loginBean.logout}" id="logoutButton"></h:commandButton>
 		</h:panelGrid>
 		</h:form>
-<!-- 		<h:panelGrid columns="1"  rendered="#{not empty skuMain.exceptionString}"> -->
-<!-- 		<h:outputLabel value="Журнал ошибок"></h:outputLabel> -->
-<!-- 		<h:inputTextarea value="#{skuMain.exceptionString}" -->
-<!--       		readonly="true" cols="130" rows="40"/> -->
-<!--       	</h:panelGrid>	 -->
 </h:body>	
 	
 </html>

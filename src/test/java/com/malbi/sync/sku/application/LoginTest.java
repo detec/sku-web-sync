@@ -9,10 +9,6 @@ import org.openqa.selenium.WebElement;
 
 public class LoginTest extends AbstractTest {
 
-	// private WebDriver driver;
-	// private String baseUrl = "http://localhost:8080/sku-web-sync-test";
-	// private StringBuffer verificationErrors = new StringBuffer();
-
 	public void doLogin() {
 		driver.get(baseUrl + "/");
 
