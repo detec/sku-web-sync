@@ -1,6 +1,7 @@
 package com.malbi.sync.sku.db;
 
 import java.sql.Connection;
+import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
 
 import javax.naming.Context;
@@ -21,6 +22,11 @@ public class ConnectionManager {
 		// java:app/jdbc/
 		if (ds != null) {
 			con = ds.getConnection();
+
+			DatabaseMetaData dbmd = con.getMetaData();
+			if (dbmd.supportsTransactionIsolationLevel(Connection.TRANSACTION_SERIALIZABLE)) {
+				con.setTransactionIsolation(Connection.TRANSACTION_SERIALIZABLE);
+			}
 		} else {
 			throw new SQLException("Datasource from Glassfish application server returned as null!");
 		}
