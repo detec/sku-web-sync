@@ -9,6 +9,7 @@ import javax.enterprise.context.SessionScoped;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.inject.Named;
+import javax.servlet.http.HttpSession;
 
 import org.hibernate.validator.constraints.NotEmpty;
 
@@ -45,6 +46,10 @@ public class LoginBean implements Serializable {
 			this.xSource = new XlsxSource();
 
 			loggedIn = true;
+
+			HttpSession session = SessionBean.getSession();
+			session.setAttribute("username", username);
+
 			return "/xlsupload.xhtml?faces-redirect=true";
 
 		}
@@ -61,6 +66,10 @@ public class LoginBean implements Serializable {
 		this.loggedIn = false;
 		this.password = "";
 		this.xSource = new XlsxSource();
+
+		HttpSession session = SessionBean.getSession();
+		session.invalidate();
+
 		return "/login.xhtml?faces-redirect=true";
 	}
 

@@ -5,29 +5,39 @@ xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/
 id="WebApp_ID" version="3.1">
 
   <display-name>SKUwebsync</display-name>
-  
-  <welcome-file-list>
-   <welcome-file>login.xhtml</welcome-file>
-  </welcome-file-list>
-  
-  <servlet>
-    <servlet-name>Faces Servlet</servlet-name>
-    <servlet-class>javax.faces.webapp.FacesServlet</servlet-class>
-    <load-on-startup>1</load-on-startup>
-  </servlet>
-  
-  <servlet-mapping>
-    <servlet-name>Faces Servlet</servlet-name>
-    <url-pattern>*.xhtml</url-pattern>
-  </servlet-mapping>
-  
-  <servlet-mapping>
-    <servlet-name>Faces Servlet</servlet-name>
-    <url-pattern>*.jsf</url-pattern>
-</servlet-mapping>
 
+	<!-- Adding filter -->
+	<filter>
+		<filter-name>AuthFilter</filter-name>
+		<filter-class>com.malbi.sync.sku.application.AuthorizationFilter</filter-class>
+	</filter>
+	<filter-mapping>
+		<filter-name>AuthFilter</filter-name>
+		<servlet-name>Faces Servlet</servlet-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
+	  
+	<welcome-file-list>
+   		<welcome-file>login.xhtml</welcome-file>
+	</welcome-file-list>
   
-	<context-param>
+	<servlet>
+    	<servlet-name>Faces Servlet</servlet-name>
+    	<servlet-class>javax.faces.webapp.FacesServlet</servlet-class>
+    	<load-on-startup>1</load-on-startup>
+	</servlet>
+  
+	<servlet-mapping>
+    	<servlet-name>Faces Servlet</servlet-name>
+    	<url-pattern>*.xhtml</url-pattern>
+	</servlet-mapping>
+  
+	<servlet-mapping>
+    	<servlet-name>Faces Servlet</servlet-name>
+    	<url-pattern>*.jsf</url-pattern>
+	</servlet-mapping>
+
+  	<context-param>
     	<description>State saving method: 'client' or 'server' (=default). See JSF Specification 2.5.2</description>
     	<param-name>javax.faces.STATE_SAVING_METHOD</param-name>
     	<param-value>client</param-value>
