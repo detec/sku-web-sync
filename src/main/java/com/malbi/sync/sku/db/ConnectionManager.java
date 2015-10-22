@@ -4,14 +4,15 @@ import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
 
+import javax.enterprise.context.RequestScoped;
+import javax.inject.Named;
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 
+@Named
+@RequestScoped
 public class ConnectionManager {
-
-	// @Resource(name = "Oracle")
-	// private static com.sun.appserv.jdbc.DataSource ds;
 
 	public static Connection getDBConnection() throws SQLException, ClassNotFoundException, NamingException {
 

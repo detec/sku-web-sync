@@ -1,4 +1,10 @@
 F:\My\Java\sku-web-sync\src\test\java\com\malbi\sync\sku\application\LaunchTest.java
 F:\My\Java\sku-web-sync\src\test\java\com\malbi\sync\sku\application\XLSUploadTest.java
 F:\My\Java\sku-web-sync\src\test\java\com\malbi\sync\sku\application\AbstractTest.java
+F:\My\Java\sku-web-sync\src\test\java\com\malbi\sync\sku\application\DBSKUProcessorTest.java
 F:\My\Java\sku-web-sync\src\test\java\com\malbi\sync\sku\application\LoginTest.java
+F:\My\Java\sku-web-sync\src\test\java\com\malbi\sync\sku\db\CheckDatasourceTest.java
+F:\My\Java\sku-web-sync\src\test\java\com\malbi\sync\sku\application\XLSProcessorTest.java
+F:\My\Java\sku-web-sync\src\test\java\com\malbi\sync\sku\cdi\InjectionTestCase.java
+F:\My\Java\sku-web-sync\src\test\java\com\malbi\sync\sku\application\DBGroupsTest.java
+F:\My\Java\sku-web-sync\src\test\java\com\malbi\sync\sku\application\XLSDownloadTest.java

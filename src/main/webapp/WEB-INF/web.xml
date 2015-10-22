@@ -6,37 +6,6 @@ id="WebApp_ID" version="3.1">
 
   <display-name>SKUwebsync</display-name>
 
-	<!-- Adding filter -->
-	<filter>
-		<filter-name>AuthFilter</filter-name>
-		<filter-class>com.malbi.sync.sku.application.AuthorizationFilter</filter-class>
-	</filter>
-	<filter-mapping>
-		<filter-name>AuthFilter</filter-name>
-		<servlet-name>Faces Servlet</servlet-name>
-		<url-pattern>/*</url-pattern>
-	</filter-mapping>
-	  
-	<welcome-file-list>
-   		<welcome-file>login.xhtml</welcome-file>
-	</welcome-file-list>
-  
-	<servlet>
-    	<servlet-name>Faces Servlet</servlet-name>
-    	<servlet-class>javax.faces.webapp.FacesServlet</servlet-class>
-    	<load-on-startup>1</load-on-startup>
-	</servlet>
-  
-	<servlet-mapping>
-    	<servlet-name>Faces Servlet</servlet-name>
-    	<url-pattern>*.xhtml</url-pattern>
-	</servlet-mapping>
-  
-	<servlet-mapping>
-    	<servlet-name>Faces Servlet</servlet-name>
-    	<url-pattern>*.jsf</url-pattern>
-	</servlet-mapping>
-
   	<context-param>
     	<description>State saving method: 'client' or 'server' (=default). See JSF Specification 2.5.2</description>
     	<param-name>javax.faces.STATE_SAVING_METHOD</param-name>
@@ -62,6 +31,65 @@ id="WebApp_ID" version="3.1">
     	<param-name>javax.faces.DATETIMECONVERTER_DEFAULT_TIMEZONE_IS_SYSTEM_TIMEZONE</param-name>
     	<param-value>true</param-value>
 	</context-param>
+	
+	<servlet>
+    	<servlet-name>Faces Servlet</servlet-name>
+    	<servlet-class>javax.faces.webapp.FacesServlet</servlet-class>
+    	<load-on-startup>1</load-on-startup>
+	</servlet>
+  
+	<servlet-mapping>
+    	<servlet-name>Faces Servlet</servlet-name>
+    	<url-pattern>*.xhtml</url-pattern>
+	</servlet-mapping>
+  
+	<servlet-mapping>
+    	<servlet-name>Faces Servlet</servlet-name>
+    	<url-pattern>*.jsf</url-pattern>
+	</servlet-mapping>
+	
+	<!-- Adding filter -->
+	<!-- Since 22.10.2015 we have native Glassfish authentication -->
+<!-- 	<filter> -->
+<!-- 		<filter-name>AuthFilter</filter-name> -->
+<!-- 		<filter-class>com.malbi.sync.sku.application.AuthorizationFilter</filter-class> -->
+<!-- 	</filter> -->
+<!-- 	<filter-mapping> -->
+<!-- 		<filter-name>AuthFilter</filter-name> -->
+<!-- 		<servlet-name>Faces Servlet</servlet-name> -->
+<!-- 		<url-pattern>/*</url-pattern> -->
+<!-- 	</filter-mapping> -->
+	  
+	<welcome-file-list>
+   		<welcome-file>xlsupload.xhtml</welcome-file>
+	</welcome-file-list>
+
+	<security-constraint> 
+        <display-name>validUser</display-name> 
+        <web-resource-collection> 
+             <web-resource-name>application</web-resource-name> 
+             <description/> 
+             <url-pattern>/*</url-pattern> 
+        </web-resource-collection> 
+        <auth-constraint> 
+             <description>Only Registered user can access this</description> 
+             <role-name>USER</role-name> 
+     	</auth-constraint> 
+	</security-constraint> 
+	
+	 <login-config>
+	     <auth-method>FORM</auth-method>
+	     <realm-name>LoginRealm</realm-name>
+	     <form-login-config>
+	         <form-login-page>/login.xhtml</form-login-page>
+	         <form-error-page>/login.xhtml</form-error-page>
+	     </form-login-config>
+	 </login-config>
+ 
+	<security-role>
+		<description>User</description>
+  		<role-name>USER</role-name>
+ 	</security-role>
 
 <!-- Fixed this with adding private static field with @Resource(name = "Oracle") annotation  DOESN'T WORK  -->
 <!-- This section is needed to workaround Glassfish bug when choosing datasource pool.  -->	

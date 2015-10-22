@@ -9,23 +9,26 @@
 
 <h:body>	
 <h3>Вход в приложение синхронизация SKU</h3>	
-	    <h:form id="LoginForm" enctype="multipart/form-data" >
+<!-- 	    <h:form id="LoginForm" enctype="multipart/form-data" > -->
+
+		<h:form id="LoginForm" prependId="false" 
+             onsubmit="document.getElementById('LoginForm').action = 'j_security_check';"> 
+		
 	   
             <h:panelGrid columns="2">
                 <h:outputText value="*Имя пользователя"></h:outputText>
-                <h:inputText id="username" value="#{loginBean.username}">
-                 <h:message for="username" errorClass="err" warnClass="warn" infoClass="info" showDetail="false"></h:message>
+                <h:inputText id="j_username" required="true"> <!-- value="#{loginBean.username}"> -->
+                 <h:message for="j_username" errorClass="err" warnClass="warn" infoClass="info" showDetail="false"></h:message>
                 </h:inputText>
                 
                 <h:outputText value="*Пароль"></h:outputText>
-                <h:inputSecret id="password" value="#{loginBean.password}">
-                 <h:message for="password" errorClass="err" warnClass="warn" infoClass="info" showDetail="false"></h:message>
+                <h:inputSecret id="j_password" required="true"> <!-- value="#{loginBean.password}"> -->
+                 <h:message for="j_password" errorClass="err" warnClass="warn" infoClass="info" showDetail="false"></h:message>
                 </h:inputSecret>                
                 
             </h:panelGrid>
-            <h:commandButton value="Вход" action="#{loginBean.doLogin}" id="SubmitButton">
-  
-            </h:commandButton>
+
+	          <h:commandButton value="Вход" type="submit" id="SubmitButton"/>
 			
 		</h:form>
 <h:messages id="messages" errorClass="err" warnClass="warn" infoClass="info" style="color: #FF8080" showDetail="true" showSummary="true" layout="table"/>
