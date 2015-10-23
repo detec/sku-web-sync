@@ -32,6 +32,13 @@ id="WebApp_ID" version="3.1">
     	<param-value>true</param-value>
 	</context-param>
 	
+	<!-- To workaround  Facelet[/xlsupload.xhtml] was modified message -->
+	<!-- http://stackoverflow.com/questions/3820111/facelet-was-modified-messages -->
+	<context-param>
+		<param-name>facelets.REFRESH_PERIOD</param-name>
+		<param-value>-1</param-value>
+	</context-param>
+	
 	<servlet>
     	<servlet-name>Faces Servlet</servlet-name>
     	<servlet-class>javax.faces.webapp.FacesServlet</servlet-class>

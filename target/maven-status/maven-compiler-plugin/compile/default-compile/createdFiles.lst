@@ -1,6 +1,8 @@
 com\malbi\sync\sku\converter\DBSKUGroupConverter.class
 com\malbi\sync\sku\model\DbRowData.class
 com\malbi\sync\sku\model\Changes.class
+com\malbi\sync\sku\application\SessionBean.class
+com\malbi\sync\sku\application\AuthorizationFilter.class
 com\malbi\sync\sku\application\DBSKUController.class
 com\malbi\sync\sku\dao\DAO.class
 com\malbi\sync\sku\application\XLSProcessorController.class

@@ -41,10 +41,9 @@ public class LoginBean implements Serializable {
 
 		else {
 			// we don't need messages about duplicates.
-			this.xSource = new XlsxSource();
+			initializeApplicationSession();
 
-			loggedIn = true;
-
+			// put username when authenticating manually
 			HttpSession session = SessionBean.getSession();
 			session.setAttribute("username", username);
 
@@ -57,6 +56,21 @@ public class LoginBean implements Serializable {
 		msg.setSeverity(FacesMessage.SEVERITY_ERROR);
 		FacesContext.getCurrentInstance().addMessage(null, msg);
 		return "";
+
+	}
+
+	// this method will be used to call both from this bean and from
+	// XLSUploadcontroller
+	public void initializeApplicationSession() {
+
+		// Here we must initialize Login bean and session
+		String username = SessionBean.getUserName();
+		if (username.isEmpty()) {
+			return;
+		}
+
+		this.xSource = new XlsxSource();
+		this.loggedIn = true;
 
 	}
 

@@ -66,7 +66,7 @@ public class LaunchTest extends AbstractTest {
 		driver.get(baseUrl + "/skuprocessor.xhtml");
 
 		// find field username
-		WebElement inputField = driver.findElement(By.xpath("//*[@id='LoginForm:username']"));
+		WebElement inputField = driver.findElement(By.xpath("//*[@id='j_username']"));
 		assertThat(inputField.isSelected());
 	}
 

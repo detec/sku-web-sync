@@ -13,18 +13,18 @@ public class LoginTest extends AbstractTest {
 		driver.get(baseUrl + "/");
 
 		// find field username
-		WebElement inputField = driver.findElement(By.xpath("//*[@id='LoginForm:j_username']"));
+		WebElement inputField = driver.findElement(By.xpath("//*[@id='j_username']"));
 		assertThat(inputField.isSelected());
 		inputField.clear();
 		inputField.sendKeys("user");
 
 		// find field password
-		WebElement passwordField = driver.findElement(By.xpath("//*[@id='LoginForm:j_password']"));
+		WebElement passwordField = driver.findElement(By.xpath("//*[@id='j_password']"));
 		assertThat(passwordField.isSelected());
 		passwordField.clear();
 		passwordField.sendKeys("malbi39");
 
-		WebElement loginButton = driver.findElement(By.xpath("//*[@id='LoginForm:SubmitButton']"));
+		WebElement loginButton = driver.findElement(By.xpath("//*[@id='SubmitButton']"));
 		assertThat(loginButton.isSelected());
 		loginButton.click();
 

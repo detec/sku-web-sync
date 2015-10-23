@@ -8,6 +8,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.Serializable;
 
+import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.faces.view.ViewScoped;
@@ -21,6 +22,20 @@ import com.malbi.sync.sku.xls.XlsxSource;
 @Named("XLSUpload")
 @ViewScoped
 public class XLSUploadController implements Serializable {
+
+	@PostConstruct
+	public void init() {
+
+		// Here we must initialize Login bean and session
+		String username = SessionBean.getUserName();
+		if (username.isEmpty()) {
+			return;
+		}
+
+		// initializing LoginBean
+		// this.sessionManager = new LoginBean();
+		// this.sessionManager.initializeApplicationSession();
+	}
 
 	public void appendLog(SKUService service, StringBuffer log) {
 		String receivedLog = service.getErrorLog();
@@ -217,7 +232,7 @@ public class XLSUploadController implements Serializable {
 		this.fileUploaded = fileUploaded;
 	}
 
-	@Inject
+	@Inject // it is created at postconstruct
 	private LoginBean sessionManager;
 
 	public LoginBean getSessionManager() {
