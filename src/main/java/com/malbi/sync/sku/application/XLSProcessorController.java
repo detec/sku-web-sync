@@ -97,7 +97,7 @@ public class XLSProcessorController implements Serializable {
 		this.skuMap = service.getSkuMap();
 		// check if there are errors.
 		// this.ExceptionString = service.getErrorLog();
-		appendLog(service, log);
+		appendLog(log);
 
 		// Let's not fill second table if database connection failed.
 		if (this.skuMap.size() == 0) {
@@ -124,7 +124,7 @@ public class XLSProcessorController implements Serializable {
 
 	}
 
-	public void appendLog(SKUService service, StringBuffer log) {
+	private void appendLog(StringBuffer log) {
 		String receivedLog = service.getErrorLog();
 		// append carrige return if error message is not empty.
 		log.append(receivedLog + ((receivedLog.length() == 0) ? "" : "\n"));

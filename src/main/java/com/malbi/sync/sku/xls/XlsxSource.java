@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.Serializable;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -15,6 +16,10 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
+import javax.enterprise.context.SessionScoped;
+import javax.inject.Inject;
+import javax.inject.Named;
 
 import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFRow;
@@ -29,12 +34,9 @@ import com.malbi.sync.sku.model.SKUGroupChanges;
 import com.malbi.sync.sku.model.XlsRowData;
 import com.malbi.sync.sku.service.SKUService;
 
-public class XlsxSource {
-
-	// Will add default constructor to split object creation and validation.
-	public XlsxSource() {
-
-	}
+@Named
+@SessionScoped
+public class XlsxSource implements Serializable {
 
 	public List<Changes> getGroupUpdates(Map<Integer, String> dbSkuGropMap) {
 		Map<Integer, Changes> changes = new HashMap<Integer, Changes>();
@@ -95,7 +97,7 @@ public class XlsxSource {
 	public List<SKUGroupChanges> getSKUUpdatesDBGroups(Map<Integer, DbRowData> dbSkuMap) {
 		List<SKUGroupChanges> changes = new ArrayList<SKUGroupChanges>();
 
-		SKUService service = new SKUService();
+		// SKUService service = new SKUService();
 		Map<Integer, String> mapDBGroups = service.getSkuGroupMap();
 
 		this.rows.stream().forEach(t -> {
@@ -366,7 +368,13 @@ public class XlsxSource {
 		this.validationErrorLog = validationErrorLog;
 	}
 
-	// Injection doesn't work
-	// @Inject
-	// SKUService service;
+	private static final long serialVersionUID = 1936115774792361359L;
+
+	// Will add default constructor to split object creation and validation.
+	public XlsxSource() {
+
+	}
+
+	@Inject
+	SKUService service;
 }

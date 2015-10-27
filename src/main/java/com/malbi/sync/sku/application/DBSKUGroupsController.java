@@ -70,7 +70,7 @@ public class DBSKUGroupsController implements Serializable {
 		refreshData();
 	}
 
-	public void appendLogAtRefresh(SKUService service, StringBuffer log) {
+	private void appendLogAtRefresh(StringBuffer log) {
 		if (!log.toString().isEmpty()) {
 			log.append(service.getErrorLog());
 		}
@@ -80,7 +80,7 @@ public class DBSKUGroupsController implements Serializable {
 		// SKUService service = new SKUService();
 		Map<Integer, String> skuGroupMap = service.getSkuGroupMap();
 		StringBuffer log = new StringBuffer();
-		appendLogAtRefresh(service, log);
+		appendLogAtRefresh(log);
 
 		List<Changes> groupUpdate = this.sessionManager.getxSource().getGroupUpdates(skuGroupMap);
 		groupUpdate.stream().forEach(t -> {
@@ -93,7 +93,7 @@ public class DBSKUGroupsController implements Serializable {
 
 		this.selectGroupsList.addAll(service.getDBSKUgroups());
 		// catch error messages
-		appendLogAtRefresh(service, log);
+		appendLogAtRefresh(log);
 
 		if (!log.toString().isEmpty()) {
 			this.ExceptionString = log.toString();

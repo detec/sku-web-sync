@@ -16,7 +16,6 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import javax.servlet.http.Part;
 
-import com.malbi.sync.sku.service.SKUService;
 import com.malbi.sync.sku.xls.XlsxSource;
 
 @Named("XLSUpload")
@@ -32,16 +31,13 @@ public class XLSUploadController implements Serializable {
 			return;
 		}
 
-		// initializing LoginBean
-		// this.sessionManager = new LoginBean();
-		// this.sessionManager.initializeApplicationSession();
 	}
 
-	public void appendLog(SKUService service, StringBuffer log) {
-		String receivedLog = service.getErrorLog();
-		// append carrige return if error message is not empty.
-		log.append(receivedLog + ((receivedLog.length() == 0) ? "" : "\n"));
-	}
+	// public void appendLog(SKUService service, StringBuffer log) {
+	// String receivedLog = service.getErrorLog();
+	// // append carrige return if error message is not empty.
+	// log.append(receivedLog + ((receivedLog.length() == 0) ? "" : "\n"));
+	// }
 
 	public void upload() {
 		StringBuffer log = new StringBuffer();

@@ -1,11 +1,15 @@
 package com.malbi.sync.sku.service;
 
+import java.io.Serializable;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.enterprise.context.SessionScoped;
+import javax.inject.Inject;
+import javax.inject.Named;
 import javax.naming.NamingException;
 
 import com.malbi.sync.sku.dao.DAO;
@@ -15,7 +19,9 @@ import com.malbi.sync.sku.model.DBSKUGroup;
 import com.malbi.sync.sku.model.DbRowData;
 import com.malbi.sync.sku.model.SKUGroupChanges;
 
-public class SKUService {
+@Named
+@SessionScoped
+public class SKUService implements Serializable {
 
 	public Map<Integer, String> getSkuMap() {
 		Map<Integer, String> skuMap = new HashMap<Integer, String>();
@@ -171,4 +177,9 @@ public class SKUService {
 	public void setErrorLog(String errorLog) {
 		ErrorLog = errorLog;
 	}
+
+	private static final long serialVersionUID = 3013221122140047848L;
+
+	@Inject
+	private DAO DAO;
 }

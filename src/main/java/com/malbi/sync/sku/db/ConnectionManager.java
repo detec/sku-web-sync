@@ -1,32 +1,22 @@
 package com.malbi.sync.sku.db;
 
+import java.io.Serializable;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
 
-import javax.enterprise.context.RequestScoped;
+import javax.annotation.Resource;
+import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Named;
-import javax.naming.Context;
-import javax.naming.InitialContext;
-import javax.naming.NamingException;
 
-@Named
-@RequestScoped
-public class ConnectionManager {
+@Named("ConnectionManager")
+@ApplicationScoped
+public class ConnectionManager implements Serializable {
 
-	public static Connection getDBConnection() throws SQLException, ClassNotFoundException, NamingException {
-
-		com.sun.appserv.jdbc.DataSource ds = null;
-		InitialContext initialContext = new InitialContext();
-
-		Context dbContext = (Context) initialContext.lookup("java:comp/env");
-		ds = (com.sun.appserv.jdbc.DataSource) dbContext.lookup("Oracle");
-
+	public Connection getDBConnection() throws SQLException {
 		Connection con = null;
-
-		// java:app/jdbc/
-		if (ds != null) {
-			con = ds.getConnection();
+		if (DataSource != null) {
+			con = DataSource.getConnection();
 
 			DatabaseMetaData dbmd = con.getMetaData();
 			if (dbmd.supportsTransactionIsolationLevel(Connection.TRANSACTION_SERIALIZABLE)) {
@@ -37,4 +27,9 @@ public class ConnectionManager {
 		}
 		return con;
 	}
+
+	private static final long serialVersionUID = -393036417948357440L;
+
+	@Resource(name = "Oracle")
+	private com.sun.appserv.jdbc.DataSource DataSource;
 }

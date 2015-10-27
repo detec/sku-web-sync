@@ -4,7 +4,6 @@ com\malbi\sync\sku\model\Changes.class
 com\malbi\sync\sku\application\SessionBean.class
 com\malbi\sync\sku\application\AuthorizationFilter.class
 com\malbi\sync\sku\application\DBSKUController.class
-com\malbi\sync\sku\dao\DAO.class
 com\malbi\sync\sku\application\XLSProcessorController.class
 com\malbi\sync\sku\model\DBSKUGroup.class
 com\malbi\sync\sku\application\DBSKUGroupsController.class
@@ -12,7 +11,6 @@ com\malbi\sync\sku\model\DialogueChanges.class
 com\malbi\sync\sku\model\DBSKU.class
 com\malbi\sync\sku\application\XLSUploadController.class
 com\malbi\sync\sku\model\XlsRowData.class
-com\malbi\sync\sku\db\ConnectionManager.class
 com\malbi\sync\sku\xls\XlsxSource.class
 com\malbi\sync\sku\model\SKUGroupChanges.class
 com\malbi\sync\sku\service\SKUService.class

@@ -8,6 +8,7 @@ import java.util.List;
 import javax.enterprise.context.SessionScoped;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
+import javax.inject.Inject;
 import javax.inject.Named;
 import javax.servlet.http.HttpSession;
 
@@ -69,7 +70,8 @@ public class LoginBean implements Serializable {
 			return;
 		}
 
-		this.xSource = new XlsxSource();
+		// we are injecting bean
+		// this.xSource = new XlsxSource();
 		this.loggedIn = true;
 
 	}
@@ -77,7 +79,9 @@ public class LoginBean implements Serializable {
 	public String logout() {
 		this.loggedIn = false;
 		this.password = "";
-		this.xSource = new XlsxSource();
+
+		// we are injecting bean
+		// this.xSource = new XlsxSource();
 
 		HttpSession session = SessionBean.getSession();
 		session.invalidate();
@@ -130,7 +134,11 @@ public class LoginBean implements Serializable {
 		this.loggedIn = loggedIn;
 	}
 
-	private XlsxSource xSource = new XlsxSource();
+	// Let's try not to create injected bean
+	// private XlsxSource xSource = new XlsxSource();
+
+	@Inject
+	private XlsxSource xSource;
 
 	public XlsxSource getxSource() {
 		return xSource;
