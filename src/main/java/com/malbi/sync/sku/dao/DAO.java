@@ -175,6 +175,8 @@ public class DAO implements Serializable {
 		pStmt.setInt(2, sku.getId());
 		pStmt.executeUpdate();
 
+		con.close();
+
 	}
 
 	// changed, deletes SKU from hierarchy
@@ -186,6 +188,7 @@ public class DAO implements Serializable {
 		pStmt.setInt(1, sku.getId());
 		pStmt.executeUpdate();
 
+		con.close();
 	}
 
 	private static final long serialVersionUID = 3487388043292573257L;
