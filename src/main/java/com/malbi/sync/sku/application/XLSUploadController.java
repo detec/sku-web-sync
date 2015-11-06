@@ -163,12 +163,12 @@ public class XLSUploadController implements Serializable {
 		this.uploadedXLSValidationResult = xSource.validateInternal();
 		if (!this.uploadedXLSValidationResult) {
 			this.ExceptionString = xSource.getValidationErrorLog();
+			FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_FATAL, "Проверка файла SKU_BASE_1C.xls",
+					this.ExceptionString);
+			FacesContext.getCurrentInstance().addMessage("messages", message);
 			return;
 		}
 
-		// connecting to database
-		// DBSource dSource = new DBSource();
-		// Map<Integer, String>
 	}
 
 	public String goToXLSProcessor() {

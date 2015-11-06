@@ -294,16 +294,24 @@ public class XlsxSource implements Serializable {
 
 		int rowNo = 1;
 		do {
-			row = new XlsRowData(rowNo + 1, (int) getCell(rowNo, 0, sheet).getNumericCellValue(),
-					getCell(rowNo, 1, sheet).getRichStringCellValue().toString(),
-					getCell(rowNo, 2, sheet).getRichStringCellValue().toString(),
-					(int) getCell(rowNo, 3, sheet).getNumericCellValue(),
+			int currentRow = rowNo + 1;
+
+			int col0 = readNumericCell(rowNo, 0, book, currentRow, sheet);
+
+			int col3 = readNumericCell(rowNo, 3, book, currentRow, sheet);
+
+			int col6 = readNumericCell(rowNo, 6, book, currentRow, sheet);
+
+			int col7 = readNumericCell(rowNo, 7, book, currentRow, sheet);
+
+			int col8 = readNumericCell(rowNo, 8, book, currentRow, sheet);
+
+			int col9 = readNumericCell(rowNo, 9, book, currentRow, sheet);
+
+			row = new XlsRowData(rowNo + 1, col0, getCell(rowNo, 1, sheet).getRichStringCellValue().toString(),
+					getCell(rowNo, 2, sheet).getRichStringCellValue().toString(), col3,
 					getCell(rowNo, 4, sheet).getRichStringCellValue().toString(),
-					getCell(rowNo, 5, sheet).getRichStringCellValue().toString(),
-					(int) getCell(rowNo, 6, sheet).getNumericCellValue(),
-					(int) getCell(rowNo, 7, sheet).getNumericCellValue(),
-					(int) getCell(rowNo, 8, sheet).getNumericCellValue(),
-					(int) getCell(rowNo, 9, sheet).getNumericCellValue());
+					getCell(rowNo, 5, sheet).getRichStringCellValue().toString(), col6, col7, col8, col9);
 			rowNo++;
 			if (!row.isEmpty()) {
 				rows.add(row);
@@ -312,6 +320,21 @@ public class XlsxSource implements Serializable {
 		} while (!row.isEmpty());
 
 		book.close();
+	}
+
+	private int readNumericCell(int rowNo, int colPosition, HSSFWorkbook book, int currentRow, HSSFSheet sheet)
+			throws Exception {
+
+		int col0 = 0;
+		try {
+			col0 = (int) getCell(rowNo, colPosition, sheet).getNumericCellValue();
+		} catch (Exception e) {
+			book.close();
+
+			throw new Exception("Не получилось получить числовое значение из строки " + Integer.toString(currentRow)
+					+ " и колонки " + Integer.toString(colPosition + 1) + "\n" + e.getMessage());
+		}
+		return col0;
 	}
 
 	private HSSFCell getCell(int rowIndex, int cellIndex, HSSFSheet sheet) {
