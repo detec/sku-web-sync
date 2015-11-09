@@ -3,6 +3,8 @@
  */
 package com.malbi.sync.sku.model;
 
+import javax.validation.constraints.NotNull;
+
 /**
  * @author duplyk.a This class is intended for interactive changes of items.
  */
@@ -17,6 +19,7 @@ public class DialogueChanges extends Changes {
 		super(change.key, change.before, change.after);
 	}
 
+	@NotNull(message = "Родительская группа не может быть пустой! Если это группа верхнего уровня - поставьте родительскую группу Итого!")
 	DBSKUGroup parent;
 
 	public DBSKUGroup getParent() {

@@ -2,8 +2,10 @@ package com.malbi.sync.sku.application;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.RequestScoped;
@@ -11,6 +13,10 @@ import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
+import javax.validation.ConstraintViolation;
+import javax.validation.Validation;
+import javax.validation.Validator;
+import javax.validation.ValidatorFactory;
 
 import com.malbi.sync.sku.model.Changes;
 import com.malbi.sync.sku.model.DBSKUGroup;
@@ -28,8 +34,42 @@ public class DBSKUGroupsController implements Serializable {
 	public String applyChanges() {
 		String returnAddress = "";
 
-		// SKUService service = new SKUService();
 		StringBuffer log = new StringBuffer();
+
+		// 09.11.2015, Andrei Duplik
+		ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
+		Validator validator = factory.getValidator();
+
+		this.addDBGroupList.stream().filter(t -> t.isChecked()).forEach(t -> {
+			Set<ConstraintViolation<DialogueChanges>> constraintViolations = validator.validate(t);
+
+			Iterator<ConstraintViolation<DialogueChanges>> iterator = constraintViolations.iterator();
+
+			if (constraintViolations.size() != 0) {
+				while (iterator.hasNext()) {
+					ConstraintViolation<DialogueChanges> dialogueChangesViolation = iterator.next();
+
+					String propertyPath = dialogueChangesViolation.getPropertyPath().toString();
+					String message = dialogueChangesViolation.getMessage();
+					log.append("В строке с id " + Integer.toString(t.getId()) + " для поля " + propertyPath
+							+ " выведено сообщение об ошибке проверки " + message);
+				}
+
+			}
+
+		});
+
+		// if we have errors - quit.
+		if (!log.toString().isEmpty()) {
+			this.ExceptionString = log.toString();
+			FacesMessage msg = new FacesMessage("Ошибка работы с базой", this.ExceptionString);
+			msg.setSeverity(FacesMessage.SEVERITY_ERROR);
+			FacesContext.getCurrentInstance().addMessage(null, msg);
+
+			return returnAddress;
+		}
+		// 09.11.2015, Andrei Duplik
+
 		// rename checked groups
 		this.updateDBGroupList.stream().filter(t -> t.isChecked()).forEach(t -> {
 			boolean result;
@@ -43,6 +83,8 @@ public class DBSKUGroupsController implements Serializable {
 
 		this.addDBGroupList.stream().filter(t -> t.isChecked()).forEach(t -> {
 			boolean result;
+			// we can also add to top-level group.
+			// There is group Итого, id 1005. If none is selected - what to do?
 			int parentId = t.getParent().getId();
 			result = service.addNewGroup(parentId, t);
 			if (!result) {
@@ -77,7 +119,7 @@ public class DBSKUGroupsController implements Serializable {
 	}
 
 	public void refreshData() {
-		// SKUService service = new SKUService();
+
 		Map<Integer, String> skuGroupMap = service.getSkuGroupMap();
 		StringBuffer log = new StringBuffer();
 		appendLogAtRefresh(log);
@@ -85,7 +127,13 @@ public class DBSKUGroupsController implements Serializable {
 		List<Changes> groupUpdate = this.sessionManager.getxSource().getGroupUpdates(skuGroupMap);
 		groupUpdate.stream().forEach(t -> {
 			if (t.getBefore() == null) {
-				addDBGroupList.add(new DialogueChanges(t));
+				// 09.11.2015, Andrei Duplik
+				// will add parent group Итого, as it is the only top level
+				// group
+				DialogueChanges dialogueChanges = new DialogueChanges(t);
+				// by default, we are adding top level group
+				dialogueChanges.setParent(new DBSKUGroup(1005, "Итого"));
+				addDBGroupList.add(dialogueChanges);
 			} else {
 				updateDBGroupList.add(t);
 			}

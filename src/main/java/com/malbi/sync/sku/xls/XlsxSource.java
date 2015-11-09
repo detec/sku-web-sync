@@ -94,19 +94,42 @@ public class XlsxSource implements Serializable {
 
 	// this method should return not groups' codes but DBGroup objects with
 	// name. Andrei Duplik wrote after getSkuUpdates
-	public List<SKUGroupChanges> getSKUUpdatesDBGroups(Map<Integer, DbRowData> dbSkuMap) {
-		List<SKUGroupChanges> changes = new ArrayList<SKUGroupChanges>();
+	// public List<SKUGroupChanges> getSKUUpdatesDBGroups(Map<Integer,
+	// DbRowData> dbSkuMap) {
+	public List<SKUGroupChanges> getSKUUpdatesDBGroups() {
 
-		// SKUService service = new SKUService();
+		StringBuffer log = new StringBuffer();
+
+		// returns "select parent_id" + " ,node_id" + " ,is_group" + "
+		// ,is_plan_group"
+		// + " from xx_rs_sku_hierarchy" + " where is_group=0"
+		// so it returns the position of sku in the hierarchy.
+		Map<Integer, DbRowData> dbSkuMap = service.getSkuHierarchyMap();
+		appendLogAtRefresh(service, log);
+
+		// makes query to "select group_id" + " ,group_name" + " from
+		// xx_rs_sku_groups"
 		Map<Integer, String> mapDBGroups = service.getSkuGroupMap();
+		appendLogAtRefresh(service, log);
+
+		List<SKUGroupChanges> changes = new ArrayList<SKUGroupChanges>();
 
 		this.rows.stream().forEach(t -> {
 			Integer key = t.getSkuCode();
+
+			// check if xx_rs_sku_hierarchy contains node_id equal to sku id in
+			// xls row.
 			if (!dbSkuMap.containsKey(key)) {
-				// new sku
+
+				// new sku, according to Bondarenko.
 				Integer groupCode = t.getSkuGroupCode();
+
+				// get group name from common groups ref xx_rs_sku_groups
+				String pName = mapDBGroups.get(groupCode);
+
+				// new DBSKUGroup() equals to null in Bondarenko's version
 				SKUGroupChanges change = new SKUGroupChanges(key, new DBSKUGroup(),
-						new DBSKUGroup(groupCode.intValue(), mapDBGroups.get(groupCode)));
+						new DBSKUGroup(groupCode.intValue(), pName));
 
 				changes.add(change);
 			} else {
@@ -133,6 +156,10 @@ public class XlsxSource implements Serializable {
 			changes.add(change);
 		});
 
+		// put errors from db to current object exception string.
+		if (!log.toString().isEmpty()) {
+			this.ExceptionString = log.toString();
+		}
 		return changes;
 
 	}
@@ -381,7 +408,7 @@ public class XlsxSource implements Serializable {
 		XlsFile = xlsFile;
 	}
 
-	private String validationErrorLog;
+	private String validationErrorLog = "";
 
 	public String getValidationErrorLog() {
 		return validationErrorLog;
@@ -391,11 +418,27 @@ public class XlsxSource implements Serializable {
 		this.validationErrorLog = validationErrorLog;
 	}
 
+	private String ExceptionString = "";
+
+	public String getExceptionString() {
+		return ExceptionString;
+	}
+
+	public void setExceptionString(String exceptionString) {
+		ExceptionString = exceptionString;
+	}
+
 	private static final long serialVersionUID = 1936115774792361359L;
 
 	// Will add default constructor to split object creation and validation.
 	public XlsxSource() {
 
+	}
+
+	public void appendLogAtRefresh(SKUService service, StringBuffer log) {
+		if (!log.toString().isEmpty()) {
+			log.append(service.getErrorLog());
+		}
 	}
 
 	@Inject

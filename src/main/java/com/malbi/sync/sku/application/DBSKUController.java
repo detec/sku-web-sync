@@ -3,7 +3,6 @@ package com.malbi.sync.sku.application;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.RequestScoped;
@@ -13,7 +12,6 @@ import javax.inject.Inject;
 import javax.inject.Named;
 
 import com.malbi.sync.sku.model.DBSKUGroup;
-import com.malbi.sync.sku.model.DbRowData;
 import com.malbi.sync.sku.model.SKUGroupChanges;
 import com.malbi.sync.sku.service.SKUService;
 
@@ -83,13 +81,18 @@ public class DBSKUController implements Serializable {
 		}
 	}
 
-	public void refreshData() {
-		StringBuffer log = new StringBuffer();
-		// SKUService service = new SKUService();
-		Map<Integer, DbRowData> SKUHierarchy = service.getSkuHierarchyMap();
-		appendLogAtRefresh(service, log);
+	public void changeGroupAll() {
+		this.addList.forEach(t -> t.setChecked(true));
+	}
 
-		List<SKUGroupChanges> skuChanges = this.sessionManager.getxSource().getSKUUpdatesDBGroups(SKUHierarchy);
+	public void refreshData() {
+		// StringBuffer log = new StringBuffer();
+		// Map<Integer, DbRowData> SKUHierarchy = service.getSkuHierarchyMap();
+		// appendLogAtRefresh(service, log);
+
+		// List<SKUGroupChanges> skuChanges =
+		// this.sessionManager.getxSource().getSKUUpdatesDBGroups(SKUHierarchy);
+		List<SKUGroupChanges> skuChanges = this.sessionManager.getxSource().getSKUUpdatesDBGroups();
 
 		// for (Changes c : skuChanges)
 		//
@@ -103,7 +106,10 @@ public class DBSKUController implements Serializable {
 		// }
 		// }
 		skuChanges.stream().forEach(t -> {
+
+			// this is obviously equal to null in older version.
 			DBSKUGroup comparison = new DBSKUGroup();
+
 			if (t.getBefore().equals(comparison)) {
 				this.addList.add(t);
 			} else if (t.getAfter().equals(comparison)) {
@@ -111,12 +117,14 @@ public class DBSKUController implements Serializable {
 			} else {
 				this.updateList.add(t);
 			}
+
 		});
 
 		// after all operations.
-		if (!log.toString().isEmpty()) {
+		if (!this.sessionManager.getxSource().getExceptionString().isEmpty()) {
 
-			this.ExceptionString = log.toString();
+			// this.ExceptionString = log.toString();
+			this.ExceptionString = this.sessionManager.getxSource().getExceptionString();
 			FacesMessage msg = new FacesMessage("Ошибки при операциях с базы данных", this.ExceptionString);
 			msg.setSeverity(FacesMessage.SEVERITY_ERROR);
 			FacesContext.getCurrentInstance().addMessage(null, msg);

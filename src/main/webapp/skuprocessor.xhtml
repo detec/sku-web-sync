@@ -48,6 +48,9 @@
 		<h4>Добавленные SKU</h4>
 		<h:outputLabel value="Они были добавлены в XLS-файл. Для добавления SKU в базу данных отметьте необходимые строки флажками.">
 		</h:outputLabel>
+		<br></br>
+		<h:commandButton value="Выбрать всё" 
+		action="#{DBSKUController.changeGroupAll}" id="selectAllChangeGroup"></h:commandButton>
 	    <h:dataTable border="1" var = "s" value="#{DBSKUController.addList}" id="AddListDataTable">
 	    	<h:column id="Selected">
 	    		<f:facet name="header" >
