@@ -37,6 +37,9 @@ public class DAO implements Serializable {
 			skuMap.put(rs.getInt(1), rs.getString(2));
 		}
 
+		// or we get ORA-01000: maximum open cursors exceeded
+		stmt.close();
+		rs.close();
 		con.close();
 
 		return skuMap;
@@ -54,6 +57,8 @@ public class DAO implements Serializable {
 			skuGropMap.put(rs.getInt(1), rs.getString(2));
 		}
 
+		stmt.close();
+		rs.close(); // or we get ORA-01000: maximum open cursors exceeded
 		con.close();
 		return skuGropMap;
 	}
@@ -72,6 +77,8 @@ public class DAO implements Serializable {
 			dbRows.put(rs.getInt(2), new DbRowData(rs.getInt(1), rs.getInt(2), rs.getInt(3), rs.getInt(4)));
 		}
 
+		stmt.close();
+		rs.close(); // or we get ORA-01000: maximum open cursors exceeded
 		con.close();
 
 		return dbRows;
@@ -93,6 +100,8 @@ public class DAO implements Serializable {
 			skuGroup = new DBSKUGroup(rs.getInt(1), rs.getString(2));
 		}
 
+		stmt.close();
+		rs.close(); // or we get ORA-01000: maximum open cursors exceeded
 		con.close();
 		return skuGroup;
 	}
@@ -110,6 +119,8 @@ public class DAO implements Serializable {
 		stmt.setInt(4, 0);
 		stmt.executeUpdate();
 
+		// or we get ORA-01000: maximum open cursors exceeded
+		stmt.close();
 		con.close();
 
 	}
@@ -122,6 +133,8 @@ public class DAO implements Serializable {
 		stmt.setInt(2, changes.getId());
 		stmt.executeUpdate();
 
+		// or we get ORA-01000: maximum open cursors exceeded
+		stmt.close();
 		con.close();
 	}
 
@@ -134,6 +147,8 @@ public class DAO implements Serializable {
 		stmt.setInt(2, group.getId());
 		stmt.executeUpdate();
 
+		// or we get ORA-01000: maximum open cursors exceeded
+		stmt.close();
 		con.close();
 	}
 
@@ -159,6 +174,8 @@ public class DAO implements Serializable {
 		pStmt.setInt(4, 0);
 		pStmt.executeUpdate();
 
+		// or we get ORA-01000: maximum open cursors exceeded
+		pStmt.close();
 		con.close();
 
 	}
@@ -175,6 +192,8 @@ public class DAO implements Serializable {
 		pStmt.setInt(2, sku.getId());
 		pStmt.executeUpdate();
 
+		// or we get ORA-01000: maximum open cursors exceeded
+		pStmt.close();
 		con.close();
 
 	}
@@ -188,6 +207,8 @@ public class DAO implements Serializable {
 		pStmt.setInt(1, sku.getId());
 		pStmt.executeUpdate();
 
+		// or we get ORA-01000: maximum open cursors exceeded
+		pStmt.close();
 		con.close();
 	}
 
