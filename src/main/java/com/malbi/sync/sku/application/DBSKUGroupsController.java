@@ -4,7 +4,6 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 import javax.annotation.PostConstruct;
@@ -120,11 +119,11 @@ public class DBSKUGroupsController implements Serializable {
 
 	public void refreshData() {
 
-		Map<Integer, String> skuGroupMap = service.getSkuGroupMap();
+		// Map<Integer, String> skuGroupMap = service.getSkuGroupMap();
 		StringBuffer log = new StringBuffer();
-		appendLogAtRefresh(log);
+		// appendLogAtRefresh(log);
 
-		List<Changes> groupUpdate = this.sessionManager.getxSource().getGroupUpdates(skuGroupMap);
+		List<Changes> groupUpdate = this.sessionManager.getxSource().getGroupUpdates();
 		groupUpdate.stream().forEach(t -> {
 			if (t.getBefore() == null) {
 				// 09.11.2015, Andrei Duplik

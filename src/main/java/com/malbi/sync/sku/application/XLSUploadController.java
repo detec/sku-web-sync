@@ -33,12 +33,6 @@ public class XLSUploadController implements Serializable {
 
 	}
 
-	// public void appendLog(SKUService service, StringBuffer log) {
-	// String receivedLog = service.getErrorLog();
-	// // append carrige return if error message is not empty.
-	// log.append(receivedLog + ((receivedLog.length() == 0) ? "" : "\n"));
-	// }
-
 	public void upload() {
 		StringBuffer log = new StringBuffer();
 
@@ -49,7 +43,6 @@ public class XLSUploadController implements Serializable {
 			this.outputFile = File.createTempFile("SKU_BASE_1C", ".xls");
 
 		} catch (IOException e) {
-			// this.ExceptionString = e.getMessage();
 			log.append(e.getMessage());
 			this.fileUploaded = false;
 			return;
@@ -59,8 +52,6 @@ public class XLSUploadController implements Serializable {
 		try {
 			inputStream = file.getInputStream();
 		} catch (IOException e) {
-
-			// this.ExceptionString = e.getMessage();
 			log.append(e.getMessage());
 			this.fileUploaded = false;
 			return;
@@ -70,7 +61,6 @@ public class XLSUploadController implements Serializable {
 		try {
 			outputStream = new FileOutputStream(outputFile);
 		} catch (FileNotFoundException e) {
-			// this.ExceptionString = e.getMessage();
 			log.append(e.getMessage());
 			this.fileUploaded = false;
 			return;
@@ -83,14 +73,13 @@ public class XLSUploadController implements Serializable {
 				outputStream.write(buffer, 0, bytesRead);
 			}
 		} catch (IOException e) {
-			// this.ExceptionString = e.getMessage();
 			log.append(e.getMessage());
 
 			if (outputStream != null) {
 				try {
 					outputStream.close();
 				} catch (IOException e1) {
-					// this.ExceptionString = e1.getMessage();
+
 					log.append(e1.getMessage());
 				}
 			}
@@ -103,7 +92,6 @@ public class XLSUploadController implements Serializable {
 			try {
 				outputStream.close();
 			} catch (IOException e) {
-				// this.ExceptionString = e.getMessage();
 				log.append(e.getMessage());
 				this.fileUploaded = false;
 				return;
@@ -113,7 +101,6 @@ public class XLSUploadController implements Serializable {
 			try {
 				inputStream.close();
 			} catch (IOException e) {
-				// this.ExceptionString = e.getMessage();
 				log.append(e.getMessage());
 				this.fileUploaded = false;
 				return;
@@ -144,14 +131,12 @@ public class XLSUploadController implements Serializable {
 			return;
 		}
 
-		// XlsxSource xSource = new XlsxSource();
 		XlsxSource xSource = sessionManager.getxSource();
 		xSource.setXlsFile(this.outputFile);
 		// reading file into some linked list with rows.
 		try {
 			xSource.initData();
 		} catch (Exception e) {
-			// this.ExceptionString = e.getMessage();
 			log.append(e.getMessage());
 			FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_FATAL, "Закачка файла SKU_BASE_1C.xls",
 					log.toString());

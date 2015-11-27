@@ -70,8 +70,6 @@ public class LoginBean implements Serializable {
 			return;
 		}
 
-		// we are injecting bean
-		// this.xSource = new XlsxSource();
 		this.loggedIn = true;
 
 	}
@@ -79,9 +77,6 @@ public class LoginBean implements Serializable {
 	public String logout() {
 		this.loggedIn = false;
 		this.password = "";
-
-		// we are injecting bean
-		// this.xSource = new XlsxSource();
 
 		HttpSession session = SessionBean.getSession();
 		session.invalidate();
@@ -133,9 +128,6 @@ public class LoginBean implements Serializable {
 	public void setLoggedIn(boolean loggedIn) {
 		this.loggedIn = loggedIn;
 	}
-
-	// Let's try not to create injected bean
-	// private XlsxSource xSource = new XlsxSource();
 
 	@Inject
 	private XlsxSource xSource;

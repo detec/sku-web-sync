@@ -38,7 +38,12 @@ import com.malbi.sync.sku.service.SKUService;
 @SessionScoped
 public class XlsxSource implements Serializable {
 
-	public List<Changes> getGroupUpdates(Map<Integer, String> dbSkuGropMap) {
+	public List<Changes> getGroupUpdates() {
+
+		StringBuffer log = new StringBuffer();
+		Map<Integer, String> dbSkuGropMap = service.getSkuGroupMap();
+		appendLogAtRefresh(service, log); // check if we got errors.
+
 		Map<Integer, Changes> changes = new HashMap<Integer, Changes>();
 		Integer key;
 		String dbSkuGroupName;

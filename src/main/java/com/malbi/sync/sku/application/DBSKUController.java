@@ -32,7 +32,6 @@ public class DBSKUController implements Serializable {
 	public String applyChanges() {
 		String returnAddress = "";
 
-		// SKUService service = new SKUService();
 		StringBuffer log = new StringBuffer();
 
 		// move checked SKU
@@ -86,12 +85,7 @@ public class DBSKUController implements Serializable {
 	}
 
 	public void refreshData() {
-		// StringBuffer log = new StringBuffer();
-		// Map<Integer, DbRowData> SKUHierarchy = service.getSkuHierarchyMap();
-		// appendLogAtRefresh(service, log);
 
-		// List<SKUGroupChanges> skuChanges =
-		// this.sessionManager.getxSource().getSKUUpdatesDBGroups(SKUHierarchy);
 		List<SKUGroupChanges> skuChanges = this.sessionManager.getxSource().getSKUUpdatesDBGroups();
 
 		// for (Changes c : skuChanges)

@@ -15,16 +15,6 @@ public class SessionBean {
 	}
 
 	public static String getUserName() {
-		// HttpSession session = (HttpSession)
-		// FacesContext.getCurrentInstance().getExternalContext().getSession(false);
-		//
-		//
-		// if (session != null) {
-		// Object attribute = session.getAttribute("username");
-		// if (attribute != null) {
-		// username = attribute.toString();
-		// }
-		// }
 
 		String remoteuser = FacesContext.getCurrentInstance().getExternalContext().getRemoteUser();
 

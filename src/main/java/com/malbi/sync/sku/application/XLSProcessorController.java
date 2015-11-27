@@ -93,14 +93,14 @@ public class XLSProcessorController implements Serializable {
 		StringBuffer log = new StringBuffer();
 
 		List<XlsRowData> rows = this.sessionManager.getxSource().getRows();
-		// SKUService service = new SKUService();
+
 		this.skuMap = service.getSkuMap();
 		// check if there are errors.
-		// this.ExceptionString = service.getErrorLog();
 		appendLog(log);
 
 		// Let's not fill second table if database connection failed.
 		if (this.skuMap.size() == 0) {
+			showFacesException(log);
 			return;
 		}
 		for (XlsRowData xls : rows) {
@@ -115,13 +115,18 @@ public class XLSProcessorController implements Serializable {
 			}
 		}
 
+		showFacesException(log);
+
+	}
+
+	private void showFacesException(StringBuffer log) {
+
 		if (!log.toString().isEmpty()) {
 			this.ExceptionString = log.toString();
 			FacesMessage msg = new FacesMessage("Ошибка работы с базой", this.ExceptionString);
 			msg.setSeverity(FacesMessage.SEVERITY_ERROR);
 			FacesContext.getCurrentInstance().addMessage(null, msg);
 		}
-
 	}
 
 	private void appendLog(StringBuffer log) {
