@@ -11,8 +11,15 @@
 </head>
 
 <h:body>	
-<h3>Вход в приложение синхронизация SKU</h3>	
-<!-- 	    <h:form id="LoginForm" enctype="multipart/form-data" > -->
+<h3>Вход в приложение синхронизация SKU</h3>
+
+<!-- This doesn't work, because servlet handler is used. -->
+<h:messages id="messages" errorClass="err" warnClass="warn" infoClass="info" style="color: #FF8080" showDetail="true" showSummary="true" layout="table"/>
+
+<!-- http://stackoverflow.com/questions/10367152/jsf-authentication-cannot-intercept-error-messages -->
+<h:panelGroup rendered="#{requestScope['javax.servlet.forward.servlet_path'] == '/j_security_check'}">
+    <h:outputText value="Ошибка входа в приложение: неверный логин и/или пароль!" style="color: #FF8080" />
+</h:panelGroup>
 
 		<h:form id="LoginForm" prependId="false" 
              onsubmit="document.getElementById('LoginForm').action = 'j_security_check';"> 
@@ -34,7 +41,7 @@
 	          <h:commandButton value="Вход" type="submit" id="SubmitButton"/>
 			
 		</h:form>
-<h:messages id="messages" errorClass="err" warnClass="warn" infoClass="info" style="color: #FF8080" showDetail="true" showSummary="true" layout="table"/>
+
 
 </h:body>
 
