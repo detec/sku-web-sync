@@ -14,7 +14,7 @@ The process of synchronization has been split into such phases:
 
 ## Tests notice ##
 
-As this application uses a large customized OEBS database, there are no JUnit tests. Only automated functional testing is used, where Maven cargo plugin raises GlassFish 4 instance, changes configuration to desired one. From client side Selenium Firefox client tests login and logout, .xls file upload and download, ability to change wizard steps without changes.
+As this application uses a large customized OEBS database with piles of interdependent tables, there are no JUnit tests. Only automated functional testing is used, where Maven cargo plugin raises GlassFish 4 instance and changes configuration to desired one. From client side Selenium Firefox client tests login and logout, .xls file upload and download, ability to pass through wizard steps without changes made to database.
 
 ## System requirements ##
 
