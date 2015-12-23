@@ -11,8 +11,9 @@ import javax.inject.Named;
 
 @Named("ConnectionManager")
 @ApplicationScoped
-public class ConnectionManager implements Serializable {
+public class ConnectionManager implements Serializable, IConnectionManager {
 
+	@Override
 	public Connection getDBConnection() throws SQLException {
 		Connection con = null;
 		if (DataSource != null) {
@@ -23,7 +24,7 @@ public class ConnectionManager implements Serializable {
 				con.setTransactionIsolation(Connection.TRANSACTION_SERIALIZABLE);
 			}
 		} else {
-			throw new SQLException("Datasource from Glassfish application server returned as null!");
+			throw new SQLException("Datasource from Tomcat returned as null!");
 		}
 		return con;
 	}
@@ -32,4 +33,5 @@ public class ConnectionManager implements Serializable {
 
 	@Resource(name = "Oracle")
 	private com.sun.appserv.jdbc.DataSource DataSource;
+
 }

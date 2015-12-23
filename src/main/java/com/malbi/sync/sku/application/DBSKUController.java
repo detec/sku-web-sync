@@ -21,7 +21,7 @@ public class DBSKUController implements Serializable {
 
 	public void appendLog(SKUService service, StringBuffer log) {
 		String receivedLog = service.getErrorLog();
-		// append carrige return if error message is not empty.
+		// append carriage return if error message is not empty.
 		log.append(receivedLog + ((receivedLog.length() == 0) ? "" : "\n"));
 	}
 

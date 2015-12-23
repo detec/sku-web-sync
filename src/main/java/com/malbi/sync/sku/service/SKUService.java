@@ -23,6 +23,14 @@ import com.malbi.sync.sku.model.SKUGroupChanges;
 @SessionScoped
 public class SKUService implements Serializable {
 
+	public DAO getDAO() {
+		return DAO;
+	}
+
+	public void setDAO(DAO dAO) {
+		DAO = dAO;
+	}
+
 	public Map<Integer, String> getSkuMap() {
 		Map<Integer, String> skuMap = new HashMap<Integer, String>();
 

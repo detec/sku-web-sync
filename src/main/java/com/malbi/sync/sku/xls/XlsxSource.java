@@ -38,6 +38,14 @@ import com.malbi.sync.sku.service.SKUService;
 @SessionScoped
 public class XlsxSource implements Serializable {
 
+	public SKUService getService() {
+		return service;
+	}
+
+	public void setService(SKUService service) {
+		this.service = service;
+	}
+
 	public List<Changes> getGroupUpdates() {
 
 		StringBuffer log = new StringBuffer();
@@ -447,5 +455,5 @@ public class XlsxSource implements Serializable {
 	}
 
 	@Inject
-	SKUService service;
+	private SKUService service;
 }
