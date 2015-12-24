@@ -56,13 +56,13 @@ public class XLSDownloadController implements Serializable {
 	private static final long serialVersionUID = 2829805868397655132L;
 
 	@Inject
-	private LoginBean sessionManager;
+	private ISessionManager sessionManager;
 
-	public LoginBean getSessionManager() {
+	public ISessionManager getSessionManager() {
 		return sessionManager;
 	}
 
-	public void setSessionManager(LoginBean sessionManager) {
+	public void setSessionManager(ISessionManager sessionManager) {
 		this.sessionManager = sessionManager;
 	}
 

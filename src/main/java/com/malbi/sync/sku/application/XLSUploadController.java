@@ -214,13 +214,13 @@ public class XLSUploadController implements Serializable {
 	}
 
 	@Inject // it is created at postconstruct
-	private LoginBean sessionManager;
+	private ISessionManager sessionManager;
 
-	public LoginBean getSessionManager() {
+	public ISessionManager getSessionManager() {
 		return sessionManager;
 	}
 
-	public void setSessionManager(LoginBean sessionManager) {
+	public void setSessionManager(ISessionManager sessionManager) {
 		this.sessionManager = sessionManager;
 	}
 }

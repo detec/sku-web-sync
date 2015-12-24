@@ -57,7 +57,8 @@ public class XLSProcessorController implements Serializable {
 
 	public void removeXLSRows() {
 
-		skuRename.stream().filter(t -> t.isChecked()).forEach(t -> {
+		// corrected 24.12.2015.
+		this.doesNotExist.stream().filter(t -> t.isChecked()).forEach(t -> {
 			int key = t.getId();
 			int rowId = this.sessionManager.getxSource().getArrayIdOfXlsRowDataBySkuCode(key);
 			this.sessionManager.getxSource().getRows().remove(rowId);
@@ -156,14 +157,22 @@ public class XLSProcessorController implements Serializable {
 	}
 
 	@Inject
-	private LoginBean sessionManager;
+	private ISessionManager sessionManager;
 
-	public LoginBean getSessionManager() {
+	public ISessionManager getSessionManager() {
 		return sessionManager;
 	}
 
-	public void setSessionManager(LoginBean sessionManager) {
+	public void setSessionManager(ISessionManager sessionManager) {
 		this.sessionManager = sessionManager;
+	}
+
+	public SKUService getService() {
+		return service;
+	}
+
+	public void setService(SKUService service) {
+		this.service = service;
 	}
 
 	Map<Integer, String> skuMap = new HashMap<>();

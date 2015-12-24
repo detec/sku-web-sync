@@ -18,7 +18,7 @@ import com.malbi.sync.sku.xls.XlsxSource;
 
 @Named("loginBean")
 @SessionScoped
-public class LoginBean implements Serializable {
+public class LoginBean implements Serializable, ISessionManager {
 
 	// add default constructor
 	public LoginBean() {
@@ -132,10 +132,12 @@ public class LoginBean implements Serializable {
 	@Inject
 	private XlsxSource xSource;
 
+	@Override
 	public XlsxSource getxSource() {
 		return xSource;
 	}
 
+	@Override
 	public void setxSource(XlsxSource xSource) {
 		this.xSource = xSource;
 	}

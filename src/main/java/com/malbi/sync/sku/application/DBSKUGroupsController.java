@@ -191,13 +191,21 @@ public class DBSKUGroupsController implements Serializable {
 	}
 
 	@Inject
-	private LoginBean sessionManager;
+	private ISessionManager sessionManager;
 
-	public LoginBean getSessionManager() {
+	public ISessionManager getSessionManager() {
 		return sessionManager;
 	}
 
-	public void setSessionManager(LoginBean sessionManager) {
+	public SKUService getService() {
+		return service;
+	}
+
+	public void setService(SKUService service) {
+		this.service = service;
+	}
+
+	public void setSessionManager(ISessionManager sessionManager) {
 		this.sessionManager = sessionManager;
 	}
 
