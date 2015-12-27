@@ -41,6 +41,7 @@ With DBUnit and H2 components had been added, it became possible to develop unit
 - Selenium;
 - DBUnit 2.5;
 - H2;
+- Maven 3.3 with plugins compiler, surefire, resources, war, cargo
 - GlassFish 4.1;
 - Java 8.
 
