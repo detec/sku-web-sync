@@ -52,6 +52,11 @@
   		<artifactId>ojdbc6</artifactId> 
   		<version>11.2.0.3</version> 
   	</dependency>
+  	<dependency>
+		<groupId>com.h2database</groupId>
+		<artifactId>h2</artifactId>
+		<version>1.4.187</version>
+	</dependency>
 	
 	<!-- JSF implementation: Mojarra org.glassfish - is the one at org.glassfish and it is working! -->
 	
@@ -73,7 +78,7 @@
 	<dependency>
 		<groupId>org.hibernate</groupId>
 		<artifactId>hibernate-validator</artifactId>
-		<version>5.2.1.Final</version>
+		<version>5.2.2.Final</version>
 	</dependency>
 	
 	<!--  Work with Excel -->
@@ -85,7 +90,7 @@
     <dependency>
 		<groupId>org.glassfish.main.common</groupId>
 		<artifactId>glassfish-api</artifactId>
-		<version>4.1</version>
+		<version>4.1.1</version>
 		<scope>provided</scope>
     </dependency>
     <dependency>
@@ -116,41 +121,32 @@
 	</dependency>
 	
 	<!-- From https://kenai.com/projects/javaee-patterns/sources/hg/content/TestingEJBAndCDI/pom.xml?rev=227 -->
-	<dependency>
+<!-- 	<dependency>
 		<groupId>org.glassfish.extras</groupId>
 		<artifactId>glassfish-embedded-all</artifactId>
-		<version>3.1</version>
+		<version>4.1.1</version>
 		<scope>provided</scope>
-	</dependency>
-	
-<!-- 	<dependency>
-		<groupId>org.jboss.arquillian.junit</groupId>
-		<artifactId>arquillian-junit-standalone</artifactId>
-		<version>${org.jboss.arquillian.version}</version>
-		<scope>test</scope>
-	</dependency>
-
-	glassfish container
-	<dependency>
-		<groupId>org.jboss.arquillian.container</groupId>
-		<artifactId>arquillian-glassfish-embedded-3.1</artifactId>
-		<version>1.0.0.CR4</version>
-		<scope>test</scope>
 	</dependency> -->
-			
-<!-- 	<dependency>  -->
-<!--     	<groupId>org.jboss.arquillian.junit</groupId>  -->
-<!--         <artifactId>arquillian-junit-container</artifactId> -->
-<!--         <version>1.1.10.Final</version>  -->
-<!--         <scope>test</scope>  -->
-<!-- 	</dependency> -->
-<!-- 	<dependency> -->
-<!-- 		<groupId>org.jboss.arquillian</groupId>  -->
-<!-- 		<artifactId>arquillian-bom</artifactId>  -->
-<!-- 		<version>${org.jboss.arquillian.version}</version>  -->
-<!-- 		<scope>test</scope>  -->
-<!-- 	</dependency>  -->
-	  	
+  	<dependency>
+		<groupId>org.dbunit</groupId>
+		<artifactId>dbunit</artifactId>
+		<version>2.5.1</version>
+		<scope>test</scope>
+	</dependency>
+	<!-- DBUnit needs this otherwise it uses GlassFish's embedded -->
+	<dependency>
+    	<groupId>org.slf4j</groupId>
+    	<artifactId>slf4j-api</artifactId>
+    	<version>1.7.13</version>
+    	<scope>test</scope>
+	</dependency>
+  	<dependency>
+		<groupId>org.slf4j</groupId>
+		<artifactId>slf4j-log4j12</artifactId>
+		<version>1.7.13</version>
+		<scope>test</scope>
+  	</dependency>
+  	
 </dependencies>
 
  
@@ -158,20 +154,24 @@
 
   <build>
     <finalName>sku-web-sync</finalName>
+    
     <sourceDirectory>src/main/java</sourceDirectory>
-    <resources>
+  
+<!--     <resources>
       <resource>
         <directory>src/main/recources</directory>
         <excludes>
           <exclude>**/*.java</exclude>
         </excludes>
+        <includes>
+        <include>SQLQueries.properties</include>
+        </includes>
       </resource>
-    </resources>
+    </resources> -->
     
 	<defaultGoal>install</defaultGoal>
 	<testResources>
 	  <testResource>
-	  	
 	    <directory>${project.basedir}/src/test/java</directory>
 	  </testResource>
 	  <testResource>
@@ -199,29 +199,6 @@
 	        </configuration>
     	</plugin>
  
-	<!-- From https://kenai.com/projects/javaee-patterns/sources/hg/content/TestingEJBAndCDI/pom.xml?rev=227 -->     
-<!-- 		<plugin>
-			<groupId>org.apache.maven.plugins</groupId>
-			<artifactId>maven-failsafe-plugin</artifactId>
-			<version>2.19</version>
-				<executions>
-					<execution>
-					<id>integration-test</id>
-					<phase>integration-test</phase>
-					<goals>
-						<goal>integration-test</goal>
-					</goals>
-					</execution>
-				<execution>
-				<id>verify</id>
-				<phase>verify</phase>
-				<goals>
-					<goal>verify</goal>
-				</goals>
-				</execution>
-			</executions>     
-		</plugin>       -->
-		
 		<!-- http://stackoverflow.com/questions/20916581/how-to-do-in-container-testing-of-a-web-app-in-spring -->
 		<plugin>
         	<groupId>org.codehaus.cargo</groupId>
@@ -242,13 +219,20 @@
 
 							<!-- Cleaned domain.xml from datasources -->
                              <cargo.datasource.datasource.ds1>
-                             cargo.datasource.url=jdbc:oracle:thin:@dummy.dp.ua:1521:WORK|
+                             cargo.datasource.url=jdbc:oracle:thin:@oradb02.malbi.dp.ua:1521:WORK|
                              cargo.datasource.driver=oracle.jdbc.pool.OracleDataSource|
-                             cargo.datasource.username=foo|
-                             cargo.datasource.password=bar|
+                             cargo.datasource.username=xx|
+                             cargo.datasource.password=xx|
                              cargo.datasource.jndi=Oracle
+                             <!-- We will use H2 in-memory datasource 
+                             It seems, that current version does not support ommitting cargo.datasource.password
+                             -->
+ <!--                             cargo.datasource.url=jdbc:h2:mem:test;DB_CLOSE_DELAY=-1|
+                             cargo.datasource.driver=org.h2.Driver|
+                             cargo.datasource.username=sa|
+                             cargo.datasource.jndi=Oracle -->
                              </cargo.datasource.datasource.ds1>
-                             
+<!--                              cargo.datasource.password=| -->                             
                              <!-- 
 							http://stackoverflow.com/questions/10247601/how-to-setup-configuration-jdbc-realm-or-a-java-mail-session-in-glassfish-with
 							How to setup configuration (JDBC Realm or a Java Mail Session) in Glassfish with Maven Cargo?
