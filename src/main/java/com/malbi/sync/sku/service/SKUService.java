@@ -66,7 +66,7 @@ public class SKUService implements Serializable {
 	}
 
 	// changed
-	public boolean addSkuToDB(SKUGroupChanges c) {
+	public boolean addSkuToDBHierarchy(SKUGroupChanges c) {
 		boolean result = false;
 
 		// In DAO we should send plain objects, not business-layer ones.
@@ -75,7 +75,7 @@ public class SKUService implements Serializable {
 		sku.setParentId(c.getAfter().getId()); // id of the parent group.
 
 		try {
-			DAO.addSkuToDB(sku);
+			DAO.addSkuToDBHierarchy(sku);
 			result = true;
 		} catch (SQLException | ClassNotFoundException | NamingException e) {
 			this.ErrorLog = "Не удалось получить иерархию SKU из БД: \n" + e.getMessage();

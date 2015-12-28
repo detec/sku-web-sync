@@ -62,8 +62,7 @@ public class DBSKUGroupsController implements Serializable {
 		if (!log.toString().isEmpty()) {
 			this.ExceptionString = log.toString();
 			FacesMessage msg = new FacesMessage("Ошибка работы с базой", this.ExceptionString);
-			msg.setSeverity(FacesMessage.SEVERITY_ERROR);
-			FacesContext.getCurrentInstance().addMessage(null, msg);
+			addFacesMessage(msg);
 
 			return returnAddress;
 		}
@@ -97,8 +96,7 @@ public class DBSKUGroupsController implements Serializable {
 		if (!log.toString().isEmpty()) {
 			this.ExceptionString = log.toString();
 			FacesMessage msg = new FacesMessage("Ошибка работы с базой", this.ExceptionString);
-			msg.setSeverity(FacesMessage.SEVERITY_ERROR);
-			FacesContext.getCurrentInstance().addMessage(null, msg);
+			addFacesMessage(msg);
 
 		} else {
 			returnAddress = "/skuprocessor.xhtml?faces-redirect=true";
@@ -145,8 +143,15 @@ public class DBSKUGroupsController implements Serializable {
 		if (!log.toString().isEmpty()) {
 			this.ExceptionString = log.toString();
 			FacesMessage msg = new FacesMessage("Ошибка работы с базой", this.ExceptionString);
-			msg.setSeverity(FacesMessage.SEVERITY_ERROR);
-			FacesContext.getCurrentInstance().addMessage(null, msg);
+			addFacesMessage(msg);
+		}
+	}
+
+	private void addFacesMessage(FacesMessage msg) {
+		msg.setSeverity(FacesMessage.SEVERITY_ERROR);
+		FacesContext fc = FacesContext.getCurrentInstance();
+		if (fc != null) {
+			fc.addMessage(null, msg);
 		}
 	}
 
@@ -212,6 +217,6 @@ public class DBSKUGroupsController implements Serializable {
 	private static final long serialVersionUID = 3971794466485136396L;
 
 	@Inject
-	SKUService service;
+	private SKUService service;
 
 }

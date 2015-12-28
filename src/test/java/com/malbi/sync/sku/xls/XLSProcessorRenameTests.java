@@ -22,6 +22,7 @@ public class XLSProcessorRenameTests extends XLSProcessorAbstractTest {
 
 		// now should coincide with the name in database
 		assertEquals("Шоколад Любимов к/у молочний", xSource.getRows().get(0).getSkuName());
+		assertEquals(true, xpc.getExceptionString().isEmpty());
 
 	}
 
@@ -31,6 +32,7 @@ public class XLSProcessorRenameTests extends XLSProcessorAbstractTest {
 		assertEquals(1, xpc.getSkuRename().size());
 		assertEquals(302204010, xpc.getSkuRename().get(0).getId());
 		assertEquals(0, xpc.getDoesNotExist().size());
+		assertEquals(true, xpc.getExceptionString().isEmpty());
 
 	}
 

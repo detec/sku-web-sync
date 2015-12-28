@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?> 
+<dataset>
+	<!--
+	<xx_rs_sku_groups GROUP_ID="1005" GROUP_NAME="Итого" />
+	<xx_rs_sku_hierarchy NODE_ID="1005" IS_GROUP="1" IS_PLAN_GROUP="0" />
+	-->
+
+	
+	<xx_rs_sku_groups GROUP_ID="1018" GROUP_NAME="Шоколад" />
+	<xx_rs_sku_hierarchy PARENT_ID="1005" NODE_ID="1018" IS_GROUP="1" IS_PLAN_GROUP="0" />
+	<xx_rs_sku_groups GROUP_ID="1020" GROUP_NAME="Шоколад Любимов" />  	
+	<xx_rs_sku_hierarchy PARENT_ID="1018" NODE_ID="1020" IS_GROUP="1" IS_PLAN_GROUP="1" />	
+	<xx_rs_sku_hierarchy PARENT_ID="1020" NODE_ID="301" IS_GROUP="1" IS_PLAN_GROUP="0" />
+	
+	<xx_rs_sku_groups GROUP_ID="301" GROUP_NAME="Любимов классический" />
+	<items ITEM_NO="302204010" ITEM_DESC="Шоколад Любимов к/у молочний" /> 
+ 	<xx_rs_sku_hierarchy PARENT_ID="301" NODE_ID="302204010" IS_GROUP="0" IS_PLAN_GROUP="0" />
+
+
+</dataset>

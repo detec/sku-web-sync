@@ -1,21 +1,15 @@
 package com.malbi.sync.sku.jsfcontrollers;
 
-import java.io.IOException;
-import java.sql.SQLException;
-
-import org.dbunit.DatabaseUnitException;
 import org.junit.Before;
 import org.junit.Test;
 
 import com.malbi.sync.sku.model.DBSKUGroup;
 import com.malbi.sync.sku.model.DialogueChanges;
-import com.malbi.sync.sku.util.UnloadTestDatabase;
 
 public class DBSKUGroupsAddTests extends DBSKUGroupsAbstractTest {
 
 	public DBSKUGroupsAddTests(String name) {
 		super(name);
-		// TODO Auto-generated constructor stub
 	}
 
 	@Override
@@ -58,14 +52,17 @@ public class DBSKUGroupsAddTests extends DBSKUGroupsAbstractTest {
 
 		DBskuGC.applyChanges();
 
-		try {
-			new UnloadTestDatabase();
-		} catch (ClassNotFoundException | SQLException | IOException | DatabaseUnitException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		/*
+		 * try { new UnloadTestDatabase(); } catch (ClassNotFoundException |
+		 * SQLException | IOException | DatabaseUnitException e) {
+		 *
+		 * e.printStackTrace(); }
+		 */
 		// here we should check if group was really added to DB.
+		// Fetch database data after executing your code
 
+		String expectedDatasetPath = "/dbunit/after_new_group_insert.xml";
+		compareDatasets(expectedDatasetPath);
 	}
 
 }

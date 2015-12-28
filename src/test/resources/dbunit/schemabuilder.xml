@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <dataset>
-<items ITEM_NO="302204010" ITEM_DESC="&#1064;&#1086;&#1082;&#1086;&#1083;&#1072;&#1076; &#1051;&#1102;&#1073;&#1080;&#1084;&#1086;&#1074; &#1082;/&#1091; &#1084;&#1086;&#1083;&#1086;&#1095;&#1085;&#1080;&#1081;"/>
-<xx_rs_sku_groups GROUP_ID="301" GROUP_NAME="&#1051;&#1102;&#1073;&#1080;&#1084;&#1086;&#1074; &#1082;&#1083;&#1072;&#1089;&#1089;&#1080;&#1095;&#1077;&#1089;&#1082;&#1080;&#1081;"/>
-<xx_rs_sku_hierarchy PARENT_ID="301" NODE_ID="302204010" IS_GROUP="0" IS_PLAN_GROUP="0"/>
+<items ITEM_NO="1" ITEM_DESC="stub"/>
+<xx_rs_sku_groups GROUP_ID="1" GROUP_NAME="stub"/>
+<xx_rs_sku_hierarchy PARENT_ID="1" NODE_ID="1" IS_GROUP="0" IS_PLAN_GROUP="0"/>
 </dataset>

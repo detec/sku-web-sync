@@ -22,6 +22,7 @@ public class XLSProcessorDoesNotExistTests extends XLSProcessorAbstractTest {
 
 		// one row should be in XLS file
 		assertEquals(1, xpc.getSessionManager().getxSource().getRows().size());
+		assertEquals(true, xpc.getExceptionString().isEmpty());
 	}
 
 	@Test
@@ -33,6 +34,7 @@ public class XLSProcessorDoesNotExistTests extends XLSProcessorAbstractTest {
 		assertEquals(1, xpc.getDoesNotExist().size());
 		assertEquals(302204020, xpc.getDoesNotExist().get(0).getId());
 		assertEquals(0, xpc.getSkuRename().size());
+		assertEquals(true, xpc.getExceptionString().isEmpty());
 
 	}
 

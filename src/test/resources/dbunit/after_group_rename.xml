@@ -1,0 +1,13 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<dataset>
+  <items ITEM_NO="302204010" ITEM_DESC="&#1064;&#1086;&#1082;&#1086;&#1083;&#1072;&#1076; &#1051;&#1102;&#1073;&#1080;&#1084;&#1086;&#1074; &#1082;/&#1091; &#1084;&#1086;&#1083;&#1086;&#1095;&#1085;&#1080;&#1081;"/>
+  <xx_rs_sku_groups GROUP_ID="301" GROUP_NAME="&#1051;&#1102;&#1073;&#1080;&#1084;&#1086;&#1074; &#1082;&#1083;&#1072;&#1089;&#1089;&#1080;&#1095;&#1077;&#1089;&#1082;&#1080;&#1081; &#1087;&#1083;&#1080;&#1090;&#1082;&#1072;"/>
+  <xx_rs_sku_groups GROUP_ID="1005" GROUP_NAME="&#1048;&#1090;&#1086;&#1075;&#1086;"/>
+  <xx_rs_sku_groups GROUP_ID="1018" GROUP_NAME="&#1064;&#1086;&#1082;&#1086;&#1083;&#1072;&#1076;"/>
+  <xx_rs_sku_groups GROUP_ID="1020" GROUP_NAME="&#1064;&#1086;&#1082;&#1086;&#1083;&#1072;&#1076; &#1051;&#1102;&#1073;&#1080;&#1084;&#1086;&#1074;"/>
+  <xx_rs_sku_hierarchy NODE_ID="301" IS_GROUP="1" IS_PLAN_GROUP="0"/>
+  <xx_rs_sku_hierarchy NODE_ID="1005" IS_GROUP="1" IS_PLAN_GROUP="0"/>
+  <xx_rs_sku_hierarchy NODE_ID="1018" IS_GROUP="1" IS_PLAN_GROUP="0"/>
+  <xx_rs_sku_hierarchy NODE_ID="1020" IS_GROUP="1" IS_PLAN_GROUP="1"/>
+  <xx_rs_sku_hierarchy NODE_ID="302204010" IS_GROUP="0" IS_PLAN_GROUP="0"/>
+</dataset>

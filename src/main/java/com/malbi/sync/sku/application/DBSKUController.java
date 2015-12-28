@@ -46,7 +46,7 @@ public class DBSKUController implements Serializable {
 		// add checked SKU
 		this.addList.stream().filter(t -> t.isChecked()).forEach(t -> {
 			boolean result;
-			result = service.addSkuToDB(t);
+			result = service.addSkuToDBHierarchy(t);
 			if (!result) {
 				appendLog(service, log);
 			}
@@ -65,13 +65,20 @@ public class DBSKUController implements Serializable {
 
 			this.ExceptionString = log.toString();
 			FacesMessage msg = new FacesMessage("Ошибки при операциях с базы данных", this.ExceptionString);
-			msg.setSeverity(FacesMessage.SEVERITY_ERROR);
-			FacesContext.getCurrentInstance().addMessage(null, msg);
+			addFacesMessage(msg);
 
 		} else {
 			returnAddress = "/xlsdownload.xhtml?faces-redirect=true";
 		}
 		return returnAddress;
+	}
+
+	public SKUService getService() {
+		return service;
+	}
+
+	public void setService(SKUService service) {
+		this.service = service;
 	}
 
 	public void appendLogAtRefresh(SKUService service, StringBuffer log) {
@@ -120,8 +127,7 @@ public class DBSKUController implements Serializable {
 			// this.ExceptionString = log.toString();
 			this.ExceptionString = this.sessionManager.getxSource().getExceptionString();
 			FacesMessage msg = new FacesMessage("Ошибки при операциях с базы данных", this.ExceptionString);
-			msg.setSeverity(FacesMessage.SEVERITY_ERROR);
-			FacesContext.getCurrentInstance().addMessage(null, msg);
+			addFacesMessage(msg);
 
 		}
 
@@ -135,6 +141,14 @@ public class DBSKUController implements Serializable {
 	List<SKUGroupChanges> updateList = new ArrayList<SKUGroupChanges>();
 	List<SKUGroupChanges> addList = new ArrayList<SKUGroupChanges>();
 	List<SKUGroupChanges> removeList = new ArrayList<SKUGroupChanges>();
+
+	private void addFacesMessage(FacesMessage msg) {
+		msg.setSeverity(FacesMessage.SEVERITY_ERROR);
+		FacesContext fc = FacesContext.getCurrentInstance();
+		if (fc != null) {
+			fc.addMessage(null, msg);
+		}
+	}
 
 	public List<SKUGroupChanges> getUpdateList() {
 		return updateList;
@@ -160,7 +174,7 @@ public class DBSKUController implements Serializable {
 		this.removeList = removeList;
 	}
 
-	private String ExceptionString;
+	private String ExceptionString = "";
 
 	public String getExceptionString() {
 		return ExceptionString;

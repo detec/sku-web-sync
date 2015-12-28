@@ -43,10 +43,8 @@ public class XLSProcessorController implements Serializable {
 			returnAddress = "/skugroupsprocessor.xhtml?faces-redirect=true";
 		} catch (IOException e) {
 			FacesMessage msg = new FacesMessage("Ошибки при изменении XLS-файла", e.getMessage());
-			msg.setSeverity(FacesMessage.SEVERITY_ERROR);
-			FacesContext.getCurrentInstance().addMessage(null, msg);
+			addFacesMessage(msg);
 
-			// this.ExceptionString = e.getMessage();
 		}
 		return returnAddress;
 	}
@@ -125,8 +123,15 @@ public class XLSProcessorController implements Serializable {
 		if (!log.toString().isEmpty()) {
 			this.ExceptionString = log.toString();
 			FacesMessage msg = new FacesMessage("Ошибка работы с базой", this.ExceptionString);
-			msg.setSeverity(FacesMessage.SEVERITY_ERROR);
-			FacesContext.getCurrentInstance().addMessage(null, msg);
+			addFacesMessage(msg);
+		}
+	}
+
+	private void addFacesMessage(FacesMessage msg) {
+		msg.setSeverity(FacesMessage.SEVERITY_ERROR);
+		FacesContext fc = FacesContext.getCurrentInstance();
+		if (fc != null) {
+			fc.addMessage(null, msg);
 		}
 	}
 
@@ -185,7 +190,7 @@ public class XLSProcessorController implements Serializable {
 		this.skuMap = skuMap;
 	}
 
-	private String ExceptionString;
+	private String ExceptionString = "";
 
 	public String getExceptionString() {
 		return ExceptionString;
@@ -208,5 +213,5 @@ public class XLSProcessorController implements Serializable {
 	private static final long serialVersionUID = -4146325243351405003L;
 
 	@Inject
-	SKUService service;
+	private SKUService service;
 }

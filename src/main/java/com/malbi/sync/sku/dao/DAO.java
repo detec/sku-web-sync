@@ -180,7 +180,7 @@ public class DAO implements Serializable {
 	}
 
 	// changed
-	public void addSkuToDB(DBSKU sku) throws SQLException, ClassNotFoundException, NamingException {
+	public void addSkuToDBHierarchy(DBSKU sku) throws SQLException, ClassNotFoundException, NamingException {
 
 		String query = sqlQueries.getProperty().getProperty("add.sku.to.db.insert");
 
@@ -297,11 +297,11 @@ public class DAO implements Serializable {
 					queryIntoHierarchy
 
 			);) {
-				pStmt.setInt(1, parentId);
-				pStmt.setInt(2, changes.getId());
-				pStmt.setInt(3, 1);
-				pStmt.setInt(4, 0);
-				pStmt.executeUpdate();
+				pStmtHierarchy.setInt(1, parentId);
+				pStmtHierarchy.setInt(2, changes.getId());
+				pStmtHierarchy.setInt(3, 1);
+				pStmtHierarchy.setInt(4, 0);
+				pStmtHierarchy.executeUpdate();
 
 			}
 		}
