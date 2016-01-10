@@ -9,9 +9,9 @@ The process of synchronization has been split into such phases:
 - user authentication (GlassFish security realm is used);
 - XLS file upload and check;
 - output of XLS-OEBS changes in SKUs, ability to add, remove XLS file records, rename SKUs in file;
+- output of XLS-OEBS changes in SKU groups, ability to add SKU groups to groups hierarchy and rename them in database;
 - output of XLS-OEBS changes in SKUs, ability to modify SKU names in OEBS, according to new XLS file data;
-- output of XLS-OEBS changes in SKU groups, ability to add, rename or remove SKU groups from groups hierarchy in database;
-- output of XLS-OEBS changes, so that SKU can be placed to another SKU group in database;
+- output of XLS-OEBS changes, so that SKU can be placed to another SKU group in database or removed from the group hierarchy;
 - ability to download modified XLS file from server, if necessary.
 
 ## Technical details ##
@@ -21,7 +21,7 @@ The application was re-written from its old command-line predecessor. The aim wa
 ## Tests notice ##
 
 As this application uses a large customized OEBS database with piles of interdependent tables, initially only automated superficial UI testing was used, where Maven cargo plugin raises GlassFish 4 instance and changes container configuration to desired one. From client side Selenium Firefox client tests login and logout, Excel file upload and download, ability to pass through wizard steps without changes made to database.
-With DBUnit and H2 components had been added, it became possible to develop unit tests for JSF controllers apart from OEBS database. DBUnit made functional tests possible, where preliminarily prepared small Excel files are imported and processed, changes are made to H2 in-memory database and afterwards compared to verified XML datasets.
+After DBUnit and H2 components had been added, it became possible to develop unit tests for data manipulation methods in JSF controllers apart from OEBS database. DBUnit made functional tests possible, where preliminarily prepared small Excel files are imported and processed, changes are made to H2 in-memory database and afterwards compared to verified reference XML datasets.
 
 ## System requirements ##
 
@@ -35,10 +35,10 @@ With DBUnit and H2 components had been added, it became possible to develop unit
 
 - JSF 2.2;
 - CDI 1.2;
-- JDBC;
+- JDBC (Oracle and H2);
 - Hibernate Validator 5.2;
 - JUnit 4.12;
-- Selenium;
+- Selenium (Firefox driver);
 - DBUnit 2.5;
 - H2;
 - Maven 3.3 with plugins compiler, surefire, resources, war, cargo;
