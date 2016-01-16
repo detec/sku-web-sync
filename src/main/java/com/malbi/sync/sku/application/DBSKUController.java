@@ -126,7 +126,7 @@ public class DBSKUController implements Serializable {
 
 			// this.ExceptionString = log.toString();
 			this.ExceptionString = this.sessionManager.getxSource().getExceptionString();
-			FacesMessage msg = new FacesMessage("Ошибки при операциях с базы данных", this.ExceptionString);
+			FacesMessage msg = new FacesMessage("Ошибки при операциях с базой данных", this.ExceptionString);
 			addFacesMessage(msg);
 
 		}

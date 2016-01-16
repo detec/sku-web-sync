@@ -16,6 +16,7 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import javax.servlet.http.Part;
 
+import com.malbi.sync.sku.converter.Exception2String;
 import com.malbi.sync.sku.xls.XlsxSource;
 
 @Named("XLSUpload")
@@ -43,7 +44,7 @@ public class XLSUploadController implements Serializable {
 			this.outputFile = File.createTempFile("SKU_BASE_1C", ".xls");
 
 		} catch (IOException e) {
-			log.append(e.getMessage());
+			log.append(Exception2String.printStackTrace(e));
 			this.fileUploaded = false;
 			return;
 		}
@@ -52,7 +53,7 @@ public class XLSUploadController implements Serializable {
 		try {
 			inputStream = file.getInputStream();
 		} catch (IOException e) {
-			log.append(e.getMessage());
+			log.append(Exception2String.printStackTrace(e));
 			this.fileUploaded = false;
 			return;
 		}
@@ -61,7 +62,7 @@ public class XLSUploadController implements Serializable {
 		try {
 			outputStream = new FileOutputStream(outputFile);
 		} catch (FileNotFoundException e) {
-			log.append(e.getMessage());
+			log.append(Exception2String.printStackTrace(e));
 			this.fileUploaded = false;
 			return;
 		}
@@ -73,14 +74,14 @@ public class XLSUploadController implements Serializable {
 				outputStream.write(buffer, 0, bytesRead);
 			}
 		} catch (IOException e) {
-			log.append(e.getMessage());
+			log.append(Exception2String.printStackTrace(e));
 
 			if (outputStream != null) {
 				try {
 					outputStream.close();
 				} catch (IOException e1) {
 
-					log.append(e1.getMessage());
+					log.append(Exception2String.printStackTrace(e1));
 				}
 			}
 			this.fileUploaded = false;
@@ -92,7 +93,7 @@ public class XLSUploadController implements Serializable {
 			try {
 				outputStream.close();
 			} catch (IOException e) {
-				log.append(e.getMessage());
+				log.append(Exception2String.printStackTrace(e));
 				this.fileUploaded = false;
 				return;
 			}
@@ -101,7 +102,7 @@ public class XLSUploadController implements Serializable {
 			try {
 				inputStream.close();
 			} catch (IOException e) {
-				log.append(e.getMessage());
+				log.append(Exception2String.printStackTrace(e));
 				this.fileUploaded = false;
 				return;
 			}

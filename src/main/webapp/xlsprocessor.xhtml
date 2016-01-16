@@ -13,9 +13,11 @@
 <h:body>
 	<h2>Синхронизация SKU</h2>
 	<h3>Работа с данными в XLS-файле</h3>
-	<h:messages id="messages" errorClass="err" warnClass="warn"
+<!-- 	<h:messages id="messages" errorClass="err" warnClass="warn"
 		infoClass="info" style="color: #FF8080" showDetail="true"
-		showSummary="true" />
+		showSummary="true" /> -->
+		
+	
 
 
 	<h4>Переименованные SKU</h4>
@@ -110,13 +112,18 @@
 			<h:commandButton value="Выход" rendered="#{loginBean.loggedIn}"
 				action="#{loginBean.logout}" id="logoutButton"></h:commandButton>
 		</h:panelGrid>
+		
+				<h:messages style="color:red;margin:8px;" />
 	</h:form>
-	<!-- 		<br></br> -->
-	<!-- 		<h:panelGrid columns="1"  rendered="#{not empty XLSProcessorController.exceptionString}"> -->
-	<!-- 	    <h:outputLabel value="Журнал ошибок"></h:outputLabel> -->
-	<!-- 	    <h:inputTextarea value="#{XLSProcessorController.exceptionString}"  -->
-	<!--       		readonly="true" cols="130" rows="40"/> -->
-	<!-- 		</h:panelGrid> -->
+	
+
+	
+			<br></br>
+			<h:panelGrid columns="1"  rendered="#{not empty XLSProcessorController.exceptionString}">
+		    <h:outputLabel value="Журнал ошибок"></h:outputLabel>
+		    <h:inputTextarea value="#{XLSProcessorController.exceptionString}" 
+	      		readonly="true" cols="130" rows="40"/>
+			</h:panelGrid>
 </h:body>
 
 </html>

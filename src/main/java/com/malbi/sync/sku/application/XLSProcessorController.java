@@ -15,6 +15,7 @@ import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
 
+import com.malbi.sync.sku.converter.Exception2String;
 import com.malbi.sync.sku.model.Changes;
 import com.malbi.sync.sku.model.XlsRowData;
 import com.malbi.sync.sku.service.SKUService;
@@ -42,7 +43,7 @@ public class XLSProcessorController implements Serializable {
 			this.sessionManager.getxSource().updateXlsSource();
 			returnAddress = "/skugroupsprocessor.xhtml?faces-redirect=true";
 		} catch (IOException e) {
-			FacesMessage msg = new FacesMessage("Ошибки при изменении XLS-файла", e.getMessage());
+			FacesMessage msg = new FacesMessage("Ошибки при изменении XLS-файла", Exception2String.printStackTrace(e));
 			addFacesMessage(msg);
 
 		}
@@ -122,7 +123,11 @@ public class XLSProcessorController implements Serializable {
 
 		if (!log.toString().isEmpty()) {
 			this.ExceptionString = log.toString();
-			FacesMessage msg = new FacesMessage("Ошибка работы с базой", this.ExceptionString);
+			FacesMessage msg = new FacesMessage("Ошибка работы с базой", this.ExceptionString
+
+			// , "Test"
+
+			);
 			addFacesMessage(msg);
 		}
 	}

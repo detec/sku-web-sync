@@ -13,6 +13,8 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import javax.servlet.http.HttpServletResponse;
 
+import com.malbi.sync.sku.converter.Exception2String;
+
 @Named(value = "XLSDownloadController")
 @RequestScoped
 public class XLSDownloadController implements Serializable {
@@ -46,7 +48,8 @@ public class XLSDownloadController implements Serializable {
 			responseOutputStream.close();
 
 		} catch (IOException e) {
-			FacesMessage msg = new FacesMessage("Ошибка скачивания изменённого xls-файла", e.getMessage());
+			FacesMessage msg = new FacesMessage("Ошибка скачивания изменённого xls-файла",
+					Exception2String.printStackTrace(e));
 			msg.setSeverity(FacesMessage.SEVERITY_ERROR);
 			FacesContext.getCurrentInstance().addMessage(null, msg);
 		}

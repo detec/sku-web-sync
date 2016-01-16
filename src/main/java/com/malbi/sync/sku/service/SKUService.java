@@ -12,6 +12,7 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import javax.naming.NamingException;
 
+import com.malbi.sync.sku.converter.Exception2String;
 import com.malbi.sync.sku.dao.DAO;
 import com.malbi.sync.sku.model.Changes;
 import com.malbi.sync.sku.model.DBSKU;
@@ -37,7 +38,7 @@ public class SKUService implements Serializable {
 		try {
 			skuMap = DAO.getSkuMap();
 		} catch (SQLException | ClassNotFoundException | NamingException e) {
-			this.ErrorLog = "Не удалось получить список SKU из БД: \n" + e.getMessage();
+			this.ErrorLog = "Не удалось получить список SKU из БД: \n" + Exception2String.printStackTrace(e);
 		}
 
 		return skuMap;
@@ -48,7 +49,7 @@ public class SKUService implements Serializable {
 		try {
 			skuGropMap = DAO.getSkuGroupMap();
 		} catch (SQLException | ClassNotFoundException | NamingException e) {
-			this.ErrorLog = "Не удалось получить список групп SKU из БД: \n" + e.getMessage();
+			this.ErrorLog = "Не удалось получить список групп SKU из БД: \n" + Exception2String.printStackTrace(e);
 		}
 
 		return skuGropMap;
@@ -60,7 +61,7 @@ public class SKUService implements Serializable {
 		try {
 			dbRows = DAO.getSkuHierarchyMap();
 		} catch (SQLException | ClassNotFoundException | NamingException e) {
-			this.ErrorLog = "Не удалось получить иерархию SKU из БД: \n" + e.getMessage();
+			this.ErrorLog = "Не удалось получить иерархию SKU из БД: \n" + Exception2String.printStackTrace(e);
 		}
 		return dbRows;
 	}
@@ -78,7 +79,7 @@ public class SKUService implements Serializable {
 			DAO.addSkuToDBHierarchy(sku);
 			result = true;
 		} catch (SQLException | ClassNotFoundException | NamingException e) {
-			this.ErrorLog = "Не удалось получить иерархию SKU из БД: \n" + e.getMessage();
+			this.ErrorLog = "Не удалось получить иерархию SKU из БД: \n" + Exception2String.printStackTrace(e);
 			result = false;
 		}
 		return result;
@@ -96,7 +97,7 @@ public class SKUService implements Serializable {
 			DAO.updateGroup(group);
 			result = true;
 		} catch (ClassNotFoundException | SQLException | NamingException e) {
-			this.ErrorLog = "Не удалось переименовать группу SKU в БД: \n" + e.getMessage();
+			this.ErrorLog = "Не удалось переименовать группу SKU в БД: \n" + Exception2String.printStackTrace(e);
 			result = false;
 		}
 		return result;
@@ -108,7 +109,7 @@ public class SKUService implements Serializable {
 			DAO.addNewGroup(parentId, changes);
 			result = true;
 		} catch (ClassNotFoundException | SQLException | NamingException e) {
-			this.ErrorLog = "Не удалось добавить группу SKU в БД: \n" + e.getMessage();
+			this.ErrorLog = "Не удалось добавить группу SKU в БД: \n" + Exception2String.printStackTrace(e);
 			result = false;
 		}
 
@@ -127,7 +128,7 @@ public class SKUService implements Serializable {
 			// List<DBSKUGroup> DBGroupList = new ArrayList<DBSKUGroup>();
 
 		} catch (ClassNotFoundException | SQLException | NamingException e) {
-			this.ErrorLog = "Не удалось получить список групп SKU из БД: \n" + e.getMessage();
+			this.ErrorLog = "Не удалось получить список групп SKU из БД: \n" + Exception2String.printStackTrace(e);
 		}
 
 		skuGropMap.entrySet().stream()
@@ -148,7 +149,7 @@ public class SKUService implements Serializable {
 			DAO.moveSkuToAnotherGroup(sku);
 			result = true;
 		} catch (ClassNotFoundException | SQLException | NamingException e) {
-			this.ErrorLog = "Не удалось переместить SKU в другую группу: \n" + e.getMessage();
+			this.ErrorLog = "Не удалось переместить SKU в другую группу: \n" + Exception2String.printStackTrace(e);
 		}
 		return result;
 	}
@@ -161,7 +162,7 @@ public class SKUService implements Serializable {
 			DAO.deleteSku(sku);
 			result = true;
 		} catch (ClassNotFoundException | SQLException | NamingException e) {
-			this.ErrorLog = "Не удалось удалить SKU: \n" + e.getMessage();
+			this.ErrorLog = "Не удалось удалить SKU: \n" + Exception2String.printStackTrace(e);
 		}
 
 		return result;
@@ -171,7 +172,7 @@ public class SKUService implements Serializable {
 		try {
 			return DAO.getDBSKUGroupById(pId);
 		} catch (ClassNotFoundException | SQLException | NamingException e) {
-			this.ErrorLog = "Не удалось запросить в БД группу SKU: \n" + e.getMessage();
+			this.ErrorLog = "Не удалось запросить в БД группу SKU: \n" + Exception2String.printStackTrace(e);
 		}
 		return new DBSKUGroup();
 	}

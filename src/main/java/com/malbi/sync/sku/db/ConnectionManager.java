@@ -24,7 +24,7 @@ public class ConnectionManager implements Serializable, IConnectionManager {
 				con.setTransactionIsolation(Connection.TRANSACTION_SERIALIZABLE);
 			}
 		} else {
-			throw new SQLException("Datasource from Tomcat returned as null!");
+			throw new SQLException("Datasource from GlassFish returned as null!");
 		}
 		return con;
 	}

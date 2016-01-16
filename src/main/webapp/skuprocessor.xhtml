@@ -129,5 +129,12 @@
 		action="#{loginBean.logout}" id="logoutButton"></h:commandButton>
 		</h:panelGrid>		 
 	</h:form>
+	
+				<br></br>
+			<h:panelGrid columns="1"  rendered="#{not empty XLSProcessorController.exceptionString}">
+		    <h:outputLabel value="Журнал ошибок"></h:outputLabel>
+		    <h:inputTextarea value="#{XLSProcessorController.exceptionString}" 
+	      		readonly="true" cols="130" rows="40"/>
+			</h:panelGrid>
 	</h:body>
 </html>

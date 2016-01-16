@@ -27,6 +27,7 @@ import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.poifs.filesystem.POIFSFileSystem;
 
+import com.malbi.sync.sku.converter.Exception2String;
 import com.malbi.sync.sku.model.Changes;
 import com.malbi.sync.sku.model.DBSKUGroup;
 import com.malbi.sync.sku.model.DbRowData;
@@ -372,7 +373,7 @@ public class XlsxSource implements Serializable {
 			book.close();
 
 			throw new Exception("Не получилось получить числовое значение из строки " + Integer.toString(currentRow)
-					+ " и колонки " + Integer.toString(colPosition + 1) + "\n" + e.getMessage());
+					+ " и колонки " + Integer.toString(colPosition + 1) + "\n" + Exception2String.printStackTrace(e));
 		}
 		return col0;
 	}
