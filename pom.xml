@@ -219,7 +219,7 @@
 
 							<!-- Cleaned domain.xml from datasources -->
                              <cargo.datasource.datasource.ds1>
-                             cargo.datasource.url=jdbc:oracle:thin:@oradb02.malbi.dp.ua:1521:WORK|
+                             cargo.datasource.url=jdbc:oracle:thin:@dummy.dp.ua:1521:WORK|
                              cargo.datasource.driver=oracle.jdbc.pool.OracleDataSource|
                              cargo.datasource.username=xx|
                              cargo.datasource.password=xx|
