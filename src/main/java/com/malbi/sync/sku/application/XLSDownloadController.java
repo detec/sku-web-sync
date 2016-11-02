@@ -19,6 +19,11 @@ import com.malbi.sync.sku.converter.Exception2String;
 @RequestScoped
 public class XLSDownloadController implements Serializable {
 
+	private static final long serialVersionUID = 2829805868397655132L;
+
+	@Inject
+	private ISessionManager sessionManager;
+
 	public void doDonwload() {
 
 		// Get the FacesContext
@@ -35,17 +40,12 @@ public class XLSDownloadController implements Serializable {
 		File file = this.sessionManager.getxSource().getXlsFile();
 		response.setContentLength((int) file.length());
 
-		FileInputStream fileInputStream;
-		try {
-			fileInputStream = new FileInputStream(file);
-
-			OutputStream responseOutputStream = response.getOutputStream();
-			int bytes;
+		int bytes;
+		try (FileInputStream fileInputStream = new FileInputStream(file);
+				OutputStream responseOutputStream = response.getOutputStream();) {
 			while ((bytes = fileInputStream.read()) != -1) {
 				responseOutputStream.write(bytes);
 			}
-			fileInputStream.close();
-			responseOutputStream.close();
 
 		} catch (IOException e) {
 			FacesMessage msg = new FacesMessage("Ошибка скачивания изменённого xls-файла",
@@ -55,11 +55,6 @@ public class XLSDownloadController implements Serializable {
 		}
 
 	}
-
-	private static final long serialVersionUID = 2829805868397655132L;
-
-	@Inject
-	private ISessionManager sessionManager;
 
 	public ISessionManager getSessionManager() {
 		return sessionManager;

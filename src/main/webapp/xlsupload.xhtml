@@ -21,7 +21,7 @@
 <h:messages id="messages" errorClass="err" warnClass="warn" infoClass="info" style="color: #FF8080" showDetail="true" showSummary="true"/>
 	<h:form id="XLSUploadForm" enctype="multipart/form-data"> <!--  rendered="#{XLSUpload.sessionManager.loggedIn}">  -->
 	
-		<h:inputFile id="file" value="#{XLSUpload.file}"/>
+		<h:inputFile id="file" value="#{XLSUpload.httpPart}"/>
 	 	<br></br>
 	 	<h:commandButton value="Загрузить файл SKU_BASE_1C.xls ..."
       		action="#{XLSUpload.checkXLSFile()}" id="uploadButton">

@@ -1,7 +1,12 @@
 package com.malbi.sync.sku.model;
 
-// This is a class to represent DB SKU group in dialogue.
-// It is almost the same as SKU, that's why we use an=bstract class as superclass.
+/**
+ * This is a class to represent DB SKU group in dialogue. It is almost the same
+ * as SKU, that's why we use an=bstract class as superclass.
+ *
+ * @author Andrii Duplyk
+ *
+ */
 public class DBSKUGroup extends AbstractDBEntity {
 
 	public DBSKUGroup() {
@@ -40,18 +45,7 @@ public class DBSKUGroup extends AbstractDBEntity {
 		if (key != other.key) {
 			return false;
 		}
-		// In converter we use only Id.
 
-		// if (name == null) {
-		// if (other.name != null) {
-		// return false;
-		// }
-		// } else if (!name.equals(other.name)) {
-		// return false;
-		// }
-		// if (parentId != other.parentId) {
-		// return false;
-		// }
 		return true;
 	}
 

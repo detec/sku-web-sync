@@ -1,7 +1,13 @@
 package com.malbi.sync.sku.model;
 
 public class SKUGroupChanges {
-	int key;
+	private int key;
+
+	private DBSKUGroup before;
+	private DBSKUGroup after;
+
+	// GUI field.
+	private boolean checked;
 
 	public SKUGroupChanges(int key, DBSKUGroup pBefore, DBSKUGroup pAfter) {
 		this.key = key;
@@ -59,12 +65,6 @@ public class SKUGroupChanges {
 	public String toString() {
 		return "SKUGroupChanges [key=" + key + "]";
 	}
-
-	DBSKUGroup before;
-	DBSKUGroup after;
-
-	// GUI field.
-	boolean checked;
 
 	public boolean isChecked() {
 		return checked;

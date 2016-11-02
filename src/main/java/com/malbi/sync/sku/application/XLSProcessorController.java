@@ -24,6 +24,24 @@ import com.malbi.sync.sku.service.SKUService;
 @RequestScoped
 public class XLSProcessorController implements Serializable {
 
+	private static final long serialVersionUID = -4146325243351405003L;
+
+	@Inject
+	private SKUService service;
+
+	@Inject
+	private ISessionManager sessionManager;
+
+	private List<Changes> skuRename = new ArrayList<>();
+
+	private List<Changes> doesNotExist = new ArrayList<>();
+
+	private Map<Integer, String> skuMap = new HashMap<>();
+
+	private String exceptionString = "";
+
+	private boolean isCommitPrepared = false;
+
 	// stub method to create instance of class.
 	public void processAgainstDB() {
 		refreshData();
@@ -75,11 +93,11 @@ public class XLSProcessorController implements Serializable {
 	public void renameInXLS() {
 
 		skuRename.stream().filter(t -> t.isChecked()).forEach(t -> {
-			String SKUName = t.getAfter();
+			String skuName = t.getAfter();
 			int key = t.getId();
 			int rowId = this.sessionManager.getxSource().getArrayIdOfXlsRowDataBySkuCode(key);
 			XlsRowData rowData = this.sessionManager.getxSource().getRows().get(rowId);
-			rowData.setSkuName(SKUName);
+			rowData.setSkuName(skuName);
 		});
 		refreshIsCommitPrepared();
 	}
@@ -90,7 +108,7 @@ public class XLSProcessorController implements Serializable {
 	}
 
 	public void refreshData() {
-		StringBuffer log = new StringBuffer();
+		StringBuilder log = new StringBuilder();
 
 		List<XlsRowData> rows = this.sessionManager.getxSource().getRows();
 
@@ -99,7 +117,7 @@ public class XLSProcessorController implements Serializable {
 		appendLog(log);
 
 		// Let's not fill second table if database connection failed.
-		if (this.skuMap.size() == 0) {
+		if (this.skuMap.isEmpty()) {
 			showFacesException(log);
 			return;
 		}
@@ -119,11 +137,11 @@ public class XLSProcessorController implements Serializable {
 
 	}
 
-	private void showFacesException(StringBuffer log) {
+	private void showFacesException(StringBuilder log) {
 
 		if (!log.toString().isEmpty()) {
-			this.ExceptionString = log.toString();
-			FacesMessage msg = new FacesMessage("Ошибка работы с базой", this.ExceptionString
+			this.exceptionString = log.toString();
+			FacesMessage msg = new FacesMessage("Ошибка работы с базой", this.exceptionString
 
 			// , "Test"
 
@@ -140,13 +158,11 @@ public class XLSProcessorController implements Serializable {
 		}
 	}
 
-	private void appendLog(StringBuffer log) {
+	private void appendLog(StringBuilder log) {
 		String receivedLog = service.getErrorLog();
 		// append carrige return if error message is not empty.
-		log.append(receivedLog + ((receivedLog.length() == 0) ? "" : "\n"));
+		log.append(receivedLog + (receivedLog.isEmpty() ? "" : "\n"));
 	}
-
-	List<Changes> skuRename = new ArrayList<Changes>();
 
 	public List<Changes> getSkuRename() {
 		return this.skuRename;
@@ -156,8 +172,6 @@ public class XLSProcessorController implements Serializable {
 		this.skuRename = skuRename;
 	}
 
-	List<Changes> doesNotExist = new ArrayList<Changes>();
-
 	public List<Changes> getDoesNotExist() {
 		return doesNotExist;
 	}
@@ -165,9 +179,6 @@ public class XLSProcessorController implements Serializable {
 	public void setDoesNotExist(List<Changes> doesNotExist) {
 		this.doesNotExist = doesNotExist;
 	}
-
-	@Inject
-	private ISessionManager sessionManager;
 
 	public ISessionManager getSessionManager() {
 		return sessionManager;
@@ -185,8 +196,6 @@ public class XLSProcessorController implements Serializable {
 		this.service = service;
 	}
 
-	Map<Integer, String> skuMap = new HashMap<>();
-
 	public Map<Integer, String> getSkuMap() {
 		return skuMap;
 	}
@@ -195,17 +204,13 @@ public class XLSProcessorController implements Serializable {
 		this.skuMap = skuMap;
 	}
 
-	private String ExceptionString = "";
-
 	public String getExceptionString() {
-		return ExceptionString;
+		return exceptionString;
 	}
 
 	public void setExceptionString(String exceptionString) {
-		ExceptionString = exceptionString;
+		this.exceptionString = exceptionString;
 	}
-
-	private boolean isCommitPrepared = false;
 
 	public boolean isCommitPrepared() {
 		return isCommitPrepared;
@@ -215,8 +220,4 @@ public class XLSProcessorController implements Serializable {
 		this.isCommitPrepared = isCommitPrepared;
 	}
 
-	private static final long serialVersionUID = -4146325243351405003L;
-
-	@Inject
-	private SKUService service;
 }

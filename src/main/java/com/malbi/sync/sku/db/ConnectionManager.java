@@ -13,11 +13,16 @@ import javax.inject.Named;
 @ApplicationScoped
 public class ConnectionManager implements Serializable, IConnectionManager {
 
+	private static final long serialVersionUID = -393036417948357440L;
+
+	@Resource(name = "Oracle")
+	private com.sun.appserv.jdbc.DataSource dataSource;
+
 	@Override
 	public Connection getDBConnection() throws SQLException {
-		Connection con = null;
-		if (DataSource != null) {
-			con = DataSource.getConnection();
+		Connection con;
+		if (dataSource != null) {
+			con = dataSource.getConnection();
 
 			DatabaseMetaData dbmd = con.getMetaData();
 			if (dbmd.supportsTransactionIsolationLevel(Connection.TRANSACTION_SERIALIZABLE)) {
@@ -28,10 +33,5 @@ public class ConnectionManager implements Serializable, IConnectionManager {
 		}
 		return con;
 	}
-
-	private static final long serialVersionUID = -393036417948357440L;
-
-	@Resource(name = "Oracle")
-	private com.sun.appserv.jdbc.DataSource DataSource;
 
 }

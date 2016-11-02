@@ -16,9 +16,8 @@ public class SessionBean {
 
 	public static String getUserName() {
 
-		String remoteuser = FacesContext.getCurrentInstance().getExternalContext().getRemoteUser();
+		return FacesContext.getCurrentInstance().getExternalContext().getRemoteUser();
 
-		return remoteuser;
 	}
 
 }

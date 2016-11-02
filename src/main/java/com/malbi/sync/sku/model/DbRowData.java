@@ -2,10 +2,10 @@ package com.malbi.sync.sku.model;
 
 public class DbRowData {
 
-	public int parentId;
-	public int nodeId;
-	public int isGroup;
-	public int isPlanGroup;
+	private int parentId;
+	private int nodeId;
+	private int isGroup;
+	private int isPlanGroup;
 
 	public DbRowData(int parentId, int nodeId, int isGroup, int isPlanGroup) {
 		this.parentId = parentId;

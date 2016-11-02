@@ -78,8 +78,8 @@ public class XlsRowData {
 	}
 
 	public boolean isEmpty() {
-		if (skuCode == 0 && skuName.equals("") && skuGroup.equals("") && skuGroupCode == 0 && business.equals("")
-				&& subGroup.equals("") && primaryGroup == 0 && businessSort == 0 && subGroupSort == 0
+		if (skuCode == 0 && skuName.isEmpty() && skuGroup.isEmpty() && skuGroupCode == 0 && business.isEmpty()
+				&& subGroup.isEmpty() && primaryGroup == 0 && businessSort == 0 && subGroupSort == 0
 				&& groupSort == 0) {
 			return true;
 		}

@@ -1,7 +1,6 @@
 package com.malbi.sync.sku.service;
 
 import java.io.Serializable;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -10,7 +9,6 @@ import java.util.Map;
 import javax.enterprise.context.SessionScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
-import javax.naming.NamingException;
 
 import com.malbi.sync.sku.converter.Exception2String;
 import com.malbi.sync.sku.dao.DAO;
@@ -24,32 +22,39 @@ import com.malbi.sync.sku.model.SKUGroupChanges;
 @SessionScoped
 public class SKUService implements Serializable {
 
+	private static final long serialVersionUID = 3013221122140047848L;
+
+	@Inject
+	private DAO dao;
+
+	private String errorLog = "";
+
 	public DAO getDAO() {
-		return DAO;
+		return dao;
 	}
 
 	public void setDAO(DAO dAO) {
-		DAO = dAO;
+		dao = dAO;
 	}
 
 	public Map<Integer, String> getSkuMap() {
-		Map<Integer, String> skuMap = new HashMap<Integer, String>();
+		Map<Integer, String> skuMap = new HashMap<>();
 
 		try {
-			skuMap = DAO.getSkuMap();
-		} catch (SQLException | ClassNotFoundException | NamingException e) {
-			this.ErrorLog = "Не удалось получить список SKU из БД: \n" + Exception2String.printStackTrace(e);
+			skuMap = dao.getSkuMap();
+		} catch (Exception e) {
+			this.errorLog = "Не удалось получить список SKU из БД: \n" + Exception2String.printStackTrace(e);
 		}
 
 		return skuMap;
 	}
 
 	public Map<Integer, String> getSkuGroupMap() {
-		Map<Integer, String> skuGropMap = new HashMap<Integer, String>();
+		Map<Integer, String> skuGropMap = new HashMap<>();
 		try {
-			skuGropMap = DAO.getSkuGroupMap();
-		} catch (SQLException | ClassNotFoundException | NamingException e) {
-			this.ErrorLog = "Не удалось получить список групп SKU из БД: \n" + Exception2String.printStackTrace(e);
+			skuGropMap = dao.getSkuGroupMap();
+		} catch (Exception e) {
+			this.errorLog = "Не удалось получить список групп SKU из БД: \n" + Exception2String.printStackTrace(e);
 		}
 
 		return skuGropMap;
@@ -59,9 +64,9 @@ public class SKUService implements Serializable {
 		Map<Integer, DbRowData> dbRows = new HashMap<>();
 
 		try {
-			dbRows = DAO.getSkuHierarchyMap();
-		} catch (SQLException | ClassNotFoundException | NamingException e) {
-			this.ErrorLog = "Не удалось получить иерархию SKU из БД: \n" + Exception2String.printStackTrace(e);
+			dbRows = dao.getSkuHierarchyMap();
+		} catch (Exception e) {
+			this.errorLog = "Не удалось получить иерархию SKU из БД: \n" + Exception2String.printStackTrace(e);
 		}
 		return dbRows;
 	}
@@ -76,10 +81,10 @@ public class SKUService implements Serializable {
 		sku.setParentId(c.getAfter().getId()); // id of the parent group.
 
 		try {
-			DAO.addSkuToDBHierarchy(sku);
+			dao.addSkuToDBHierarchy(sku);
 			result = true;
-		} catch (SQLException | ClassNotFoundException | NamingException e) {
-			this.ErrorLog = "Не удалось получить иерархию SKU из БД: \n" + Exception2String.printStackTrace(e);
+		} catch (Exception e) {
+			this.errorLog = "Не удалось получить иерархию SKU из БД: \n" + Exception2String.printStackTrace(e);
 			result = false;
 		}
 		return result;
@@ -93,11 +98,10 @@ public class SKUService implements Serializable {
 		group.setName(changes.getAfter());
 
 		try {
-			// DAO.renameGroup(changes);
-			DAO.updateGroup(group);
+			dao.updateGroup(group);
 			result = true;
-		} catch (ClassNotFoundException | SQLException | NamingException e) {
-			this.ErrorLog = "Не удалось переименовать группу SKU в БД: \n" + Exception2String.printStackTrace(e);
+		} catch (Exception e) {
+			this.errorLog = "Не удалось переименовать группу SKU в БД: \n" + Exception2String.printStackTrace(e);
 			result = false;
 		}
 		return result;
@@ -106,10 +110,10 @@ public class SKUService implements Serializable {
 	public boolean addNewGroup(int parentId, Changes changes) {
 		boolean result = false;
 		try {
-			DAO.addNewGroup(parentId, changes);
+			dao.addNewGroup(parentId, changes);
 			result = true;
-		} catch (ClassNotFoundException | SQLException | NamingException e) {
-			this.ErrorLog = "Не удалось добавить группу SKU в БД: \n" + Exception2String.printStackTrace(e);
+		} catch (Exception e) {
+			this.errorLog = "Не удалось добавить группу SKU в БД: \n" + Exception2String.printStackTrace(e);
 			result = false;
 		}
 
@@ -118,22 +122,18 @@ public class SKUService implements Serializable {
 
 	// Andrei Duplik added. Returns SKU group with id and name
 	public List<DBSKUGroup> getDBSKUgroups() {
-		List<DBSKUGroup> DBGroupList = new ArrayList<DBSKUGroup>();
+		List<DBSKUGroup> dbGroupList = new ArrayList<>();
 
 		Map<Integer, String> skuGropMap = new HashMap<>();
 		try {
-			// groupsList = DAO.getDBSKUgroupsList();
-
-			skuGropMap = DAO.getSkuGroupMap();
-			// List<DBSKUGroup> DBGroupList = new ArrayList<DBSKUGroup>();
-
-		} catch (ClassNotFoundException | SQLException | NamingException e) {
-			this.ErrorLog = "Не удалось получить список групп SKU из БД: \n" + Exception2String.printStackTrace(e);
+			skuGropMap = dao.getSkuGroupMap();
+		} catch (Exception e) {
+			this.errorLog = "Не удалось получить список групп SKU из БД: \n" + Exception2String.printStackTrace(e);
 		}
 
 		skuGropMap.entrySet().stream()
-				.forEach(t -> DBGroupList.add(new DBSKUGroup(t.getKey().intValue(), t.getValue())));
-		return DBGroupList;
+				.forEach(t -> dbGroupList.add(new DBSKUGroup(t.getKey().intValue(), t.getValue())));
+		return dbGroupList;
 	}
 
 	// changed
@@ -146,10 +146,10 @@ public class SKUService implements Serializable {
 		sku.setId(c.getId());
 
 		try {
-			DAO.moveSkuToAnotherGroup(sku);
+			dao.moveSkuToAnotherGroup(sku);
 			result = true;
-		} catch (ClassNotFoundException | SQLException | NamingException e) {
-			this.ErrorLog = "Не удалось переместить SKU в другую группу: \n" + Exception2String.printStackTrace(e);
+		} catch (Exception e) {
+			this.errorLog = "Не удалось переместить SKU в другую группу: \n" + Exception2String.printStackTrace(e);
 		}
 		return result;
 	}
@@ -159,10 +159,10 @@ public class SKUService implements Serializable {
 		boolean result = false;
 		DBSKU sku = new DBSKU(c.getId());
 		try {
-			DAO.deleteSku(sku);
+			dao.deleteSku(sku);
 			result = true;
-		} catch (ClassNotFoundException | SQLException | NamingException e) {
-			this.ErrorLog = "Не удалось удалить SKU: \n" + Exception2String.printStackTrace(e);
+		} catch (Exception e) {
+			this.errorLog = "Не удалось удалить SKU: \n" + Exception2String.printStackTrace(e);
 		}
 
 		return result;
@@ -170,25 +170,19 @@ public class SKUService implements Serializable {
 
 	public DBSKUGroup getDBSKUGroupById(int pId) {
 		try {
-			return DAO.getDBSKUGroupById(pId);
-		} catch (ClassNotFoundException | SQLException | NamingException e) {
-			this.ErrorLog = "Не удалось запросить в БД группу SKU: \n" + Exception2String.printStackTrace(e);
+			return dao.getDBSKUGroupById(pId);
+		} catch (Exception e) {
+			this.errorLog = "Не удалось запросить в БД группу SKU: \n" + Exception2String.printStackTrace(e);
 		}
 		return new DBSKUGroup();
 	}
 
-	private String ErrorLog = "";
-
 	public String getErrorLog() {
-		return ErrorLog;
+		return errorLog;
 	}
 
 	public void setErrorLog(String errorLog) {
-		ErrorLog = errorLog;
+		this.errorLog = errorLog;
 	}
 
-	private static final long serialVersionUID = 3013221122140047848L;
-
-	@Inject
-	private DAO DAO;
 }

@@ -10,6 +10,9 @@ import javax.validation.constraints.NotNull;
  */
 public class DialogueChanges extends Changes {
 
+	@NotNull(message = "Родительская группа не может быть пустой! Если это группа верхнего уровня - поставьте родительскую группу Итого!")
+	private DBSKUGroup parent;
+
 	public DialogueChanges(int key, String before, String after, DBSKUGroup parent) {
 		super(key, before, after);
 		this.parent = parent;
@@ -18,9 +21,6 @@ public class DialogueChanges extends Changes {
 	public DialogueChanges(Changes change) {
 		super(change.key, change.before, change.after);
 	}
-
-	@NotNull(message = "Родительская группа не может быть пустой! Если это группа верхнего уровня - поставьте родительскую группу Итого!")
-	DBSKUGroup parent;
 
 	public DBSKUGroup getParent() {
 		return parent;

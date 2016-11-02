@@ -6,6 +6,7 @@ import java.util.concurrent.TimeUnit;
 
 import org.junit.After;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
@@ -18,6 +19,7 @@ import com.malbi.sync.sku.application.LoginTest;
 import com.malbi.sync.sku.application.XLSDownloadTest;
 import com.malbi.sync.sku.application.XLSProcessorTest;
 import com.malbi.sync.sku.application.XLSUploadTest;
+import com.malbi.sync.sku.util.GeckoDriverInstaller;
 
 // This class actually launches login, upload and walking through pages.
 public class LaunchTestIT extends AbstractTest {
@@ -109,9 +111,14 @@ public class LaunchTestIT extends AbstractTest {
 	public void tearDown() throws Exception {
 		driver.quit();
 		String verificationErrorString = verificationErrors.toString();
-		if (!"".equals(verificationErrorString)) {
+		if (!verificationErrorString.isEmpty()) {
 			fail(verificationErrorString);
 		}
+	}
+
+	@BeforeClass
+	public static void initializeDriver() {
+		GeckoDriverInstaller.setGeckoDriverPath();
 	}
 
 }

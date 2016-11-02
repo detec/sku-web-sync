@@ -14,6 +14,8 @@ public class SQLQueries implements Serializable {
 
 	private static final long serialVersionUID = 6628491051063758349L;
 
+	private Properties property = new Properties();
+
 	public Properties getProperty() {
 		if (property.isEmpty()) {
 			loadProperties();
@@ -25,13 +27,11 @@ public class SQLQueries implements Serializable {
 		this.property = property;
 	}
 
-	private Properties property = new Properties();
-
 	// http://stackoverflow.com/questions/8740234/postconstruct-checked-exceptions
 	public void loadProperties() {
 
 		// using try with resources
-		try (InputStream in = getClass().getResourceAsStream("/SQLQueries.properties")) {
+		try (InputStream in = getClass().getResourceAsStream("/SQLQueries.properties");) {
 			property.load(in);
 		} catch (IOException e) {
 

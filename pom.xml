@@ -5,12 +5,12 @@
   <artifactId>sku-web-sync</artifactId>
   <packaging>war</packaging>
   <version>1.0-SNAPSHOT</version>
-  <name>sku-web-sync Maven Webapp</name>
+  <name>sku-web-sync</name>
   
 	<properties>
   		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   		<mojarra-version>2.2.12</mojarra-version>
-		<glassfish.version>4.0</glassfish.version>
+		<glassfish.version>4.1.1</glassfish.version>
 		<org.jboss.arquillian.version>1.1.10.Final</org.jboss.arquillian.version>
 	</properties>
   
@@ -55,7 +55,7 @@
   	<dependency>
 		<groupId>com.h2database</groupId>
 		<artifactId>h2</artifactId>
-		<version>1.4.187</version>
+		<version>1.4.192</version>
 	</dependency>
 	
 	<!-- JSF implementation: Mojarra org.glassfish - is the one at org.glassfish and it is working! -->
@@ -87,12 +87,22 @@
         <artifactId>poi</artifactId>
         <version>3.13</version>
     </dependency>
-    <dependency>
+   <dependency>
 		<groupId>org.glassfish.main.common</groupId>
 		<artifactId>glassfish-api</artifactId>
-		<version>4.1.1</version>
+		<version>${glassfish.version}</version>
 		<scope>provided</scope>
     </dependency>
+
+	
+<!-- 	<dependency>
+    	<groupId>org.glassfish.main.web</groupId>
+    	<artifactId>web-core</artifactId>
+    	<version>${glassfish.version}</version>
+    	<scope>provided</scope>
+	</dependency> -->
+	
+    
     <dependency>
   		<groupId>javax.enterprise</groupId>
   		<artifactId>cdi-api</artifactId>
@@ -104,7 +114,7 @@
 	<dependency>
         <groupId>org.seleniumhq.selenium</groupId>
         <artifactId>selenium-firefox-driver</artifactId>
-        <version>2.48.2</version>
+        <version>3.0.1</version>
         <scope>test</scope>
 	</dependency> 
     <dependency>
@@ -203,7 +213,7 @@
 		<plugin>
         	<groupId>org.codehaus.cargo</groupId>
             <artifactId>cargo-maven2-plugin</artifactId>
-            <version>1.4.16</version>
+            <version>1.6.0</version>
              	<configuration>
                      <container>
                          <containerId>glassfish4x</containerId>
@@ -219,10 +229,10 @@
 
 							<!-- Cleaned domain.xml from datasources -->
                              <cargo.datasource.datasource.ds1>
-                             cargo.datasource.url=jdbc:oracle:thin:@dummy.dp.ua:1521:WORK|
+                             cargo.datasource.url=jdbc:oracle:thin:@dummy.dp.ua:1541:WORK|
                              cargo.datasource.driver=oracle.jdbc.pool.OracleDataSource|
-                             cargo.datasource.username=xx|
-                             cargo.datasource.password=xx|
+                             cargo.datasource.username=foo|
+                             cargo.datasource.password=bar|
                              cargo.datasource.jndi=Oracle
                              <!-- We will use H2 in-memory datasource 
                              It seems, that current version does not support ommitting cargo.datasource.password

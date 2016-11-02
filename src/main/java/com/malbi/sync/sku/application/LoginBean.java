@@ -20,6 +20,24 @@ import com.malbi.sync.sku.xls.XlsxSource;
 @SessionScoped
 public class LoginBean implements Serializable, ISessionManager {
 
+	private static final long serialVersionUID = 7125135135382108493L;
+
+	@Inject
+	private XlsxSource xSource;
+
+	@NotEmpty(message = "Введите имя пользователя!")
+	private String username;
+
+	@NotEmpty(message = "Введите пароль!")
+	private String password;
+
+	private boolean loggedIn;
+
+	// Let it be combination of username and password
+	private List<String> userList = new ArrayList<>(Arrays.asList("usermalbi39", "adminadmin1981"));
+
+	private Object currentObject;
+
 	// add default constructor
 	public LoginBean() {
 
@@ -27,7 +45,7 @@ public class LoginBean implements Serializable, ISessionManager {
 
 	public String doLogin() {
 
-		String errormessage = "";
+		String errormessage;
 		String key = this.username + this.password;
 
 		if (this.username == null && this.password == null) {
@@ -65,8 +83,8 @@ public class LoginBean implements Serializable, ISessionManager {
 	public void initializeApplicationSession() {
 
 		// Here we must initialize Login bean and session
-		String username = SessionBean.getUserName();
-		if (username.isEmpty()) {
+		String usrName = SessionBean.getUserName();
+		if (usrName.isEmpty()) {
 			return;
 		}
 
@@ -84,12 +102,6 @@ public class LoginBean implements Serializable, ISessionManager {
 		return "/login.xhtml?faces-redirect=true";
 	}
 
-	@NotEmpty(message = "Введите имя пользователя!")
-	private String username;
-
-	@NotEmpty(message = "Введите пароль!")
-	private String password;
-
 	public String getUsername() {
 		return username;
 	}
@@ -106,20 +118,13 @@ public class LoginBean implements Serializable, ISessionManager {
 		this.password = password;
 	}
 
-	// Let it be combination of username and password
-	private List<String> userList = new ArrayList<String>(Arrays.asList("usermalbi39", "adminadmin1981"));
-
-	private Object CurrentObject;
-
 	public Object getCurrentObject() {
-		return CurrentObject;
+		return currentObject;
 	}
 
 	public void setCurrentObject(Object currentObject) {
-		CurrentObject = currentObject;
+		this.currentObject = currentObject;
 	}
-
-	private boolean loggedIn;
 
 	public boolean isLoggedIn() {
 		return loggedIn;
@@ -128,9 +133,6 @@ public class LoginBean implements Serializable, ISessionManager {
 	public void setLoggedIn(boolean loggedIn) {
 		this.loggedIn = loggedIn;
 	}
-
-	@Inject
-	private XlsxSource xSource;
 
 	@Override
 	public XlsxSource getxSource() {
@@ -141,7 +143,5 @@ public class LoginBean implements Serializable, ISessionManager {
 	public void setxSource(XlsxSource xSource) {
 		this.xSource = xSource;
 	}
-
-	private static final long serialVersionUID = 7125135135382108493L;
 
 }

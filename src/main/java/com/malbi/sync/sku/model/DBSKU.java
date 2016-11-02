@@ -4,7 +4,7 @@ public class DBSKU extends AbstractDBEntity {
 
 	public DBSKU() {
 		super();
-		// TODO Auto-generated constructor stub
+
 	}
 
 	public DBSKU(int pKey) {

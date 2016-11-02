@@ -1,7 +1,6 @@
 package com.malbi.sync.sku.xls;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.Serializable;
@@ -16,6 +15,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import javax.enterprise.context.SessionScoped;
 import javax.inject.Inject;
@@ -39,6 +39,32 @@ import com.malbi.sync.sku.service.SKUService;
 @SessionScoped
 public class XlsxSource implements Serializable {
 
+	private static final long serialVersionUID = 1936115774792361359L;
+
+	private static final String CONSTANT_DELIMITER = ";";
+
+	private static final String CONSTANT_NEW_LINE = "\n";
+
+	@Inject
+	private SKUService service;
+
+	private Path filePath;
+
+	private File xlsFile;
+
+	private List<XlsRowData> rows = new LinkedList<>();
+
+	private String exceptionString = "";
+
+	private String validationErrorLog = "";
+
+	/**
+	 * Will add default constructor to split object creation and validation.
+	 */
+	public XlsxSource() {
+
+	}
+
 	public SKUService getService() {
 		return service;
 	}
@@ -49,11 +75,11 @@ public class XlsxSource implements Serializable {
 
 	public List<Changes> getGroupUpdates() {
 
-		StringBuffer log = new StringBuffer();
+		StringBuilder log = new StringBuilder();
 		Map<Integer, String> dbSkuGropMap = service.getSkuGroupMap();
 		appendLogAtRefresh(service, log); // check if we got errors.
 
-		Map<Integer, Changes> changes = new HashMap<Integer, Changes>();
+		Map<Integer, Changes> changes = new HashMap<>();
 		Integer key;
 		String dbSkuGroupName;
 		String xlsSkuGroupName;
@@ -72,12 +98,17 @@ public class XlsxSource implements Serializable {
 			}
 		}
 
-		return new ArrayList<Changes>(changes.values());
+		return new ArrayList<>(changes.values());
 	}
 
-	// This is the original Bondarenko's method
+	/**
+	 * This is the original Bondarenko's method
+	 *
+	 * @param dbSkuMap
+	 * @return
+	 */
 	public List<Changes> getSkuUpdates(Map<Integer, DbRowData> dbSkuMap) {
-		List<Changes> changes = new ArrayList<Changes>();
+		List<Changes> changes = new ArrayList<>();
 		Integer key;
 		int dbParentId;
 		int xlsParentId;
@@ -106,17 +137,16 @@ public class XlsxSource implements Serializable {
 		return changes;
 	}
 
-	// this method should return not groups' codes but DBGroup objects with
-	// name. Andrei Duplik wrote after getSkuUpdates
-	// public List<SKUGroupChanges> getSKUUpdatesDBGroups(Map<Integer,
-	// DbRowData> dbSkuMap) {
+	/**
+	 * This method should return not groups' codes but DBGroup objects with
+	 * name. Andrei Duplik wrote after getSkuUpdates
+	 *
+	 * @return
+	 */
 	public List<SKUGroupChanges> getSKUUpdatesDBGroups() {
 
-		StringBuffer log = new StringBuffer();
+		StringBuilder log = new StringBuilder();
 
-		// returns "select parent_id" + " ,node_id" + " ,is_group" + "
-		// ,is_plan_group"
-		// + " from xx_rs_sku_hierarchy" + " where is_group=0"
 		// so it returns the position of sku in the hierarchy.
 		Map<Integer, DbRowData> dbSkuMap = service.getSkuHierarchyMap();
 		appendLogAtRefresh(service, log);
@@ -126,42 +156,9 @@ public class XlsxSource implements Serializable {
 		Map<Integer, String> mapDBGroups = service.getSkuGroupMap();
 		appendLogAtRefresh(service, log);
 
-		List<SKUGroupChanges> changes = new ArrayList<SKUGroupChanges>();
+		List<SKUGroupChanges> changes = new ArrayList<>();
 
-		this.rows.stream().forEach(t -> {
-			Integer key = t.getSkuCode();
-
-			// check if xx_rs_sku_hierarchy contains node_id equal to sku id in
-			// xls row.
-			if (!dbSkuMap.containsKey(key)) {
-
-				// new sku, according to Bondarenko.
-				Integer groupCode = t.getSkuGroupCode();
-
-				// get group name from common groups ref xx_rs_sku_groups
-				String pName = mapDBGroups.get(groupCode);
-
-				// new DBSKUGroup() equals to null in Bondarenko's version
-				SKUGroupChanges change = new SKUGroupChanges(key, new DBSKUGroup(),
-						new DBSKUGroup(groupCode.intValue(), pName));
-
-				changes.add(change);
-			} else {
-				// moved to new group
-				int dbParentId = dbSkuMap.get(key).getParentId();
-				int xlsParentId = t.getSkuGroupCode();
-				if (dbParentId != xlsParentId) {
-					SKUGroupChanges change = new SKUGroupChanges(key,
-							new DBSKUGroup(dbParentId, mapDBGroups.get(dbParentId)),
-							new DBSKUGroup(xlsParentId, mapDBGroups.get(xlsParentId)));
-					changes.add(change);
-				}
-				// all entries that are left in dbSkuMap -> are deleted from
-				// xlsSource
-				dbSkuMap.remove(key);
-
-			}
-		});
+		this.rows.stream().forEach(t -> processRow(t, dbSkuMap, mapDBGroups, changes));
 
 		// deleted values from xls source
 		dbSkuMap.values().stream().forEach(t -> {
@@ -172,27 +169,61 @@ public class XlsxSource implements Serializable {
 
 		// put errors from db to current object exception string.
 		if (!log.toString().isEmpty()) {
-			this.ExceptionString = log.toString();
+			this.exceptionString = log.toString();
 		}
 		return changes;
 
 	}
 
-	public void updateXlsSource() throws FileNotFoundException, IOException {
-		Path parent = this.XlsFile.toPath().getParent();
+	private void processRow(XlsRowData t, Map<Integer, DbRowData> dbSkuMap, Map<Integer, String> mapDBGroups,
+			List<SKUGroupChanges> changes) {
+		Integer key = t.getSkuCode();
+
+		// check if xx_rs_sku_hierarchy contains node_id equal to sku id in
+		// xls row.
+		if (!dbSkuMap.containsKey(key)) {
+
+			// new sku, according to Bondarenko.
+			Integer groupCode = t.getSkuGroupCode();
+
+			// get group name from common groups ref xx_rs_sku_groups
+			String pName = mapDBGroups.get(groupCode);
+
+			// new DBSKUGroup() equals to null in Bondarenko's version
+			SKUGroupChanges change = new SKUGroupChanges(key, new DBSKUGroup(),
+					new DBSKUGroup(groupCode.intValue(), pName));
+
+			changes.add(change);
+		} else {
+			// moved to new group
+			int dbParentId = dbSkuMap.get(key).getParentId();
+			int xlsParentId = t.getSkuGroupCode();
+			if (dbParentId != xlsParentId) {
+				SKUGroupChanges change = new SKUGroupChanges(key,
+						new DBSKUGroup(dbParentId, mapDBGroups.get(dbParentId)),
+						new DBSKUGroup(xlsParentId, mapDBGroups.get(xlsParentId)));
+				changes.add(change);
+			}
+			// all entries that are left in dbSkuMap -> are deleted from
+			// xlsSource
+			dbSkuMap.remove(key);
+
+		}
+	}
+
+	public void updateXlsSource() throws IOException {
+		Path parent = this.xlsFile.toPath().getParent();
 		// first we need to backup file?
 		String backUpFile = new SimpleDateFormat("yyyy-MM-dd-(HH-mm-ss)").format(System.currentTimeMillis()) + ".xls";
 		Path backUpPath = parent.resolve(Paths.get("back_up", backUpFile));
 
 		backUpPath.getParent().toFile().mkdirs();
-		Files.copy(this.XlsFile.toPath(), backUpPath);
+		Files.copy(this.xlsFile.toPath(), backUpPath);
 
 		POIFSFileSystem stream;
 		HSSFWorkbook book;
 		HSSFSheet sheet;
 
-		// There is a more modern example
-		// Workbook destBook = WorkbookFactory.create(srcFile);
 		File destFile = new File(backUpPath.toString());
 
 		stream = new POIFSFileSystem(destFile);
@@ -217,9 +248,7 @@ public class XlsxSource implements Serializable {
 			sheet.removeRow(sheet.getRow(i));
 		}
 
-		// book.close(); // or it causes Position 4498432 past the end of the
-		// file
-		FileOutputStream out = new FileOutputStream(this.XlsFile);
+		FileOutputStream out = new FileOutputStream(this.xlsFile);
 		book.write(out);
 		out.close();
 		book.close();
@@ -239,32 +268,36 @@ public class XlsxSource implements Serializable {
 	}
 
 	public boolean validateInternal() {
+		StringBuilder sb = new StringBuilder();
+
 		String defaultMsg = "Ошибка проверки XLS-файла.\n";
-		String error = defaultMsg;
+		// String error = defaultMsg;
+		sb.append(defaultMsg);
 
 		// NOT FILLED ROWS
 		// ///////////////////////////////////////////////////////////////
-		Set<Integer> notFilledRows = new HashSet<Integer>();
+		Set<Integer> notFilledRows = new HashSet<>();
 		for (XlsRowData r : rows) {
-			if (r.getSkuCode() == 0 || r.getSkuName().equals("") || r.getSkuGroup().equals("")
-					|| r.getSkuGroupCode() == 0 || r.getBusiness().equals("") || r.getSubGroup().equals("")
-					|| r.getBusinessSort() == 0 || r.getSubGroupSort() == 0 || r.getGroupSort() == 0) {
+			if (r.getSkuCode() == 0 || r.getSkuName().isEmpty() || r.getSkuGroup().isEmpty() || r.getSkuGroupCode() == 0
+					|| r.getBusiness().isEmpty() || r.getSubGroup().isEmpty() || r.getBusinessSort() == 0
+					|| r.getSubGroupSort() == 0 || r.getGroupSort() == 0) {
 				notFilledRows.add(r.getRowNo());
 			}
 		}
 
-		if (notFilledRows.size() > 0) {
-			error += "Эти строки заполнены не полностью:\n";
-			for (Integer i : notFilledRows) {
-				error += String.valueOf(i) + "; ";
-			}
-			error += "\n";
+		if (!notFilledRows.isEmpty()) {
+
+			sb.append("Эти строки заполнены не полностью:\n");
+
+			String joined = notFilledRows.stream().map(String::valueOf).collect(Collectors.joining(CONSTANT_DELIMITER));
+			sb.append(joined);
+			sb.append(CONSTANT_NEW_LINE);
 		}
 
 		// Duplicate IDs
 		// ///////////////////////////////////////////////////////////////
-		Set<Integer> allId = new HashSet<Integer>();
-		Set<Integer> dubId = new HashSet<Integer>();
+		Set<Integer> allId = new HashSet<>();
+		Set<Integer> dubId = new HashSet<>();
 
 		for (XlsRowData r : rows) {
 			if (!allId.add(r.getSkuCode())) {
@@ -272,18 +305,19 @@ public class XlsxSource implements Serializable {
 			}
 		}
 
-		if (dubId.size() > 0) {
-			error += "Следующие идентификаторы SKU имеют дубли:\n";
-			for (Integer i : dubId) {
-				error += String.valueOf(i) + "; ";
-			}
-			error += "\n";
+		if (!dubId.isEmpty()) {
+
+			sb.append("Следующие идентификаторы SKU имеют дубли:\n");
+
+			String joined = dubId.stream().map(String::valueOf).collect(Collectors.joining(CONSTANT_DELIMITER));
+			sb.append(joined);
+			sb.append(CONSTANT_NEW_LINE);
 		}
 
 		// DIFFERENT PROPERTIES FOR THE SAME GROUP
 		// ID///////////////////////////////
-		Map<Integer, XlsRowData> allGroupId = new HashMap<Integer, XlsRowData>();
-		Set<Integer> errorGroupId = new HashSet<Integer>();
+		Map<Integer, XlsRowData> allGroupId = new HashMap<>();
+		Set<Integer> errorGroupId = new HashSet<>();
 		XlsRowData rData;
 		for (XlsRowData r : rows) {
 			if (allGroupId.containsKey(r.getSkuGroupCode())) {
@@ -299,19 +333,19 @@ public class XlsxSource implements Serializable {
 			}
 		}
 
-		if (errorGroupId.size() > 0) {
-			error += "Эти идентификаторы групп SKU имеют различные свойства:\n";
-			for (Integer i : errorGroupId) {
-				error += String.valueOf(i) + "; ";
-			}
-			error += "\n";
+		if (!errorGroupId.isEmpty()) {
+
+			String joined = errorGroupId.stream().map(String::valueOf).collect(Collectors.joining(CONSTANT_DELIMITER));
+			sb.append(joined);
+			sb.append(CONSTANT_NEW_LINE);
+
 		}
 
-		if (error.equals(defaultMsg)) {
+		if (sb.toString().equals(defaultMsg)) {
 			return true;
 		} else {
 
-			this.validationErrorLog = error;
+			this.validationErrorLog = sb.toString();
 			return false;
 		}
 
@@ -323,14 +357,14 @@ public class XlsxSource implements Serializable {
 		HSSFSheet sheet;
 		XlsRowData row;
 
-		stream = new POIFSFileSystem(this.XlsFile);
+		stream = new POIFSFileSystem(this.xlsFile);
 
 		book = new HSSFWorkbook(stream);
 		sheet = book.getSheet("base");
 		// here can be no sheet with such name
 		if (sheet == null) {
 			book.close();
-			throw new Exception("Не найден лист base!");
+			throw new IllegalStateException("Не найден лист base!");
 		}
 
 		int rowNo = 1;
@@ -400,8 +434,6 @@ public class XlsxSource implements Serializable {
 		this.filePath = filePath;
 	}
 
-	private List<XlsRowData> rows = new LinkedList<XlsRowData>();
-
 	public List<XlsRowData> getRows() {
 		return rows;
 	}
@@ -410,19 +442,13 @@ public class XlsxSource implements Serializable {
 		this.rows = rows;
 	}
 
-	private Path filePath;
-
-	private File XlsFile;
-
 	public File getXlsFile() {
-		return XlsFile;
+		return xlsFile;
 	}
 
 	public void setXlsFile(File xlsFile) {
-		XlsFile = xlsFile;
+		this.xlsFile = xlsFile;
 	}
-
-	private String validationErrorLog = "";
 
 	public String getValidationErrorLog() {
 		return validationErrorLog;
@@ -432,29 +458,18 @@ public class XlsxSource implements Serializable {
 		this.validationErrorLog = validationErrorLog;
 	}
 
-	private String ExceptionString = "";
-
 	public String getExceptionString() {
-		return ExceptionString;
+		return exceptionString;
 	}
 
 	public void setExceptionString(String exceptionString) {
-		ExceptionString = exceptionString;
+		this.exceptionString = exceptionString;
 	}
 
-	private static final long serialVersionUID = 1936115774792361359L;
-
-	// Will add default constructor to split object creation and validation.
-	public XlsxSource() {
-
-	}
-
-	public void appendLogAtRefresh(SKUService service, StringBuffer log) {
+	public void appendLogAtRefresh(SKUService service, StringBuilder log) {
 		if (!log.toString().isEmpty()) {
 			log.append(service.getErrorLog());
 		}
 	}
 
-	@Inject
-	private SKUService service;
 }

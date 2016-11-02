@@ -1,7 +1,6 @@
 package com.malbi.sync.sku.application;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -23,6 +22,33 @@ import com.malbi.sync.sku.xls.XlsxSource;
 @ViewScoped
 public class XLSUploadController implements Serializable {
 
+	private static final long serialVersionUID = -8603992260673524815L;
+
+	private static final String CONSTANT_MESSAGES = "messages";
+
+	private File outputFile;
+
+	boolean uploadedXLSValidationResult;
+
+	@Inject // it is created at postconstruct
+	private ISessionManager sessionManager;
+
+	private boolean fileUploaded = false;
+
+	private Part httpPart;
+
+	private String fileContent;
+
+	private String exceptionString;
+
+	public Part getHttpPart() {
+		return httpPart;
+	}
+
+	public void setHttpPart(Part httpPart) {
+		this.httpPart = httpPart;
+	}
+
 	@PostConstruct
 	public void init() {
 
@@ -35,33 +61,13 @@ public class XLSUploadController implements Serializable {
 	}
 
 	public void upload() {
-		StringBuffer log = new StringBuffer();
-
-		InputStream inputStream = null;
-		OutputStream outputStream = null;
+		StringBuilder log = new StringBuilder();
 
 		try {
 			this.outputFile = File.createTempFile("SKU_BASE_1C", ".xls");
+			this.outputFile.deleteOnExit();
 
 		} catch (IOException e) {
-			log.append(Exception2String.printStackTrace(e));
-			this.fileUploaded = false;
-			return;
-		}
-
-		// reading upload content.
-		try {
-			inputStream = file.getInputStream();
-		} catch (IOException e) {
-			log.append(Exception2String.printStackTrace(e));
-			this.fileUploaded = false;
-			return;
-		}
-
-		// flushing input stream to server file copy
-		try {
-			outputStream = new FileOutputStream(outputFile);
-		} catch (FileNotFoundException e) {
 			log.append(Exception2String.printStackTrace(e));
 			this.fileUploaded = false;
 			return;
@@ -69,66 +75,41 @@ public class XLSUploadController implements Serializable {
 
 		byte[] buffer = new byte[1024];
 		int bytesRead = 0;
-		try {
+
+		try (OutputStream outputStream = new FileOutputStream(outputFile);
+				InputStream inputStream = httpPart.getInputStream();) {
+
 			while ((bytesRead = inputStream.read(buffer)) != -1) {
 				outputStream.write(buffer, 0, bytesRead);
 			}
-		} catch (IOException e) {
+
+			this.fileUploaded = true;
+		}
+		//
+		catch (IOException e) {
 			log.append(Exception2String.printStackTrace(e));
-
-			if (outputStream != null) {
-				try {
-					outputStream.close();
-				} catch (IOException e1) {
-
-					log.append(Exception2String.printStackTrace(e1));
-				}
-			}
 			this.fileUploaded = false;
 			return;
 		}
 
-		// closing streams
-		if (outputStream != null) {
-			try {
-				outputStream.close();
-			} catch (IOException e) {
-				log.append(Exception2String.printStackTrace(e));
-				this.fileUploaded = false;
-				return;
-			}
-		}
-		if (inputStream != null) {
-			try {
-				inputStream.close();
-			} catch (IOException e) {
-				log.append(Exception2String.printStackTrace(e));
-				this.fileUploaded = false;
-				return;
-			}
-		}
-
-		this.fileUploaded = true;
-
 		if (!log.toString().isEmpty()) {
-			this.ExceptionString = log.toString();
-			FacesMessage msg = new FacesMessage("Ошибки при загрузке файла на сервер", this.ExceptionString);
+			this.exceptionString = log.toString();
+			FacesMessage msg = new FacesMessage("Ошибки при загрузке файла на сервер", this.exceptionString);
 			msg.setSeverity(FacesMessage.SEVERITY_ERROR);
 			FacesContext.getCurrentInstance().addMessage(null, msg);
 		}
-		return;
 
 	}
 
 	// This this the main method
 	public void checkXLSFile() {
-		StringBuffer log = new StringBuffer();
+		StringBuilder log = new StringBuilder();
 
 		this.upload();
 		if (!this.fileUploaded) {
 			FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_FATAL, "Закачка файла SKU_BASE_1C.xls",
 					"Ошибка закачки!");
-			FacesContext.getCurrentInstance().addMessage("messages", message);
+			FacesContext.getCurrentInstance().addMessage(CONSTANT_MESSAGES, message);
 			return;
 		}
 
@@ -141,17 +122,17 @@ public class XLSUploadController implements Serializable {
 			log.append(e.getMessage());
 			FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_FATAL, "Закачка файла SKU_BASE_1C.xls",
 					log.toString());
-			FacesContext.getCurrentInstance().addMessage("messages", message);
+			FacesContext.getCurrentInstance().addMessage(CONSTANT_MESSAGES, message);
 			return;
 		}
 
 		// Validation of rows.
 		this.uploadedXLSValidationResult = xSource.validateInternal();
 		if (!this.uploadedXLSValidationResult) {
-			this.ExceptionString = xSource.getValidationErrorLog();
+			this.exceptionString = xSource.getValidationErrorLog();
 			FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_FATAL, "Проверка файла SKU_BASE_1C.xls",
-					this.ExceptionString);
-			FacesContext.getCurrentInstance().addMessage("messages", message);
+					this.exceptionString);
+			FacesContext.getCurrentInstance().addMessage(CONSTANT_MESSAGES, message);
 			return;
 		}
 
@@ -161,17 +142,12 @@ public class XLSUploadController implements Serializable {
 		return "/xlsprocessor.xhtml?faces-redirect=true";
 	}
 
-	private Part file;
-	private String fileContent;
-
-	private String ExceptionString;
-
 	public String getExceptionString() {
-		return ExceptionString;
+		return exceptionString;
 	}
 
 	public void setExceptionString(String exceptionString) {
-		ExceptionString = exceptionString;
+		this.exceptionString = exceptionString;
 	}
 
 	public String getFileContent() {
@@ -182,20 +158,6 @@ public class XLSUploadController implements Serializable {
 		this.fileContent = fileContent;
 	}
 
-	public Part getFile() {
-		return file;
-	}
-
-	public void setFile(Part file) {
-		this.file = file;
-	}
-
-	private static final long serialVersionUID = -8603992260673524815L;
-
-	File outputFile;
-
-	boolean uploadedXLSValidationResult;
-
 	public boolean isUploadedXLSValidationResult() {
 		return uploadedXLSValidationResult;
 	}
@@ -204,8 +166,6 @@ public class XLSUploadController implements Serializable {
 		this.uploadedXLSValidationResult = uploadedXLSValidationResult;
 	}
 
-	boolean fileUploaded = false;
-
 	public boolean isFileUploaded() {
 		return fileUploaded;
 	}
@@ -213,9 +173,6 @@ public class XLSUploadController implements Serializable {
 	public void setFileUploaded(boolean fileUploaded) {
 		this.fileUploaded = fileUploaded;
 	}
-
-	@Inject // it is created at postconstruct
-	private ISessionManager sessionManager;
 
 	public ISessionManager getSessionManager() {
 		return sessionManager;

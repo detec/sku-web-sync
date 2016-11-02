@@ -19,10 +19,24 @@ import com.malbi.sync.sku.service.SKUService;
 @RequestScoped
 public class DBSKUController implements Serializable {
 
-	public void appendLog(SKUService service, StringBuffer log) {
+	private static final long serialVersionUID = 2396746074529297511L;
+
+	@Inject
+	private SKUService service;
+
+	@Inject
+	private ISessionManager sessionManager;
+
+	private List<SKUGroupChanges> updateList = new ArrayList<>();
+	private List<SKUGroupChanges> addList = new ArrayList<>();
+	private List<SKUGroupChanges> removeList = new ArrayList<>();
+
+	private String exceptionString = "";
+
+	private void appendLog(SKUService service, StringBuilder log) {
 		String receivedLog = service.getErrorLog();
 		// append carriage return if error message is not empty.
-		log.append(receivedLog + ((receivedLog.length() == 0) ? "" : "\n"));
+		log.append(receivedLog + (receivedLog.isEmpty() ? "" : "\n"));
 	}
 
 	public String goToXLSDownload() {
@@ -32,7 +46,7 @@ public class DBSKUController implements Serializable {
 	public String applyChanges() {
 		String returnAddress = "";
 
-		StringBuffer log = new StringBuffer();
+		StringBuilder log = new StringBuilder();
 
 		// move checked SKU
 		this.updateList.stream().filter(t -> t.isChecked()).forEach(t -> {
@@ -63,8 +77,8 @@ public class DBSKUController implements Serializable {
 		// after all operations.
 		if (!log.toString().isEmpty()) {
 
-			this.ExceptionString = log.toString();
-			FacesMessage msg = new FacesMessage("Ошибки при операциях с базы данных", this.ExceptionString);
+			this.exceptionString = log.toString();
+			FacesMessage msg = new FacesMessage("Ошибки при операциях с базы данных", this.exceptionString);
 			addFacesMessage(msg);
 
 		} else {
@@ -81,12 +95,6 @@ public class DBSKUController implements Serializable {
 		this.service = service;
 	}
 
-	public void appendLogAtRefresh(SKUService service, StringBuffer log) {
-		if (!log.toString().isEmpty()) {
-			log.append(service.getErrorLog());
-		}
-	}
-
 	public void changeGroupAll() {
 		this.addList.forEach(t -> t.setChecked(true));
 	}
@@ -95,17 +103,6 @@ public class DBSKUController implements Serializable {
 
 		List<SKUGroupChanges> skuChanges = this.sessionManager.getxSource().getSKUUpdatesDBGroups();
 
-		// for (Changes c : skuChanges)
-		//
-		// {
-		// if (c.getBefore() == null) {
-		// addList.add(c);
-		// } else if (c.getAfter() == null) {
-		// removeList.add(c);
-		// } else {
-		// updateList.add(c);
-		// }
-		// }
 		skuChanges.stream().forEach(t -> {
 
 			// this is obviously equal to null in older version.
@@ -124,9 +121,8 @@ public class DBSKUController implements Serializable {
 		// after all operations.
 		if (!this.sessionManager.getxSource().getExceptionString().isEmpty()) {
 
-			// this.ExceptionString = log.toString();
-			this.ExceptionString = this.sessionManager.getxSource().getExceptionString();
-			FacesMessage msg = new FacesMessage("Ошибки при операциях с базой данных", this.ExceptionString);
+			this.exceptionString = this.sessionManager.getxSource().getExceptionString();
+			FacesMessage msg = new FacesMessage("Ошибки при операциях с базой данных", this.exceptionString);
 			addFacesMessage(msg);
 
 		}
@@ -137,10 +133,6 @@ public class DBSKUController implements Serializable {
 	public void init() {
 		refreshData();
 	}
-
-	List<SKUGroupChanges> updateList = new ArrayList<SKUGroupChanges>();
-	List<SKUGroupChanges> addList = new ArrayList<SKUGroupChanges>();
-	List<SKUGroupChanges> removeList = new ArrayList<SKUGroupChanges>();
 
 	private void addFacesMessage(FacesMessage msg) {
 		msg.setSeverity(FacesMessage.SEVERITY_ERROR);
@@ -174,18 +166,13 @@ public class DBSKUController implements Serializable {
 		this.removeList = removeList;
 	}
 
-	private String ExceptionString = "";
-
 	public String getExceptionString() {
-		return ExceptionString;
+		return exceptionString;
 	}
 
 	public void setExceptionString(String exceptionString) {
-		ExceptionString = exceptionString;
+		this.exceptionString = exceptionString;
 	}
-
-	@Inject
-	private ISessionManager sessionManager;
 
 	public ISessionManager getSessionManager() {
 		return sessionManager;
@@ -194,10 +181,5 @@ public class DBSKUController implements Serializable {
 	public void setSessionManager(ISessionManager sessionManager) {
 		this.sessionManager = sessionManager;
 	}
-
-	private static final long serialVersionUID = 2396746074529297511L;
-
-	@Inject
-	SKUService service;
 
 }
